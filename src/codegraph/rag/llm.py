@@ -50,7 +50,7 @@ class FakeLLMProvider(BaseLLMProvider):
 
 
 class OpenAICompatibleProvider(BaseLLMProvider):
-    """LLM provider using OpenAI-compatible REST API (e.g. Ollama, vLLM, LocalAI, OpenAI)."""
+    """LLM provider using OpenAI-compatible REST API (e.g. Ollama, vLLM, LocalAI, OpenAI, NVIDIA NIM)."""
 
     def __init__(
         self,
@@ -94,3 +94,26 @@ class OpenAICompatibleProvider(BaseLLMProvider):
                 return data["choices"][0]["message"]["content"]
         except Exception as e:
             raise RuntimeError(f"LLM API request failed: {e}") from e
+
+
+class NvidiaLLMProvider(OpenAICompatibleProvider):
+    """NVIDIA NIM Cloud API LLM Provider."""
+
+    def __init__(
+        self,
+        api_key: str | None = None,
+        base_url: str = "https://integrate.api.nvidia.com/v1",
+        model: str = "meta/llama-3.3-70b-instruct",
+        temperature: float = 0.0,
+        max_tokens: int = 1024,
+    ) -> None:
+        import os
+        key = api_key or os.getenv("NVIDIA_API_KEY") or os.getenv("NVAPI_KEY", "")
+        super().__init__(
+            api_key=key,
+            base_url=base_url,
+            model=model,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+

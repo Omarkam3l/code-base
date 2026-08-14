@@ -3,7 +3,12 @@
 from .answer_generator import AnswerGenerator, CitationValidator
 from .context_expander import ContextExpander
 from .evidence import EvidenceBuilder
-from .llm import BaseLLMProvider, FakeLLMProvider, OpenAICompatibleProvider
+from .llm import (
+    BaseLLMProvider,
+    FakeLLMProvider,
+    NvidiaLLMProvider,
+    OpenAICompatibleProvider,
+)
 from .models import (
     Answer,
     Evidence,
