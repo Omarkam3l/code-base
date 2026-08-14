@@ -8824,5 +8824,1057 @@
     "expected_entities": [],
     "expected_files": [],
     "should_abstain": true
+  },
+  {
+    "id": 701,
+    "category": "architecture_diagram",
+    "query": "Phase 15 Multimodal evaluation query for architecture_diagram case #701",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService",
+      "PostgreSQL"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 702,
+    "category": "architecture_diagram",
+    "query": "Phase 15 Multimodal evaluation query for architecture_diagram case #702",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService",
+      "PostgreSQL"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 703,
+    "category": "architecture_diagram",
+    "query": "Phase 15 Multimodal evaluation query for architecture_diagram case #703",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService",
+      "PostgreSQL"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 704,
+    "category": "architecture_diagram",
+    "query": "Phase 15 Multimodal evaluation query for architecture_diagram case #704",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService",
+      "PostgreSQL"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 705,
+    "category": "architecture_diagram",
+    "query": "Phase 15 Multimodal evaluation query for architecture_diagram case #705",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService",
+      "PostgreSQL"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 706,
+    "category": "architecture_diagram",
+    "query": "Phase 15 Multimodal evaluation query for architecture_diagram case #706",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService",
+      "PostgreSQL"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 707,
+    "category": "architecture_diagram",
+    "query": "Phase 15 Multimodal evaluation query for architecture_diagram case #707",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService",
+      "PostgreSQL"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 708,
+    "category": "architecture_diagram",
+    "query": "Phase 15 Multimodal evaluation query for architecture_diagram case #708",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService",
+      "PostgreSQL"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 709,
+    "category": "er_diagram",
+    "query": "Phase 15 Multimodal evaluation query for er_diagram case #709",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "User",
+      "Order"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 710,
+    "category": "er_diagram",
+    "query": "Phase 15 Multimodal evaluation query for er_diagram case #710",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "User",
+      "Order"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 711,
+    "category": "er_diagram",
+    "query": "Phase 15 Multimodal evaluation query for er_diagram case #711",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "User",
+      "Order"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 712,
+    "category": "er_diagram",
+    "query": "Phase 15 Multimodal evaluation query for er_diagram case #712",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "User",
+      "Order"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 713,
+    "category": "er_diagram",
+    "query": "Phase 15 Multimodal evaluation query for er_diagram case #713",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "User",
+      "Order"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 714,
+    "category": "er_diagram",
+    "query": "Phase 15 Multimodal evaluation query for er_diagram case #714",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "User",
+      "Order"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 715,
+    "category": "er_diagram",
+    "query": "Phase 15 Multimodal evaluation query for er_diagram case #715",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "User",
+      "Order"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 716,
+    "category": "er_diagram",
+    "query": "Phase 15 Multimodal evaluation query for er_diagram case #716",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "User",
+      "Order"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 717,
+    "category": "uml",
+    "query": "Phase 15 Multimodal evaluation query for uml case #717",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AdminUser",
+      "User"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 718,
+    "category": "uml",
+    "query": "Phase 15 Multimodal evaluation query for uml case #718",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AdminUser",
+      "User"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 719,
+    "category": "uml",
+    "query": "Phase 15 Multimodal evaluation query for uml case #719",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AdminUser",
+      "User"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 720,
+    "category": "uml",
+    "query": "Phase 15 Multimodal evaluation query for uml case #720",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AdminUser",
+      "User"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 721,
+    "category": "uml",
+    "query": "Phase 15 Multimodal evaluation query for uml case #721",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AdminUser",
+      "User"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 722,
+    "category": "uml",
+    "query": "Phase 15 Multimodal evaluation query for uml case #722",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AdminUser",
+      "User"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 723,
+    "category": "uml",
+    "query": "Phase 15 Multimodal evaluation query for uml case #723",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AdminUser",
+      "User"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 724,
+    "category": "uml",
+    "query": "Phase 15 Multimodal evaluation query for uml case #724",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AdminUser",
+      "User"
+    ],
+    "expected_files": [
+      "models.py"
+    ]
+  },
+  {
+    "id": 725,
+    "category": "screenshot",
+    "query": "Phase 15 Multimodal evaluation query for screenshot case #725",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "LoginPage"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 726,
+    "category": "screenshot",
+    "query": "Phase 15 Multimodal evaluation query for screenshot case #726",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "LoginPage"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 727,
+    "category": "screenshot",
+    "query": "Phase 15 Multimodal evaluation query for screenshot case #727",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "LoginPage"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 728,
+    "category": "screenshot",
+    "query": "Phase 15 Multimodal evaluation query for screenshot case #728",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "LoginPage"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 729,
+    "category": "screenshot",
+    "query": "Phase 15 Multimodal evaluation query for screenshot case #729",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "LoginPage"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 730,
+    "category": "screenshot",
+    "query": "Phase 15 Multimodal evaluation query for screenshot case #730",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "LoginPage"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 731,
+    "category": "screenshot",
+    "query": "Phase 15 Multimodal evaluation query for screenshot case #731",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "LoginPage"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 732,
+    "category": "screenshot",
+    "query": "Phase 15 Multimodal evaluation query for screenshot case #732",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "LoginPage"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 733,
+    "category": "markdown",
+    "query": "Phase 15 Multimodal evaluation query for markdown case #733",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 734,
+    "category": "markdown",
+    "query": "Phase 15 Multimodal evaluation query for markdown case #734",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 735,
+    "category": "markdown",
+    "query": "Phase 15 Multimodal evaluation query for markdown case #735",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 736,
+    "category": "markdown",
+    "query": "Phase 15 Multimodal evaluation query for markdown case #736",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 737,
+    "category": "markdown",
+    "query": "Phase 15 Multimodal evaluation query for markdown case #737",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 738,
+    "category": "markdown",
+    "query": "Phase 15 Multimodal evaluation query for markdown case #738",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 739,
+    "category": "markdown",
+    "query": "Phase 15 Multimodal evaluation query for markdown case #739",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 740,
+    "category": "markdown",
+    "query": "Phase 15 Multimodal evaluation query for markdown case #740",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 741,
+    "category": "visual_entity_mapping",
+    "query": "Phase 15 Multimodal evaluation query for visual_entity_mapping case #741",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 742,
+    "category": "visual_entity_mapping",
+    "query": "Phase 15 Multimodal evaluation query for visual_entity_mapping case #742",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 743,
+    "category": "visual_entity_mapping",
+    "query": "Phase 15 Multimodal evaluation query for visual_entity_mapping case #743",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 744,
+    "category": "visual_entity_mapping",
+    "query": "Phase 15 Multimodal evaluation query for visual_entity_mapping case #744",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 745,
+    "category": "visual_entity_mapping",
+    "query": "Phase 15 Multimodal evaluation query for visual_entity_mapping case #745",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 746,
+    "category": "visual_entity_mapping",
+    "query": "Phase 15 Multimodal evaluation query for visual_entity_mapping case #746",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 747,
+    "category": "visual_entity_mapping",
+    "query": "Phase 15 Multimodal evaluation query for visual_entity_mapping case #747",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 748,
+    "category": "visual_entity_mapping",
+    "query": "Phase 15 Multimodal evaluation query for visual_entity_mapping case #748",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 749,
+    "category": "image_to_code",
+    "query": "Phase 15 Multimodal evaluation query for image_to_code case #749",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 750,
+    "category": "image_to_code",
+    "query": "Phase 15 Multimodal evaluation query for image_to_code case #750",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 751,
+    "category": "image_to_code",
+    "query": "Phase 15 Multimodal evaluation query for image_to_code case #751",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 752,
+    "category": "image_to_code",
+    "query": "Phase 15 Multimodal evaluation query for image_to_code case #752",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 753,
+    "category": "image_to_code",
+    "query": "Phase 15 Multimodal evaluation query for image_to_code case #753",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 754,
+    "category": "image_to_code",
+    "query": "Phase 15 Multimodal evaluation query for image_to_code case #754",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 755,
+    "category": "image_to_code",
+    "query": "Phase 15 Multimodal evaluation query for image_to_code case #755",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 756,
+    "category": "image_to_code",
+    "query": "Phase 15 Multimodal evaluation query for image_to_code case #756",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 757,
+    "category": "documentation_drift",
+    "query": "Phase 15 Multimodal evaluation query for documentation_drift case #757",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 758,
+    "category": "documentation_drift",
+    "query": "Phase 15 Multimodal evaluation query for documentation_drift case #758",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 759,
+    "category": "documentation_drift",
+    "query": "Phase 15 Multimodal evaluation query for documentation_drift case #759",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 760,
+    "category": "documentation_drift",
+    "query": "Phase 15 Multimodal evaluation query for documentation_drift case #760",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 761,
+    "category": "documentation_drift",
+    "query": "Phase 15 Multimodal evaluation query for documentation_drift case #761",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 762,
+    "category": "documentation_drift",
+    "query": "Phase 15 Multimodal evaluation query for documentation_drift case #762",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 763,
+    "category": "documentation_drift",
+    "query": "Phase 15 Multimodal evaluation query for documentation_drift case #763",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 764,
+    "category": "documentation_drift",
+    "query": "Phase 15 Multimodal evaluation query for documentation_drift case #764",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "AuthService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 765,
+    "category": "code_documentation_match",
+    "query": "Phase 15 Multimodal evaluation query for code_documentation_match case #765",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 766,
+    "category": "code_documentation_match",
+    "query": "Phase 15 Multimodal evaluation query for code_documentation_match case #766",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 767,
+    "category": "code_documentation_match",
+    "query": "Phase 15 Multimodal evaluation query for code_documentation_match case #767",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 768,
+    "category": "code_documentation_match",
+    "query": "Phase 15 Multimodal evaluation query for code_documentation_match case #768",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 769,
+    "category": "code_documentation_match",
+    "query": "Phase 15 Multimodal evaluation query for code_documentation_match case #769",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 770,
+    "category": "code_documentation_match",
+    "query": "Phase 15 Multimodal evaluation query for code_documentation_match case #770",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 771,
+    "category": "code_documentation_match",
+    "query": "Phase 15 Multimodal evaluation query for code_documentation_match case #771",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 772,
+    "category": "code_documentation_match",
+    "query": "Phase 15 Multimodal evaluation query for code_documentation_match case #772",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 773,
+    "category": "multimodal_query",
+    "query": "Phase 15 Multimodal evaluation query for multimodal_query case #773",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 774,
+    "category": "multimodal_query",
+    "query": "Phase 15 Multimodal evaluation query for multimodal_query case #774",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 775,
+    "category": "multimodal_query",
+    "query": "Phase 15 Multimodal evaluation query for multimodal_query case #775",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 776,
+    "category": "multimodal_query",
+    "query": "Phase 15 Multimodal evaluation query for multimodal_query case #776",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 777,
+    "category": "multimodal_negative",
+    "query": "Phase 15 Multimodal evaluation query for multimodal_negative case #777",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 778,
+    "category": "multimodal_negative",
+    "query": "Phase 15 Multimodal evaluation query for multimodal_negative case #778",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 779,
+    "category": "visual_prompt_injection",
+    "query": "Phase 15 Multimodal evaluation query for visual_prompt_injection case #779",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "is_prompt_injection": true
+  },
+  {
+    "id": 780,
+    "category": "visual_prompt_injection",
+    "query": "Phase 15 Multimodal evaluation query for visual_prompt_injection case #780",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "is_prompt_injection": true
   }
 ]

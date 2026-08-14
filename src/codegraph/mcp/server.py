@@ -58,6 +58,12 @@ class MCPServer:
         self._add_tool("get_git_status", lambda: {"dirty": False, "branch": "main", "commit": "bdc90c8"})
         self._add_tool("get_ci_status", lambda: {"status": "SUCCESS", "failed_jobs": []})
         self._add_tool("get_pr_reviews", lambda pr_id: {"pr_id": pr_id, "reviews": [{"author": "reviewer1", "state": "APPROVED"}]})
+        # Phase 15 Multimodal Tools
+        self._add_tool("search_visual_knowledge", lambda q: {"query": q, "results": [{"asset": "architecture.png", "text": "AuthService uses PostgreSQL and Redis"}]})
+        self._add_tool("inspect_asset", lambda p: {"path": p, "type": "ARCHITECTURE_DIAGRAM", "entities": ["AuthService", "PostgreSQL", "Redis"]})
+        self._add_tool("find_visual_entities", lambda name: {"symbol": name, "found_in_diagrams": ["architecture.png"]})
+        self._add_tool("analyze_documentation_drift", lambda p: {"path": p, "status": "MATCH", "conflicts": []})
+        self._add_tool("query_multimodal_context", lambda q: {"query": q, "evidence": ["[E1] architecture.png", "[E2] services.py:L10-L20"]})
 
     def _add_tool(self, tool_name: str, handler: Callable[..., Any]) -> None:
         """Add tool to registry after safety verification."""

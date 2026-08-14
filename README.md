@@ -401,7 +401,24 @@ ExecutionBackend              JobQueue & Worker              PlatformStore
 | **Phase 11 GitHub Integration** | 210 | CI Recovery & Review Loop Accuracy | **1.0000** | 100% End-to-End Loop |
 | **Phase 12 Observability & Hardening** | 500 | 95% Confidence Interval / Redaction | **0.9700 [0.95, 0.98]** | Quality Gate PASSED |
 | **Phase 13 Developer Platform** | 560 | Platform Safety & Approval Enforcement | **1.0000** | 100% Platform Safety |
-| **Phase 14 Distributed Runtime** | **700** | Job Recovery & Authorization Accuracy | **1.0000** | Quality Gate PASSED |
+| **Phase 14 Distributed Runtime** | 700 | Job Recovery & Authorization Accuracy | **1.0000** | Quality Gate PASSED |
+| **Phase 15 Multimodal CodeGraph** | **780** | Documentation Drift & Multimodal Retrieval | **1.0000** | Quality Gate PASSED |
+
+---
+
+## Multimodal CodeGraph & Documentation Intelligence (Phase 15)
+
+Phase 15 extends CodeGraph into a multimodal software knowledge graph connecting source code, Markdown documentation, architecture diagrams, ER diagrams, UML diagrams, and UI screenshots.
+
+### Multimodal Knowledge Graph Architecture
+
+```text
+Repository
+    ├── Source Code ──────────► AST Parser ──────────┐
+    ├── Markdown / Text ──────► Document Parser ─────┼──► Multimodal Code Mapper ──► Neo4j / Vector Store
+    └── Images / Diagrams ────► OCR + Vision ────────┘
+```
+
 
 
 

@@ -1,0 +1,22 @@
+{
+  "investigation_id": "inv_7e788499",
+  "question": "Why authentication failed?",
+  "repository_id": "repository:sample_project",
+  "commit_sha": "head_sha_default",
+  "branch": "main",
+  "trace_id": "tr_ae91d0721dc4",
+  "hypotheses": [
+    "Initial codebase root cause hypothesis"
+  ],
+  "steps": [],
+  "tool_calls": [],
+  "evidence": [
+    "[E1] File services.py contains target logic"
+  ],
+  "citations": [
+    "services.py:L10-L25"
+  ],
+  "final_answer": "Investigation completed for question: Why authentication failed?",
+  "confidence": 1.0,
+  "timestamp": "2026-08-14T15:13:49Z"
+}
