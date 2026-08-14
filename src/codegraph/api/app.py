@@ -1,8 +1,10 @@
 """FastAPI REST API application for CodeGraph Developer Platform."""
 
 import uuid
+from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request, status
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from codegraph.api.models import (
     APIResponse,
     ChangePlanRequest,
@@ -18,11 +20,24 @@ from codegraph.platform.services.platform_service import PlatformService
 
 app = FastAPI(
     title="CodeGraph Developer Platform API",
-    version="13.0.0",
-    description="REST API for CodeGraph RAG Code Intelligence System",
+    version="16.0.0",
+    description="REST API and Studio Web UI for CodeGraph RAG Code Intelligence System",
 )
 
+STATIC_DIR = Path(__file__).parent / "static"
+if STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
 service = PlatformService()
+
+
+@app.get("/")
+def get_studio_ui():
+    """Serve CodeGraph Studio Web UI."""
+    index_file = STATIC_DIR / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file)
+    return JSONResponse({"message": "CodeGraph Studio API"})
 
 
 @app.middleware("http")
