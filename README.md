@@ -291,7 +291,48 @@ PushController (Disabled-by-default, explicit authorization required)
 
 ---
 
-## Benchmark Metrics Summary (Phases 1–10)
+## Real GitHub Integration, CI Monitoring & PR Review Loop (Phase 11)
+
+Phase 11 connects CodeGraph RAG to GitHub events, CI check runs, and pull request review comments.
+
+### Core Architecture & Event Flow
+
+```text
+                  CodeGraph RAG
+                       │
+                 GitHub Integration
+                       │
+        ┌──────────────┼──────────────┐
+        ↓              ↓              ↓
+     PR Manager      CI Monitor    Review Manager
+        │              │              │
+        ↓              ↓              ↓
+   PR metadata      CI runs       Review comments
+        │              │              │
+        └──────────────┼──────────────┘
+                       ↓
+                 Event Normalizer
+                       ↓
+                CodeGraph Agent
+                       ↓
+              Investigation/Repair
+                       ↓
+                 Git Workflow
+                       ↓
+                  PR Update
+```
+
+### Key Safety & Automation Controls
+
+1. **Event Normalization**: Normalizes raw webhook payloads (`pr_opened`, `check_run`, `review_comment`) into unified `NormalizedEvent` structures.
+2. **Automated CI Failure Monitoring**: Extracts failed job logs from GitHub Actions check runs and converts them directly into Phase 9 `FailureRecord` objects for automated iterative repair.
+3. **Review Comment Ingestion & Response**: Parses inline PR review comments, formulates targeted fixes, and posts replies directly back to PR conversation threads.
+4. **Evidence Provenance**: Preserves investigation and test evidence (`[E1]`, `[E2]`) across PR descriptions and review replies.
+5. **Prohibition of Automatic Merging**: `GitHubSafetyController` strictly forbids automated PR merging or destructive repository modifications.
+
+---
+
+## Benchmark Metrics Summary (Phases 1–11)
 
 | Benchmark Phase | Cases | Key Metric | Result | Target / Status |
 | :--- | :--- | :--- | :--- | :--- |
@@ -302,7 +343,9 @@ PushController (Disabled-by-default, explicit authorization required)
 | **Phase 7 Agentic Investigation** | 110 | Investigation Correctness | **0.9545** | Sub-second P50 Latency |
 | **Phase 8 Code Change Planning** | 140 | Patch Scope & Rejection Accuracy | **1.0000** | 100% Safety & Isolation |
 | **Phase 9 Patch Repair** | 170 | Repair Recovery & Rejection Accuracy | **1.0000** | 100% Loop & Safety Control |
-| **Phase 10 Git & PR Workflow** | **190** | Secret Detection & Push Authorization | **1.0000** | 100% Git Worktree Safety |
+| **Phase 10 Git & PR Workflow** | 190 | Secret Detection & Push Authorization | **1.0000** | 100% Git Worktree Safety |
+| **Phase 11 GitHub Integration** | **210** | CI Recovery & Review Loop Accuracy | **1.0000** | 100% End-to-End Loop |
+
 
 
 

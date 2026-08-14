@@ -76,7 +76,7 @@ def test_phase7_agentic_investigation_benchmark(tmp_path: Path) -> None:
     expected_root_causes = []
     expected_insufficient = []
 
-    agent_cases = [c for c in all_cases if c.id > 80]
+    agent_cases = [c for c in all_cases if 80 < c.id <= 110]
     for case in agent_cases:
         ans = pipeline.investigate(
             question=case.query,

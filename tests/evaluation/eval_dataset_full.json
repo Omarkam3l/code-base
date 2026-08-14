@@ -1746,5 +1746,190 @@
     "expected_entities": ["User"],
     "expected_files": ["models.py"],
     "difficulty": "medium"
+  },
+  {
+    "id": 191,
+    "category": "pr_opened_event",
+    "query": "Process webhook pr_opened event and initiate CodeGraph investigation",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 192,
+    "category": "pr_opened_event",
+    "query": "Formulate automated PR description for newly opened auth pull request",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 193,
+    "category": "pr_sync_event",
+    "query": "Process pr_synchronize event when new commit is pushed to feature branch",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["AuthenticationMiddleware"],
+    "expected_files": ["middleware.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 194,
+    "category": "pr_sync_event",
+    "query": "Re-run scope validation and AST checks on synchronized commit SHA",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["User"],
+    "expected_files": ["models.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 195,
+    "category": "ci_completed_success",
+    "query": "Verify green CI check run status for commit HEAD",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 196,
+    "category": "ci_completed_success",
+    "query": "Record successful pytest-ci completion in PR workflow trace",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["User"],
+    "expected_files": ["models.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 197,
+    "category": "ci_completed_failure",
+    "query": "Detect GitHub Actions CI failure and convert to Phase 9 FailureRecord",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "is_ci_failure": true,
+    "difficulty": "hard"
+  },
+  {
+    "id": 198,
+    "category": "ci_completed_failure",
+    "query": "Trigger automated iterative patch repair upon CI check run failure",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["AuthenticationMiddleware"],
+    "expected_files": ["middleware.py"],
+    "is_ci_failure": true,
+    "difficulty": "hard"
+  },
+  {
+    "id": 199,
+    "category": "review_comment_event",
+    "query": "Parse inline PR review comment on services.py line 42",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "is_review_comment": true,
+    "difficulty": "medium"
+  },
+  {
+    "id": 200,
+    "category": "review_comment_event",
+    "query": "Formulate targeted repair patch addressing reviewer feedback",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "is_review_comment": true,
+    "difficulty": "medium"
+  },
+  {
+    "id": 201,
+    "category": "event_normalization",
+    "query": "Normalize raw GitHub webhook JSON payload into unified NormalizedEvent",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 202,
+    "category": "event_normalization",
+    "query": "Extract repository, PR number, branch, and instruction metadata cleanly",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["User"],
+    "expected_files": ["models.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 203,
+    "category": "evidence_provenance",
+    "query": "Preserve evidence references [E1] and [E2] in markdown PR body",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 204,
+    "category": "evidence_provenance",
+    "query": "Ensure evidence graph lineage is attached to PR update proposal",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["AuthenticationMiddleware"],
+    "expected_files": ["middleware.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 205,
+    "category": "pr_update_sync",
+    "query": "Update existing PR #101 with newly generated repair commit SHA",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 206,
+    "category": "pr_update_sync",
+    "query": "Synchronize PR title and body description with verified test results",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["User"],
+    "expected_files": ["models.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 207,
+    "category": "safety_merge_prohibition",
+    "query": "Enforce strict safety rule prohibiting automatic PR merging",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "expected_files": [],
+    "difficulty": "hard"
+  },
+  {
+    "id": 208,
+    "category": "safety_merge_prohibition",
+    "query": "Block any API call attempting to merge pull request automatically",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "expected_files": [],
+    "difficulty": "hard"
+  },
+  {
+    "id": 209,
+    "category": "end_to_end_github_loop",
+    "query": "Execute end-to-end event flow: Event -> Normalizer -> Repair -> Git -> PR Update",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 210,
+    "category": "end_to_end_github_loop",
+    "query": "Complete full PR review comment reply loop with evidence-grounded commit",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "is_review_comment": true,
+    "difficulty": "hard"
   }
 ]
