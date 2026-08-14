@@ -1,3 +1,14 @@
+Metadata-Version: 2.4
+Name: codegraph-rag
+Version: 0.1.0
+Summary: CV-grade Graph RAG system for software repositories - Phase 1: Ingestion
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: tree-sitter>=0.22.0
+Requires-Dist: tree-sitter-python>=0.23.0
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0.0; extra == "dev"
+
 # CodeGraph RAG — Phase 1: Repository Ingestion
 
 **CodeGraph RAG** is a high-performance Graph RAG system for understanding, indexing, and querying software repositories.
