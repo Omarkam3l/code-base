@@ -247,7 +247,51 @@ Final Validated Repair Result & Observability Trace
 
 ---
 
-## Benchmark Metrics Summary (Phases 1–9)
+## Git & Pull Request Engineering Workflow (Phase 10)
+
+Phase 10 transforms a verified CodeGraph repair into a controlled Git engineering artifact.
+
+### Core Architecture & Workflow Flow
+
+```text
+Phase 9 Verified Repair Result
+       │
+       ▼
+GitRepositoryInspector & Status Check
+       │
+       ▼
+Git Worktree Isolation (User working tree untouched)
+       │
+       ▼
+BranchManager (Safe branch codegraph/<category>/<short-id> & collision handling)
+       │
+       ▼
+GitDiffInspector & SecretDetector (Local pattern scanning for API keys / tokens)
+       │
+       ▼
+CommitPlanner & CommitValidator (Conventional commit message & explicit file staging)
+       │
+       ▼
+Committer (Isolated worktree commit execution)
+       │
+       ▼
+PRGenerator (Provider-neutral PR proposal with evidence references)
+       │
+       ▼
+PushController (Disabled-by-default, explicit authorization required)
+```
+
+### Safety & Permission Controls
+
+1. **Working Tree Isolation**: Uses `git worktree` isolation to guarantee the user's working tree is untouched.
+2. **Local Secret Scanning**: Deterministically scans added lines in unified diffs for API keys (`AKIA`, `ghp_`, `nvapi-`), private keys, and tokens. BLOCKS COMMIT if secrets detected.
+3. **Explicit File Staging**: Stages only explicitly specified target files (`git add <file>`). Never runs `git add .` or `git add -A`.
+4. **Push Authorization**: Push operations are disabled by default (`push_authorized = False`). Requires explicit authorization. Rejects force push (`git push --force` or `git push -f`).
+5. **No Destructive Commands**: Rejects `git reset --hard`, `git clean`, `git checkout .`, `git rebase`, history rewriting, branch deletion, or remote modification.
+
+---
+
+## Benchmark Metrics Summary (Phases 1–10)
 
 | Benchmark Phase | Cases | Key Metric | Result | Target / Status |
 | :--- | :--- | :--- | :--- | :--- |
@@ -257,6 +301,8 @@ Final Validated Repair Result & Observability Trace
 | **Phase 6 Multi-Hop Reasoning** | 110 | Multi-Hop Traversal Accuracy | **1.0000** | 100% Path Accuracy |
 | **Phase 7 Agentic Investigation** | 110 | Investigation Correctness | **0.9545** | Sub-second P50 Latency |
 | **Phase 8 Code Change Planning** | 140 | Patch Scope & Rejection Accuracy | **1.0000** | 100% Safety & Isolation |
-| **Phase 9 Patch Repair** | **170** | Repair Recovery & Rejection Accuracy | **1.0000** | 100% Loop & Safety Control |
+| **Phase 9 Patch Repair** | 170 | Repair Recovery & Rejection Accuracy | **1.0000** | 100% Loop & Safety Control |
+| **Phase 10 Git & PR Workflow** | **190** | Secret Detection & Push Authorization | **1.0000** | 100% Git Worktree Safety |
+
 
 

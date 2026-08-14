@@ -1558,5 +1558,193 @@
     "expected_files": ["models.py"],
     "is_regression": true,
     "difficulty": "hard"
+  },
+  {
+    "id": 171,
+    "category": "clean_repository",
+    "query": "Process Git workflow for clean repository state",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 172,
+    "category": "clean_repository",
+    "query": "Generate commit proposal and PR for UserService auth fix",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 173,
+    "category": "dirty_repository",
+    "query": "Isolate worktree when user working tree contains unstaged modifications",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["AuthenticationMiddleware"],
+    "expected_files": ["middleware.py"],
+    "is_dirty": true,
+    "difficulty": "medium"
+  },
+  {
+    "id": 174,
+    "category": "dirty_repository",
+    "query": "Isolate worktree when untracked scratch files exist in repo",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["User"],
+    "expected_files": ["models.py"],
+    "is_dirty": true,
+    "difficulty": "medium"
+  },
+  {
+    "id": 175,
+    "category": "branch_creation",
+    "query": "Create deterministic feature branch codegraph/fix/userservice-auth",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 176,
+    "category": "branch_creation",
+    "query": "Formulate safe branch name for User model permission fix",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["User"],
+    "expected_files": ["models.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 177,
+    "category": "branch_collision",
+    "query": "Resolve branch collision when target branch codegraph/fix/userservice already exists",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 178,
+    "category": "branch_collision",
+    "query": "Append unique suffix when feature branch name collides with existing remote branch",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["AuthenticationMiddleware"],
+    "expected_files": ["middleware.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 179,
+    "category": "diff_scope",
+    "query": "Inspect diff scope to ensure only ChangePlan target files are included",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 180,
+    "category": "diff_scope",
+    "query": "Reject commit proposal if diff contains unexpected binary file modifications",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["User"],
+    "expected_files": ["models.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 181,
+    "category": "secret_detection",
+    "query": "Detect and block commit containing hardcoded AWS_SECRET_ACCESS_KEY",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "expected_files": ["services.py"],
+    "contains_secret": true,
+    "difficulty": "hard"
+  },
+  {
+    "id": 182,
+    "category": "secret_detection",
+    "query": "Detect and block commit introducing GitHub Personal Access Token ghp_abcdef",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "expected_files": ["middleware.py"],
+    "contains_secret": true,
+    "difficulty": "hard"
+  },
+  {
+    "id": 183,
+    "category": "commit_validation",
+    "query": "Validate conventional commit message subject and body structure",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 184,
+    "category": "commit_validation",
+    "query": "Enforce explicit file staging without git add .",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["User"],
+    "expected_files": ["models.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 185,
+    "category": "concurrent_change",
+    "query": "Detect concurrent HEAD commit modification during workflow execution",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "expected_files": [],
+    "is_concurrent": true,
+    "difficulty": "hard"
+  },
+  {
+    "id": 186,
+    "category": "concurrent_change",
+    "query": "Abort commit if target repository active branch changes mid-flight",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "expected_files": [],
+    "is_concurrent": true,
+    "difficulty": "hard"
+  },
+  {
+    "id": 187,
+    "category": "push_authorization",
+    "query": "Enforce push authorization requirement and reject unauthorized push",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "requires_push_auth": true,
+    "difficulty": "medium"
+  },
+  {
+    "id": 188,
+    "category": "push_authorization",
+    "query": "Block attempt to execute git push --force on remote repository",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["AuthenticationMiddleware"],
+    "expected_files": ["middleware.py"],
+    "requires_push_auth": true,
+    "difficulty": "hard"
+  },
+  {
+    "id": 189,
+    "category": "PR_generation",
+    "query": "Generate Pull Request proposal preserving investigation and test evidence",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 190,
+    "category": "PR_generation",
+    "query": "Construct complete PR description with root cause analysis and risk assessment",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["User"],
+    "expected_files": ["models.py"],
+    "difficulty": "medium"
   }
 ]
