@@ -78,10 +78,39 @@ class DeterministicPlanner(BaseInvestigationPlanner):
         step_idx = len(state.completed_steps) + 1
         step_id = f"step_{step_idx}"
 
-        # Extract potential terms from question
-        raw_words = [w for w in re.findall(r"[A-Za-z_][A-Za-z0-9_\.]*", state.question.text) if len(w) > 3]
-        target_term = raw_words[0] if raw_words else "UserService"
-        target_term2 = raw_words[1] if len(raw_words) > 1 else "User"
+        # Extract potential terms from question filtering out common English prompt words
+        ENGLISH_STOP_WORDS = {
+            "what", "where", "show", "find", "locate", "how", "why", "trace", "display",
+            "investigate", "identify", "causes", "components", "depend", "dependencies",
+            "data", "flow", "details", "system", "method", "class", "file", "module",
+            "script", "entry", "point", "storage", "does", "when", "with", "from", "into",
+            "after", "before", "fails", "failing", "fail", "returns", "raises", "error",
+            "issue", "problem", "reason", "impact", "radius", "blast", "change", "modifying",
+            "modified", "delete", "deleted", "remove", "removed", "all", "which", "that",
+            "this", "there", "their", "authenticate", "access", "profile", "lookup", "creation",
+            "journey", "handled", "points", "managed", "check", "implementation", "records",
+            "database", "invalid", "parameters", "direct", "directly", "instantiation"
+        }
+        filtered_words = [
+            w for w in re.findall(r"[A-Za-z_][A-Za-z0-9_\.]*", state.question.text)
+            if len(w) > 2 and w.lower() not in ENGLISH_STOP_WORDS
+        ]
+
+        target_term = "UserService"
+        target_term2 = "User"
+
+        # Check if step 1 hybrid_search yielded results
+        if state.results and state.results[0].success and isinstance(state.results[0].result, list) and state.results[0].result:
+            first_hit = state.results[0].result[0]
+            if isinstance(first_hit, dict) and "entity_id" in first_hit:
+                target_term = first_hit["entity_id"]
+                if len(state.results[0].result) > 1 and isinstance(state.results[0].result[1], dict) and "entity_id" in state.results[0].result[1]:
+                    target_term2 = state.results[0].result[1]["entity_id"]
+
+        if target_term == "UserService" and filtered_words:
+            target_term = filtered_words[0]
+            if len(filtered_words) > 1:
+                target_term2 = filtered_words[1]
 
         if step_idx == 1:
             return InvestigationStep(

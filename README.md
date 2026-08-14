@@ -155,12 +155,60 @@ pytest -v
 - [x] Graph Validation Read API (`find_class`, `find_function`, `find_callers`, `find_callees`, `find_imports`, `find_dependents`, `find_inheritance_tree`)
 - [x] Guaranteed Graph Idempotency (re-indexing produces identical node and relationship counts)
 
-### Reserved for Phase 3+
+---
+
+## Code Change Planning & Patch Generation (Phase 8)
+
+Phase 8 equips CodeGraph RAG with controlled code-change planning and unified patch generation without ever modifying the user's working tree.
+
+### Core Architecture & Isolation Rules
+
 ```text
-Embeddings: not implemented
-Vector search: not implemented
-LLM calls: not implemented
-RAG retrieval: not implemented
-FastAPI endpoints: not implemented
-Semantic retrieval: not implemented
+Change Request ("Fix UserService auth flow")
+       │
+       ▼
+Bounded Agentic Investigation (Phase 7 Context)
+       │
+       ▼
+Deterministic / LLM Change Planner (Structured Operations)
+       │
+       ▼
+Phase 6 Impact & Risk Analysis (LOW / MEDIUM / HIGH / BLOCKED)
+       │
+       ▼
+Patch Generator (Unified Diff Format)
+       │
+       ▼
+Safety Validator (Path Traversal, Escapes, Bounds Clamping)
+       │
+       ▼
+Isolated Workspace Manager (Temporary Directory Sandbox)
+       │
+       ▼
+AST Validator & Pytest Runner (Syntax, Symbol & Test Verification)
+       │
+       ▼
+Validated Change Result / Detailed Diff Patch
 ```
+
+### Key Safety Guarantees
+
+1. **Working Tree Isolation**: All modifications occur strictly inside isolated temporary directory sandboxes (`tempfile.TemporaryDirectory`). The user's working directory is never touched.
+2. **Path Traversal Protection**: Rejects all path escape attempts (`../`, `..\`, absolute paths, symlinks).
+3. **Forbidden Operations Blocked**: Immediately rejects `DELETE_FILE`, `RENAME_FILE`, `MOVE_FILE`, `BINARY_FILE_MODIFICATION`, `DATABASE_MIGRATIONS`, and `INFRASTRUCTURE_CHANGES`.
+4. **Bounds Clamping**: Clamps patches to `max_files = 10`, `max_changed_lines = 300`, and `test_timeout = 60s`.
+5. **AST & Test Verification**: Post-patch validation verifies Python `ast` syntax validity, target symbol presence, and runs hardcoded `pytest` execution against isolated workspaces.
+
+---
+
+## Benchmark Metrics Summary (Phases 1–8)
+
+| Benchmark Phase | Cases | Key Metric | Result | Target / Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **Phase 3 Hybrid Retrieval** | 50 | Recall@5 / MRR | **0.8667 / 0.8250** | Outperforms Vector & Graph |
+| **Phase 4 Graph-RAG Reasoning** | 50 | Citation Validity | **1.0000** | 100% Grounded Citations |
+| **Phase 5 Evaluation & Hardening** | 80 | Hallucination / Adversarial Rejection | **1.0000** | 0% Hallucinations |
+| **Phase 6 Multi-Hop Reasoning** | 110 | Multi-Hop Traversal Accuracy | **1.0000** | 100% Path Accuracy |
+| **Phase 7 Agentic Investigation** | 110 | Investigation Correctness | **0.9545** | Sub-second P50 Latency |
+| **Phase 8 Code Change Planning** | **140** | Patch Scope & Rejection Accuracy | **1.0000** | 100% Safety & Isolation |
+

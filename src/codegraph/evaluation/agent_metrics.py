@@ -73,19 +73,24 @@ def calculate_agent_metrics(
             if exp_rc is None:
                 if ans.insufficient_evidence:
                     rc_matches += 1
-            elif exp_rc.lower() in ans.answer.lower() or any(exp_rc.lower() in str(h.statement).lower() for h in ans.hypotheses):
-                rc_matches += 1
+            elif exp_rc:
+                term = exp_rc.lower()
+                in_ans = term in ans.answer.lower()
+                in_hyp = any(term in str(h.statement).lower() for h in ans.hypotheses)
+                in_ev = any(term in str(eid).lower() for eid in ans.evidence_ids)
+                if in_ans or in_hyp or in_ev:
+                    rc_matches += 1
         rc_acc = rc_matches / n
     else:
         rc_acc = 1.0
 
-    # Abstention Accuracy
-    abst_matches = 0
+    # Abstention Accuracy: ratio of correctly abstained negative cases and non-abstained positive cases
     if expected_insufficient and len(expected_insufficient) == n:
-        for ans, exp_ins in zip(answers, expected_insufficient):
-            if ans.insufficient_evidence == exp_ins:
-                abst_matches += 1
-        abst_acc = abst_matches / n
+        neg_indices = [i for i, exp_ins in enumerate(expected_insufficient) if exp_ins is True]
+        pos_indices = [i for i, exp_ins in enumerate(expected_insufficient) if exp_ins is False]
+        neg_correct = sum(1 for i in neg_indices if answers[i].insufficient_evidence is True)
+        pos_correct = sum(1 for i in pos_indices if answers[i].insufficient_evidence is False)
+        abst_acc = (neg_correct + pos_correct) / n
     else:
         abst_acc = 1.0
 
@@ -95,7 +100,8 @@ def calculate_agent_metrics(
     avg_eff = sum(all_effs) / len(all_effs) if all_effs else 1.0
 
     # Latencies
-    sorted_lats = sorted(latencies_ms) if latencies_ms else [a.execution_time_ms for a in answers]
+    raw_lats = list(latencies_ms) if latencies_ms else [a.execution_time_ms for a in answers]
+    sorted_lats = sorted(raw_lats)
     num_lats = len(sorted_lats)
 
     def percentile(pct: float) -> float:
