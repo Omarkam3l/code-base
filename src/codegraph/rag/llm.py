@@ -29,13 +29,25 @@ class FakeLLMProvider(BaseLLMProvider):
 
         # Check if prompt requests query analysis JSON
         if "JSON" in prompt or "intent_type" in prompt:
-            # Simple mock intent
+            query_match = re.search(r'User Query:\s*"([^"]+)"', prompt)
+            query = query_match.group(1) if query_match else prompt
+            raw_entities = re.findall(r"[A-Za-z_][A-Za-z0-9_\.]*", query)
+            stop_words = {
+                "who", "what", "where", "how", "why", "does", "is", "a", "an", "the", "in", "from",
+                "and", "or", "to", "for", "with", "call", "calls", "calling", "inherit", "inherits",
+                "import", "imports", "show", "find", "locate", "defined", "definition", "implemented",
+                "function", "class", "method", "module", "file", "code"
+            }
+            entities = [e for e in raw_entities if e.lower() not in stop_words and len(e) >= 2]
+            if ("create" in query.lower() or "users" in query.lower()) and "create_user" not in entities:
+                entities.append("create_user")
+
             return json.dumps(
                 {
                     "intent_type": "symbol_lookup",
-                    "entities": ["UserService", "create_user"],
-                    "concepts": ["user creation"],
-                    "requested_relationships": ["CALLS"],
+                    "entities": entities if entities else ["UserService"],
+                    "concepts": [],
+                    "requested_relationships": [],
                 }
             )
 

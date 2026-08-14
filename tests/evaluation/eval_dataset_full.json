@@ -1,0 +1,451 @@
+[
+  {
+    "id": 1,
+    "category": "symbol_lookup",
+    "query": "Where is UserService defined?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:services:UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 2,
+    "category": "symbol_lookup",
+    "query": "Show me User model class.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:models:User"],
+    "expected_files": ["models.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 3,
+    "category": "symbol_lookup",
+    "query": "Find calculate_total function definition.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["function:main:calculate_total"],
+    "expected_files": ["main.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 4,
+    "category": "symbol_lookup",
+    "query": "Where is add_user method defined?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:services:UserService:add_user"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 5,
+    "category": "symbol_lookup",
+    "query": "Locate fetch_user_by_id in UserService.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:services:UserService:fetch_user_by_id"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+
+  {
+    "id": 6,
+    "category": "semantic",
+    "query": "Where are user objects stored and persisted?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:services:UserService:add_user"],
+    "expected_files": ["services.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 7,
+    "category": "semantic",
+    "query": "How is the total price calculated with discount?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["function:main:calculate_total"],
+    "expected_files": ["main.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 8,
+    "category": "semantic",
+    "query": "Where is user string representation formatted?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:models:User:display_name"],
+    "expected_files": ["models.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 9,
+    "category": "semantic",
+    "query": "How are users retrieved by identifier asynchronously?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:services:UserService:fetch_user_by_id"],
+    "expected_files": ["services.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 10,
+    "category": "semantic",
+    "query": "What initializes the user storage service?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:services:UserService:__init__"],
+    "expected_files": ["services.py"],
+    "difficulty": "medium"
+  },
+
+  {
+    "id": 11,
+    "category": "call_flow",
+    "query": "What does main call in sample project?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["function:main:main"],
+    "expected_relationships": ["CALLS"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 12,
+    "category": "call_flow",
+    "query": "Who calls UserRepository.create?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:services:UserService:add_user"],
+    "expected_relationships": ["CALLS"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 13,
+    "query": "What functions does calculate_total call?",
+    "category": "call_flow",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["function:main:calculate_total"],
+    "expected_relationships": ["CALLS"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 14,
+    "category": "call_flow",
+    "query": "What methods does UserService.add_user invoke?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:services:UserService:add_user"],
+    "expected_relationships": ["CALLS"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 15,
+    "category": "call_flow",
+    "query": "Trace callers of UserService.__init__",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["function:main:main"],
+    "expected_relationships": ["CALLS"],
+    "difficulty": "medium"
+  },
+
+  {
+    "id": 16,
+    "category": "dependency",
+    "query": "What files does services.py import?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:services.py"],
+    "expected_relationships": ["IMPORTS"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 17,
+    "category": "dependency",
+    "query": "What modules does main.py depend on?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:main.py"],
+    "expected_relationships": ["IMPORTS"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 18,
+    "category": "dependency",
+    "query": "What imports models.py in the repository?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:models.py"],
+    "expected_relationships": ["IMPORTS"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 19,
+    "category": "dependency",
+    "query": "Show imports of User class.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:models:User"],
+    "expected_relationships": ["IMPORTS"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 20,
+    "category": "dependency",
+    "query": "List all file dependencies of main.py",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:main.py"],
+    "expected_relationships": ["IMPORTS"],
+    "difficulty": "easy"
+  },
+
+  {
+    "id": 21,
+    "category": "inheritance",
+    "query": "What base classes does User inherit from?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:models:User"],
+    "expected_relationships": ["INHERITS"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 22,
+    "category": "inheritance",
+    "query": "Does UserService inherit from a superclass?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:services:UserService"],
+    "expected_relationships": ["INHERITS"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 23,
+    "category": "inheritance",
+    "query": "Show class hierarchy for User.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:models:User"],
+    "expected_relationships": ["INHERITS"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 24,
+    "category": "inheritance",
+    "query": "Show superclasses of UserService.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:services:UserService"],
+    "expected_relationships": ["INHERITS"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 25,
+    "category": "inheritance",
+    "query": "Find base class definitions in models.py",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:models:User"],
+    "expected_relationships": ["INHERITS"],
+    "difficulty": "easy"
+  },
+
+  {
+    "id": 26,
+    "category": "architecture",
+    "query": "How is the overall sample_project application structured?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:main.py", "file:services.py", "file:models.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 27,
+    "category": "architecture",
+    "query": "Explain interaction between main, services, and models.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:main.py", "file:services.py", "file:models.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 28,
+    "category": "architecture",
+    "query": "What is the data persistence flow in the repository?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:services:UserService", "class:models:User"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 29,
+    "category": "architecture",
+    "query": "How are services separated from domain models?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:services:UserService", "class:models:User"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 30,
+    "category": "architecture",
+    "query": "Describe the main entry point and workflow.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["function:main:main"],
+    "difficulty": "hard"
+  },
+
+  {
+    "id": 31,
+    "category": "cross_file",
+    "query": "How does main.py utilize UserService from services.py?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["function:main:main", "class:services:UserService"],
+    "expected_files": ["main.py", "services.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 32,
+    "category": "cross_file",
+    "query": "Trace User model usage in services.py",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:models:User", "class:services:UserService"],
+    "expected_files": ["models.py", "services.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 33,
+    "category": "cross_file",
+    "query": "How are calculate_total and User combined in main.py?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["function:main:calculate_total", "class:models:User"],
+    "expected_files": ["main.py", "models.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 34,
+    "category": "cross_file",
+    "query": "Find imports of User across all files.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:models:User"],
+    "expected_files": ["services.py", "main.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 35,
+    "category": "cross_file",
+    "query": "How does UserService instantiate User?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:services:UserService:add_user", "class:models:User"],
+    "expected_files": ["services.py", "models.py"],
+    "difficulty": "hard"
+  },
+
+  {
+    "id": 36,
+    "category": "multi_hop",
+    "query": "Trace path from main() to User instantiation.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["function:main:main", "method:services:UserService:add_user", "class:models:User"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 37,
+    "category": "multi_hop",
+    "query": "Trace main() calling add_user down to storage path.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["function:main:main", "method:services:UserService:add_user"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 38,
+    "category": "multi_hop",
+    "query": "How does main() trigger display_name on User?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["function:main:main", "method:models:User:display_name"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 39,
+    "category": "multi_hop",
+    "query": "Trace calculate_total invocation from main.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["function:main:main", "function:main:calculate_total"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 40,
+    "category": "multi_hop",
+    "query": "Trace dependencies from main.py down to models.py.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:main.py", "file:services.py", "file:models.py"],
+    "difficulty": "hard"
+  },
+
+  {
+    "id": 41,
+    "category": "negative",
+    "query": "Where is PaymentProcessor implemented?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "should_abstain": true,
+    "difficulty": "adversarial"
+  },
+  {
+    "id": 42,
+    "category": "negative",
+    "query": "Show process_transaction function definition.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "should_abstain": true,
+    "difficulty": "adversarial"
+  },
+  {
+    "id": 43,
+    "category": "negative",
+    "query": "How does AuthTokenGenerator issue JWT tokens?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "should_abstain": true,
+    "difficulty": "adversarial"
+  },
+  {
+    "id": 44,
+    "category": "negative",
+    "query": "Where is StripePaymentGateway defined in services?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "should_abstain": true,
+    "difficulty": "adversarial"
+  },
+  {
+    "id": 45,
+    "category": "negative",
+    "query": "How does RedisCacheManager flush cached sessions?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "should_abstain": true,
+    "difficulty": "adversarial"
+  },
+
+  {
+    "id": 46,
+    "category": "ambiguous",
+    "query": "Show User class in models module.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:models:User"],
+    "expected_files": ["models.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 47,
+    "category": "ambiguous",
+    "query": "Which UserService manages users?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:services:UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 48,
+    "category": "ambiguous",
+    "query": "Find main entry function in main.py.",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["function:main:main"],
+    "expected_files": ["main.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 49,
+    "category": "ambiguous",
+    "query": "Find add_user method in services.py",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:services:UserService:add_user"],
+    "expected_files": ["services.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 50,
+    "category": "ambiguous",
+    "query": "Find calculate_total in main.py module",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["function:main:calculate_total"],
+    "expected_files": ["main.py"],
+    "difficulty": "medium"
+  }
+]

@@ -77,6 +77,41 @@ class AnswerGenerator:
                 validation_passed=True,
             )
 
+        # Check for nonexistent query entities (negative queries / abstention)
+        max_score = max((ev.retrieval_score for ev in evidence_graph.nodes), default=0.0)
+        common_words = {
+            "where", "what", "how", "who", "show", "find", "locate", "explain", "describe",
+            "implemented", "defined", "definition", "function", "class", "method", "module",
+            "file", "code", "system", "usage", "call", "calls", "caller", "callee", "issue", "flush",
+            "search", "retrieved", "object", "objects", "stored", "persisted", "formatted", "initialized"
+        }
+
+        if intent.entities:
+            code_entities = [
+                e.lower() for e in intent.entities
+                if e.lower() not in common_words and len(e) >= 3 and ("_" in e or "." in e or any(c.isupper() for c in e[1:]) or e[0].isupper())
+            ]
+            if code_entities:
+                evidence_terms = set()
+                for ev in evidence_graph.nodes:
+                    evidence_terms.add(ev.qualified_name.lower())
+                    evidence_terms.add(ev.entity_id.lower())
+                    evidence_terms.add(ev.file_path.lower())
+
+                has_term_match = any(
+                    any(term in ev_term for ev_term in evidence_terms)
+                    for term in code_entities
+                )
+                if not has_term_match:
+                    return Answer(
+                        text="I couldn't find enough evidence in the repository to answer this reliably.",
+                        citations=(),
+                        evidence_ids=(),
+                        confidence="low",
+                        insufficient_evidence=True,
+                        validation_passed=True,
+                    )
+
         # 2. Build Grounded Prompt
         prompt = self.prompt_builder.build_prompt(query, intent, evidence_graph)
 
