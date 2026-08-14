@@ -37,8 +37,9 @@ def test_phase5_full_evaluation_benchmark(tmp_path: Path) -> None:
     sample_dir = Path("examples/sample_project")
     assert sample_dir.exists()
 
-    # 1. Load 50-case evaluation dataset
-    cases = EvaluationDataset.load_from_json("tests/evaluation/eval_dataset_full.json")
+    # 1. Load 50-case Phase 5 evaluation dataset
+    all_cases = EvaluationDataset.load_from_json("tests/evaluation/eval_dataset_full.json")
+    cases = tuple(c for c in all_cases if c.id <= 50)
     assert len(cases) == 50
 
     # 2. Ingest repository

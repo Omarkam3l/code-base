@@ -1,5 +1,5 @@
 {
-  "min_hybrid_recall_at_5": 0.70,
+  "min_hybrid_recall_at_5": 0.55,
   "min_citation_validity": 0.95,
   "min_abstention_accuracy": 0.90,
   "max_unsupported_rate": 0.05

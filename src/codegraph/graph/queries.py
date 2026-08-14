@@ -93,11 +93,11 @@ RETURN c
 QUERY_FIND_FUNCTION = """
 MATCH (f:Function)
 WHERE f.qualified_name = $qualified_name
-RETURN f
+RETURN f as f
 UNION
 MATCH (m:Method)
 WHERE m.qualified_name = $qualified_name
-RETURN m
+RETURN m as f
 """
 
 QUERY_FIND_CALLERS = """

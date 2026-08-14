@@ -9,7 +9,7 @@ from codegraph.evaluation.models import BenchmarkReport, CategoryMetrics, Latenc
 def test_dataset_loader() -> None:
     cases = EvaluationDataset.load_from_json("tests/evaluation/eval_dataset_full.json")
 
-    assert len(cases) == 50
+    assert len(cases) >= 50
     cat_names = {c.category for c in cases}
     assert "symbol_lookup" in cat_names
     assert "negative" in cat_names
