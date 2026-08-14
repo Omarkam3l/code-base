@@ -6469,5 +6469,750 @@
     "expected_entities": [],
     "expected_files": [],
     "is_prompt_injection": true
+  },
+  {
+    "id": 501,
+    "category": "platform_api",
+    "query": "Phase 13 Platform evaluation query for platform_api case #501",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 502,
+    "category": "platform_api",
+    "query": "Phase 13 Platform evaluation query for platform_api case #502",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 503,
+    "category": "platform_api",
+    "query": "Phase 13 Platform evaluation query for platform_api case #503",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 504,
+    "category": "platform_api",
+    "query": "Phase 13 Platform evaluation query for platform_api case #504",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 505,
+    "category": "platform_api",
+    "query": "Phase 13 Platform evaluation query for platform_api case #505",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 506,
+    "category": "cli",
+    "query": "Phase 13 Platform evaluation query for cli case #506",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 507,
+    "category": "cli",
+    "query": "Phase 13 Platform evaluation query for cli case #507",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 508,
+    "category": "cli",
+    "query": "Phase 13 Platform evaluation query for cli case #508",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 509,
+    "category": "cli",
+    "query": "Phase 13 Platform evaluation query for cli case #509",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 510,
+    "category": "cli",
+    "query": "Phase 13 Platform evaluation query for cli case #510",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 511,
+    "category": "mcp",
+    "query": "Phase 13 Platform evaluation query for mcp case #511",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 512,
+    "category": "mcp",
+    "query": "Phase 13 Platform evaluation query for mcp case #512",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 513,
+    "category": "mcp",
+    "query": "Phase 13 Platform evaluation query for mcp case #513",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 514,
+    "category": "mcp",
+    "query": "Phase 13 Platform evaluation query for mcp case #514",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 515,
+    "category": "mcp",
+    "query": "Phase 13 Platform evaluation query for mcp case #515",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 516,
+    "category": "repository_registration",
+    "query": "Phase 13 Platform evaluation query for repository_registration case #516",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 517,
+    "category": "repository_registration",
+    "query": "Phase 13 Platform evaluation query for repository_registration case #517",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 518,
+    "category": "repository_registration",
+    "query": "Phase 13 Platform evaluation query for repository_registration case #518",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 519,
+    "category": "repository_registration",
+    "query": "Phase 13 Platform evaluation query for repository_registration case #519",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 520,
+    "category": "repository_registration",
+    "query": "Phase 13 Platform evaluation query for repository_registration case #520",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 521,
+    "category": "incremental_indexing",
+    "query": "Phase 13 Platform evaluation query for incremental_indexing case #521",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 522,
+    "category": "incremental_indexing",
+    "query": "Phase 13 Platform evaluation query for incremental_indexing case #522",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 523,
+    "category": "incremental_indexing",
+    "query": "Phase 13 Platform evaluation query for incremental_indexing case #523",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 524,
+    "category": "incremental_indexing",
+    "query": "Phase 13 Platform evaluation query for incremental_indexing case #524",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 525,
+    "category": "incremental_indexing",
+    "query": "Phase 13 Platform evaluation query for incremental_indexing case #525",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 526,
+    "category": "repository_isolation",
+    "query": "Phase 13 Platform evaluation query for repository_isolation case #526",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 527,
+    "category": "repository_isolation",
+    "query": "Phase 13 Platform evaluation query for repository_isolation case #527",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 528,
+    "category": "repository_isolation",
+    "query": "Phase 13 Platform evaluation query for repository_isolation case #528",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 529,
+    "category": "repository_isolation",
+    "query": "Phase 13 Platform evaluation query for repository_isolation case #529",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 530,
+    "category": "repository_isolation",
+    "query": "Phase 13 Platform evaluation query for repository_isolation case #530",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 531,
+    "category": "persistent_investigation",
+    "query": "Phase 13 Platform evaluation query for persistent_investigation case #531",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 532,
+    "category": "persistent_investigation",
+    "query": "Phase 13 Platform evaluation query for persistent_investigation case #532",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 533,
+    "category": "persistent_investigation",
+    "query": "Phase 13 Platform evaluation query for persistent_investigation case #533",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 534,
+    "category": "persistent_investigation",
+    "query": "Phase 13 Platform evaluation query for persistent_investigation case #534",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 535,
+    "category": "persistent_investigation",
+    "query": "Phase 13 Platform evaluation query for persistent_investigation case #535",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 536,
+    "category": "trace_reconstruction",
+    "query": "Phase 13 Platform evaluation query for trace_reconstruction case #536",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 537,
+    "category": "trace_reconstruction",
+    "query": "Phase 13 Platform evaluation query for trace_reconstruction case #537",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 538,
+    "category": "trace_reconstruction",
+    "query": "Phase 13 Platform evaluation query for trace_reconstruction case #538",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 539,
+    "category": "trace_reconstruction",
+    "query": "Phase 13 Platform evaluation query for trace_reconstruction case #539",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 540,
+    "category": "trace_reconstruction",
+    "query": "Phase 13 Platform evaluation query for trace_reconstruction case #540",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 541,
+    "category": "approval_workflow",
+    "query": "Phase 13 Platform evaluation query for approval_workflow case #541",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 542,
+    "category": "approval_workflow",
+    "query": "Phase 13 Platform evaluation query for approval_workflow case #542",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 543,
+    "category": "approval_workflow",
+    "query": "Phase 13 Platform evaluation query for approval_workflow case #543",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 544,
+    "category": "approval_workflow",
+    "query": "Phase 13 Platform evaluation query for approval_workflow case #544",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 545,
+    "category": "approval_workflow",
+    "query": "Phase 13 Platform evaluation query for approval_workflow case #545",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 546,
+    "category": "api_failure",
+    "query": "Phase 13 Platform evaluation query for api_failure case #546",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 547,
+    "category": "api_failure",
+    "query": "Phase 13 Platform evaluation query for api_failure case #547",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 548,
+    "category": "api_failure",
+    "query": "Phase 13 Platform evaluation query for api_failure case #548",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 549,
+    "category": "api_failure",
+    "query": "Phase 13 Platform evaluation query for api_failure case #549",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 550,
+    "category": "api_failure",
+    "query": "Phase 13 Platform evaluation query for api_failure case #550",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 551,
+    "category": "mcp_security",
+    "query": "Phase 13 Platform evaluation query for mcp_security case #551",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "is_unsafe": true
+  },
+  {
+    "id": 552,
+    "category": "mcp_security",
+    "query": "Phase 13 Platform evaluation query for mcp_security case #552",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "is_unsafe": true
+  },
+  {
+    "id": 553,
+    "category": "mcp_security",
+    "query": "Phase 13 Platform evaluation query for mcp_security case #553",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "is_unsafe": true
+  },
+  {
+    "id": 554,
+    "category": "mcp_security",
+    "query": "Phase 13 Platform evaluation query for mcp_security case #554",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "is_unsafe": true
+  },
+  {
+    "id": 555,
+    "category": "mcp_security",
+    "query": "Phase 13 Platform evaluation query for mcp_security case #555",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "is_unsafe": true
+  },
+  {
+    "id": 556,
+    "category": "secret_leakage",
+    "query": "Phase 13 Platform evaluation query for secret_leakage case #556",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [
+      "services.py"
+    ],
+    "contains_secret": true
+  },
+  {
+    "id": 557,
+    "category": "secret_leakage",
+    "query": "Phase 13 Platform evaluation query for secret_leakage case #557",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [
+      "services.py"
+    ],
+    "contains_secret": true
+  },
+  {
+    "id": 558,
+    "category": "secret_leakage",
+    "query": "Phase 13 Platform evaluation query for secret_leakage case #558",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [
+      "services.py"
+    ],
+    "contains_secret": true
+  },
+  {
+    "id": 559,
+    "category": "secret_leakage",
+    "query": "Phase 13 Platform evaluation query for secret_leakage case #559",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [
+      "services.py"
+    ],
+    "contains_secret": true
+  },
+  {
+    "id": 560,
+    "category": "secret_leakage",
+    "query": "Phase 13 Platform evaluation query for secret_leakage case #560",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [
+      "services.py"
+    ],
+    "contains_secret": true
   }
 ]

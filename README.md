@@ -332,7 +332,34 @@ Phase 11 connects CodeGraph RAG to GitHub events, CI check runs, and pull reques
 
 ---
 
-## Benchmark Metrics Summary (Phases 1–11)
+---
+
+## CodeGraph Developer Platform (Phase 13)
+
+Phase 13 turns CodeGraph RAG into a developer platform featuring a Repository Manager (with incremental indexing), Developer CLI, FastAPI REST API, MCP Server, Persistent Investigation History, and Human Approval Workflows.
+
+### Platform Architecture
+
+```text
+               Developer CLI / FastAPI REST API / MCP Server
+                                    │
+                                    ▼
+                          PlatformService
+                                    │
+        ┌───────────────────────────┼───────────────────────────┐
+        ↓                           ↓                           ↓
+RepositoryManager         InvestigationManager        ApprovalWorkflowEngine
+(Incremental Indexing)    (Persistent History)       (Human Approval Gates)
+        │                           │                           │
+        └───────────────────────────┼───────────────────────────┘
+                                    ↓
+                       Existing CodeGraph Engine
+                      (Phases 1–12 Hardened Core)
+```
+
+---
+
+## Benchmark Metrics Summary (Phases 1–13)
 
 | Benchmark Phase | Cases | Key Metric | Result | Target / Status |
 | :--- | :--- | :--- | :--- | :--- |
@@ -344,7 +371,10 @@ Phase 11 connects CodeGraph RAG to GitHub events, CI check runs, and pull reques
 | **Phase 8 Code Change Planning** | 140 | Patch Scope & Rejection Accuracy | **1.0000** | 100% Safety & Isolation |
 | **Phase 9 Patch Repair** | 170 | Repair Recovery & Rejection Accuracy | **1.0000** | 100% Loop & Safety Control |
 | **Phase 10 Git & PR Workflow** | 190 | Secret Detection & Push Authorization | **1.0000** | 100% Git Worktree Safety |
-| **Phase 11 GitHub Integration** | **210** | CI Recovery & Review Loop Accuracy | **1.0000** | 100% End-to-End Loop |
+| **Phase 11 GitHub Integration** | 210 | CI Recovery & Review Loop Accuracy | **1.0000** | 100% End-to-End Loop |
+| **Phase 12 Observability & Hardening** | 500 | 95% Confidence Interval / Redaction | **0.9700 [0.95, 0.98]** | Quality Gate PASSED |
+| **Phase 13 Developer Platform** | **560** | Platform Safety & Approval Enforcement | **1.0000** | 100% Platform Safety |
+
 
 
 
