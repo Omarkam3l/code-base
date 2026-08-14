@@ -46,6 +46,10 @@ class GraphRetriever:
         if not query.strip():
             return []
 
+        if repository_id and not repository_id.startswith("repository:"):
+            from codegraph.graph.models import make_repository_id
+            repository_id = make_repository_id(repository_id)
+
         tokens = self._extract_tokens(query)
         if not tokens:
             return []

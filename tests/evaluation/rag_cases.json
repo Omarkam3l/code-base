@@ -1,0 +1,199 @@
+[
+  {
+    "id": 1,
+    "query": "How does UserService create users?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "method:services:UserService:add_user"
+    ],
+    "required_relationships": [
+      "CALLS"
+    ],
+    "expected_citations": [
+      "E1"
+    ]
+  },
+  {
+    "id": 2,
+    "query": "What fields does User model contain and how is display_name implemented?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "class:models:User",
+      "method:models:User:display_name"
+    ],
+    "required_relationships": [
+      "DEFINES"
+    ],
+    "expected_citations": [
+      "E1"
+    ]
+  },
+  {
+    "id": 3,
+    "query": "What does calculate_total function compute?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "function:main:calculate_total"
+    ],
+    "required_relationships": [],
+    "expected_citations": [
+      "E1"
+    ]
+  },
+  {
+    "id": 4,
+    "query": "How does fetch_user_by_id search for users?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "method:services:UserService:fetch_user_by_id"
+    ],
+    "required_relationships": [],
+    "expected_citations": [
+      "E1"
+    ]
+  },
+  {
+    "id": 5,
+    "query": "What modules does main.py import?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "file:main.py"
+    ],
+    "required_relationships": [
+      "IMPORTS"
+    ],
+    "expected_citations": [
+      "E1"
+    ]
+  },
+  {
+    "id": 6,
+    "query": "Where is UserService defined?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "class:services:UserService"
+    ],
+    "required_relationships": [
+      "DEFINES"
+    ],
+    "expected_citations": [
+      "E1"
+    ]
+  },
+  {
+    "id": 7,
+    "query": "What calls UserRepository.create in the repository?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "method:services:UserService:add_user"
+    ],
+    "required_relationships": [
+      "CALLS"
+    ],
+    "expected_citations": [
+      "E1"
+    ]
+  },
+  {
+    "id": 8,
+    "query": "What does main entry point do?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "function:main:main"
+    ],
+    "required_relationships": [
+      "CALLS"
+    ],
+    "expected_citations": [
+      "E1"
+    ]
+  },
+  {
+    "id": 9,
+    "query": "What is the storage_path default in UserService?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "method:services:UserService:__init__"
+    ],
+    "required_relationships": [],
+    "expected_citations": [
+      "E1"
+    ]
+  },
+  {
+    "id": 10,
+    "query": "What parameters does calculate_total accept?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "function:main:calculate_total"
+    ],
+    "required_relationships": [],
+    "expected_citations": [
+      "E1"
+    ]
+  },
+  {
+    "id": 11,
+    "query": "Does User model have an email field?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "class:models:User"
+    ],
+    "required_relationships": [],
+    "expected_citations": [
+      "E1"
+    ]
+  },
+  {
+    "id": 12,
+    "query": "What does services.py depend on?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "file:services.py"
+    ],
+    "required_relationships": [
+      "IMPORTS"
+    ],
+    "expected_citations": [
+      "E1"
+    ]
+  },
+  {
+    "id": 13,
+    "query": "How is User formatted in display_name?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "method:models:User:display_name"
+    ],
+    "required_relationships": [],
+    "expected_citations": [
+      "E1"
+    ]
+  },
+  {
+    "id": 14,
+    "query": "What imports models.py in sample_project?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "file:models.py"
+    ],
+    "required_relationships": [
+      "IMPORTS"
+    ],
+    "expected_citations": [
+      "E1"
+    ]
+  },
+  {
+    "id": 15,
+    "query": "How does UserService store new users?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [
+      "method:services:UserService:add_user"
+    ],
+    "required_relationships": [],
+    "expected_citations": [
+      "E1"
+    ]
+  }
+]

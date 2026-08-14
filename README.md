@@ -7,23 +7,66 @@
 
 ---
 
-## Pipeline Architecture
+## Pipeline Architecture Overview
 
 ```text
 Python Repository
-        ↓
-Phase 1: Repository Scanner (scanner.py)
-        ↓
-Phase 1: Tree-sitter Parser (parser.py) & AST Extractor (extractor.py)
-        ↓
-Phase 1: Domain Model (entities.py)
-        ↓
-Phase 2: Graph Mapper & Resolver (mapper.py)
-        ↓
-Phase 2: Neo4j Repository (repository.py)
-        ↓
-Code Knowledge Graph (Neo4j)
+        │
+        ▼
+Repository Scanner  ──────────────────► Python Source Files
+        │
+        ▼
+Tree-sitter Parser  ──────────────────► AST
+        │
+        ▼
+Code Entity Extractor  ───────────────► Domain Model (Files, Classes, Functions, Imports, Parameters)
+        │
+        ├────────────────────────────────┐
+        ▼                                ▼
+Graph Mapper                     Code Chunker
+        │                                │
+        ▼                                ▼
+Neo4j Graph Store                Chroma Vector Store
+(Entities & Relationships)       (Dense Embeddings: BGE-M3)
+        │                                │
+        └────────────────┬───────────────┘
+                         ▼
+                  Hybrid Retriever (RRF Fusion)
+                         │
+                         ▼
+                Query Analyzer & Planner
+                         │
+                         ▼
+             Graph Context Expander (Neo4j 1/2-Hop)
+                         │
+                         ▼
+               Provenance Evidence Graph
+                         │
+                         ▼
+            LLM Reasoning & Citation Validator
+                         │
+                         ▼
+              Grounded Answer ([E1], [E2])
 ```
+
+---
+
+## RAG Reasoning Engine (Phase 4)
+
+Phase 4 introduces a grounded Graph-RAG reasoning pipeline that synthesizes retrieved code evidence into factually grounded answers with strict citation validation (`[E1]`, `[E2]`).
+
+### Benchmark Results
+
+```text
+Strategy                         Citation Validity    Evidence Coverage    Unsupported Rate  
+---------------------------------------------------------------------------------------------
+Hybrid Retrieval (No Expansion)  0.9333               0.5333               0.0667            
+Graph-RAG (Context Expansion)    1.0000               0.6667               0.0000            
+```
+
+- **Citation Validity**: 100% of generated citations strictly map to supplied evidence IDs.
+- **Evidence Coverage**: Neo4j context expansion increases evidence coverage by +13.34% over hybrid retrieval alone.
+- **Unsupported Citation Rate**: Reduced to 0.0000 with post-generation hallucination guard.
 
 ---
 

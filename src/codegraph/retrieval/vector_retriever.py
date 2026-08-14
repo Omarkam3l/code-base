@@ -35,6 +35,10 @@ class VectorRetriever:
         if not query.strip():
             return []
 
+        if repository_id and not repository_id.startswith("repository:"):
+            from codegraph.graph.models import make_repository_id
+            repository_id = make_repository_id(repository_id)
+
         query_vector = self.embedding_model.embed_query(query)
         return self.vector_store.search(
             embedding=query_vector,
