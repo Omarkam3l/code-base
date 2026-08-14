@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "query": "UserService create_user",
+    "expected_entities": [
+      "method:services:UserService:add_user",
+      "class:services:UserService"
+    ]
+  },
+  {
+    "id": 2,
+    "query": "User model display name",
+    "expected_entities": [
+      "class:models:User",
+      "method:models:User:display_name"
+    ]
+  },
+  {
+    "id": 3,
+    "query": "calculate_total discount",
+    "expected_entities": [
+      "function:main:calculate_total"
+    ]
+  },
+  {
+    "id": 4,
+    "query": "fetch_user_by_id async",
+    "expected_entities": [
+      "method:services:UserService:fetch_user_by_id"
+    ]
+  },
+  {
+    "id": 5,
+    "query": "models.py User",
+    "expected_entities": [
+      "class:models:User"
+    ]
+  },
+  {
+    "id": 6,
+    "query": "services.py UserService",
+    "expected_entities": [
+      "class:services:UserService"
+    ]
+  },
+  {
+    "id": 7,
+    "query": "add_user storage",
+    "expected_entities": [
+      "method:services:UserService:add_user"
+    ]
+  },
+  {
+    "id": 8,
+    "query": "main entry point",
+    "expected_entities": [
+      "function:main:main"
+    ]
+  },
+  {
+    "id": 9,
+    "query": "UserService __init__",
+    "expected_entities": [
+      "method:services:UserService:__init__"
+    ]
+  },
+  {
+    "id": 10,
+    "query": "items total price calculation",
+    "expected_entities": [
+      "function:main:calculate_total"
+    ]
+  },
+  {
+    "id": 11,
+    "query": "user domain entity age email",
+    "expected_entities": [
+      "class:models:User"
+    ]
+  },
+  {
+    "id": 12,
+    "query": "UserRepository create",
+    "expected_entities": [
+      "class:services:UserService",
+      "method:services:UserService:add_user"
+    ]
+  },
+  {
+    "id": 13,
+    "query": "formatted user display name",
+    "expected_entities": [
+      "method:models:User:display_name"
+    ]
+  },
+  {
+    "id": 14,
+    "query": "models import User",
+    "expected_entities": [
+      "class:models:User"
+    ]
+  },
+  {
+    "id": 15,
+    "query": "create and store new user",
+    "expected_entities": [
+      "method:services:UserService:add_user"
+    ]
+  }
+]
