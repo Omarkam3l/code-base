@@ -1,11 +1,28 @@
 """Pytest test runner for Phase 8 isolated workspace validation."""
 
+import re
 import sys
 import time
 import subprocess
 from pathlib import Path
 from codegraph.change.models import TestExecutionResult
 from codegraph.change.safety import DEFAULT_TEST_TIMEOUT, MAX_TEST_TIMEOUT
+
+# Matches pytest's short summary line, e.g. "3 passed, 1 failed, 2 errors in 0.42s"
+_SUMMARY_RE = re.compile(r"(\d+)\s+(passed|failed|error|errors|skipped)")
+
+
+def _parse_pytest_summary(stdout: str) -> dict[str, int]:
+    """Parse pytest's final summary line into counts per outcome."""
+    counts: dict[str, int] = {}
+    for line in reversed(stdout.splitlines()):
+        matches = _SUMMARY_RE.findall(line)
+        if matches:
+            for num, label in matches:
+                key = "error" if label == "errors" else label
+                counts[key] = counts.get(key, 0) + int(num)
+            break
+    return counts
 
 
 class TestRunner:
@@ -60,11 +77,17 @@ class TestRunner:
             )
             elapsed_ms = (time.perf_counter() - start_time) * 1000.0
 
+            summary = _parse_pytest_summary(res.stdout)
+            passed = summary.get("passed", 0)
+            failed = summary.get("failed", 0) + summary.get("error", 0)
+            skipped = summary.get("skipped", 0)
+            total_run = passed + failed + skipped
+
             if res.returncode == 0:
                 return TestExecutionResult(
-                    tests_run=1,
-                    tests_passed=1,
-                    tests_failed=0,
+                    tests_run=total_run or 1,
+                    tests_passed=passed or 1,
+                    tests_failed=failed,
                     execution_time_ms=elapsed_ms,
                     baseline_failed=False,
                 )
@@ -74,9 +97,9 @@ class TestRunner:
                     failures = [res.stderr[:500]] if res.stderr else ["Pytest execution failed"]
 
                 return TestExecutionResult(
-                    tests_run=1,
-                    tests_passed=0,
-                    tests_failed=len(failures),
+                    tests_run=total_run or 1,
+                    tests_passed=passed,
+                    tests_failed=failed or len(failures),
                     test_failures=tuple(failures),
                     execution_time_ms=elapsed_ms,
                     baseline_failed=False,

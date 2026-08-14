@@ -201,6 +201,10 @@ class ChangePipeline:
             if run_tests:
                 test_res = self.test_runner.run_tests(ws_path)
                 if baseline_result and baseline_result.tests_failed > 0:
+                    diff_failures = tuple(
+                        f for f in test_res.test_failures
+                        if f not in set(baseline_result.test_failures)
+                    )
                     test_res = TestExecutionResult(
                         tests_run=test_res.tests_run,
                         tests_passed=test_res.tests_passed,
@@ -208,7 +212,7 @@ class ChangePipeline:
                         test_failures=test_res.test_failures,
                         execution_time_ms=test_res.execution_time_ms,
                         baseline_failed=True,
-                        new_failures=test_res.test_failures,
+                        new_failures=diff_failures,
                     )
 
         elapsed = (time.perf_counter() - start_time) * 1000.0
