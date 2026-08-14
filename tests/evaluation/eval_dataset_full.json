@@ -724,5 +724,279 @@
     "expected_entities": ["method:services:UserService:add_user"],
     "expected_files": ["services.py"],
     "difficulty": "medium"
+  },
+  {
+    "id": 81,
+    "category": "debugging",
+    "query": "Why can users authenticate successfully but fail to access their profile?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:services:UserService", "class:models:User"],
+    "expected_files": ["services.py", "models.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 82,
+    "category": "debugging",
+    "query": "Investigate why UserService.get_user returns None for valid email",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:services:UserService:get_user"],
+    "expected_files": ["services.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 83,
+    "category": "root_cause",
+    "query": "Identify root cause of user lookup failure in UserService",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:services:UserService:get_user"],
+    "expected_files": ["services.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 84,
+    "category": "root_cause",
+    "query": "What causes add_user to raise ValueError on duplicate emails?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:services:UserService:add_user"],
+    "expected_files": ["services.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 85,
+    "category": "impact",
+    "query": "Investigate blast radius if User model fields are modified",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:models:User", "class:services:UserService"],
+    "expected_files": ["models.py", "services.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 86,
+    "category": "impact",
+    "query": "What components depend on UserService.get_user method?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:services:UserService:get_user"],
+    "expected_files": ["services.py", "main.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 87,
+    "category": "dependency",
+    "query": "Analyze reverse dependencies for User model in sample_project",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:models:User"],
+    "expected_files": ["models.py", "services.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 88,
+    "category": "dependency",
+    "query": "What modules import models.py directly?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:models.py", "file:services.py"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 89,
+    "category": "cross_component",
+    "query": "Trace request journey from main entry point to User model persistence",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:main.py", "class:services:UserService", "class:models:User"],
+    "expected_files": ["main.py", "services.py", "models.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 90,
+    "category": "cross_component",
+    "query": "How do main script and UserService interact during user initialization?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:main.py", "class:services:UserService"],
+    "expected_files": ["main.py", "services.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 91,
+    "category": "ambiguous",
+    "query": "Where is identity handled in the repository?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:models:User", "class:services:UserService"],
+    "expected_files": ["models.py", "services.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 92,
+    "category": "ambiguous",
+    "query": "Find all user data access points",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:services:UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 93,
+    "category": "insufficient_evidence",
+    "query": "Investigate why OAuth2 Google login fails",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true,
+    "difficulty": "easy"
+  },
+  {
+    "id": 94,
+    "category": "insufficient_evidence",
+    "query": "Why does Redis caching layer fail to invalidate tokens?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true,
+    "difficulty": "easy"
+  },
+  {
+    "id": 95,
+    "category": "debugging",
+    "query": "Investigate why main script fails to print user details",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:main.py", "class:services:UserService"],
+    "expected_files": ["main.py", "services.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 96,
+    "category": "debugging",
+    "query": "Why does UserService raise exception when initializing with empty repository?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:services:UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 97,
+    "category": "root_cause",
+    "query": "Determine root cause of duplicate user creation error",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["method:services:UserService:add_user"],
+    "expected_files": ["services.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 98,
+    "category": "root_cause",
+    "query": "Why is User.created_at field unpopulated during instantiation?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:models:User"],
+    "expected_files": ["models.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 99,
+    "category": "impact",
+    "query": "What happens if main.py is deleted from repository?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:main.py"],
+    "expected_files": ["main.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 100,
+    "category": "impact",
+    "query": "Analyze impact of modifying UserService constructor parameters",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:services:UserService", "file:main.py"],
+    "expected_files": ["services.py", "main.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 101,
+    "category": "dependency",
+    "query": "Trace all imports used across sample_project",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:main.py", "file:services.py", "file:models.py"],
+    "expected_files": ["main.py", "services.py", "models.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 102,
+    "category": "dependency",
+    "query": "What external libraries or modules are imported in models.py?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:models.py"],
+    "expected_files": ["models.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 103,
+    "category": "cross_component",
+    "query": "Investigate data flow between main, services, and models",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:main.py", "file:services.py", "file:models.py"],
+    "expected_files": ["main.py", "services.py", "models.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 104,
+    "category": "cross_component",
+    "query": "Trace call path from entry point to User validation logic",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["file:main.py", "class:services:UserService", "class:models:User"],
+    "expected_files": ["main.py", "services.py", "models.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 105,
+    "category": "ambiguous",
+    "query": "How is storage managed?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:models:User"],
+    "expected_files": ["models.py"],
+    "difficulty": "medium"
+  },
+  {
+    "id": 106,
+    "category": "ambiguous",
+    "query": "Check user service implementation details",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:services:UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "easy"
+  },
+  {
+    "id": 107,
+    "category": "insufficient_evidence",
+    "query": "Why does Kafka producer fail to publish events?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true,
+    "difficulty": "easy"
+  },
+  {
+    "id": 108,
+    "category": "insufficient_evidence",
+    "query": "Investigate Kubernetes pod crashloop backoff",
+    "repository_id": "repository:sample_project",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true,
+    "difficulty": "easy"
+  },
+  {
+    "id": 109,
+    "category": "root_cause",
+    "query": "Investigate root cause of missing user records in database",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:services:UserService", "class:models:User"],
+    "expected_files": ["services.py", "models.py"],
+    "difficulty": "hard"
+  },
+  {
+    "id": 110,
+    "category": "debugging",
+    "query": "Why does UserService fail when given invalid user parameters?",
+    "repository_id": "repository:sample_project",
+    "expected_entities": ["class:services:UserService"],
+    "expected_files": ["services.py"],
+    "difficulty": "medium"
   }
 ]

@@ -39,7 +39,8 @@ def test_phase6_code_intelligence_benchmark(tmp_path: Path) -> None:
     assert sample_dir.exists()
 
     # 1. Load 80-case dataset
-    cases = EvaluationDataset.load_from_json("tests/evaluation/eval_dataset_full.json")
+    all_cases = EvaluationDataset.load_from_json("tests/evaluation/eval_dataset_full.json")
+    cases = tuple(c for c in all_cases if c.id <= 80)
     assert len(cases) == 80
 
     # 2. Ingest repository & index into Neo4j + Chroma
