@@ -105,6 +105,16 @@ class PythonExtractor:
                 fn = self._extract_function(child, source_bytes)
                 if fn:
                     functions.append(fn)
+            elif child.type == "decorated_definition":
+                for sub in child.children:
+                    if sub.type == "class_definition":
+                        cls = self._extract_class(sub, source_bytes)
+                        if cls:
+                            classes.append(cls)
+                    elif sub.type in ("function_definition", "async_function_definition"):
+                        fn = self._extract_function(sub, source_bytes)
+                        if fn:
+                            functions.append(fn)
             elif child.type in ("if_statement", "try_statement", "with_statement"):
                 # Recurse into top-level compound statement blocks
                 for sub in child.children:
@@ -279,6 +289,12 @@ class PythonExtractor:
                     fn = self._extract_function(child, source_bytes)
                     if fn:
                         methods.append(fn)
+                elif child.type == "decorated_definition":
+                    for sub in child.children:
+                        if sub.type in ("function_definition", "async_function_definition"):
+                            fn = self._extract_function(sub, source_bytes)
+                            if fn:
+                                methods.append(fn)
 
         methods.sort(key=lambda m: (m.location.start_line, m.location.start_column, m.name))
 

@@ -4,13 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "codegraph-rag"
-version = "0.1.0"
-description = "CV-grade Graph RAG system for software repositories - Phase 1: Ingestion"
+version = "0.2.0"
+description = "CV-grade Graph RAG system for software repositories - Phase 2: Code Knowledge Graph"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "tree-sitter>=0.22.0",
     "tree-sitter-python>=0.23.0",
+    "neo4j>=5.0.0",
 ]
 
 [project.optional-dependencies]
