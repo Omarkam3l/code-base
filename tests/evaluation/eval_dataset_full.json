@@ -7214,5 +7214,1615 @@
       "services.py"
     ],
     "contains_secret": true
+  },
+  {
+    "id": 561,
+    "category": "concurrency",
+    "query": "Phase 14 Production Runtime evaluation query for concurrency case #561",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 562,
+    "category": "concurrency",
+    "query": "Phase 14 Production Runtime evaluation query for concurrency case #562",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 563,
+    "category": "concurrency",
+    "query": "Phase 14 Production Runtime evaluation query for concurrency case #563",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 564,
+    "category": "concurrency",
+    "query": "Phase 14 Production Runtime evaluation query for concurrency case #564",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 565,
+    "category": "concurrency",
+    "query": "Phase 14 Production Runtime evaluation query for concurrency case #565",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 566,
+    "category": "concurrency",
+    "query": "Phase 14 Production Runtime evaluation query for concurrency case #566",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 567,
+    "category": "concurrency",
+    "query": "Phase 14 Production Runtime evaluation query for concurrency case #567",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 568,
+    "category": "concurrency",
+    "query": "Phase 14 Production Runtime evaluation query for concurrency case #568",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 569,
+    "category": "concurrency",
+    "query": "Phase 14 Production Runtime evaluation query for concurrency case #569",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 570,
+    "category": "concurrency",
+    "query": "Phase 14 Production Runtime evaluation query for concurrency case #570",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 571,
+    "category": "multi_user",
+    "query": "Phase 14 Production Runtime evaluation query for multi_user case #571",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 572,
+    "category": "multi_user",
+    "query": "Phase 14 Production Runtime evaluation query for multi_user case #572",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 573,
+    "category": "multi_user",
+    "query": "Phase 14 Production Runtime evaluation query for multi_user case #573",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 574,
+    "category": "multi_user",
+    "query": "Phase 14 Production Runtime evaluation query for multi_user case #574",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 575,
+    "category": "multi_user",
+    "query": "Phase 14 Production Runtime evaluation query for multi_user case #575",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 576,
+    "category": "multi_user",
+    "query": "Phase 14 Production Runtime evaluation query for multi_user case #576",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 577,
+    "category": "multi_user",
+    "query": "Phase 14 Production Runtime evaluation query for multi_user case #577",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 578,
+    "category": "multi_user",
+    "query": "Phase 14 Production Runtime evaluation query for multi_user case #578",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 579,
+    "category": "multi_user",
+    "query": "Phase 14 Production Runtime evaluation query for multi_user case #579",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 580,
+    "category": "multi_user",
+    "query": "Phase 14 Production Runtime evaluation query for multi_user case #580",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 581,
+    "category": "repository_isolation",
+    "query": "Phase 14 Production Runtime evaluation query for repository_isolation case #581",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 582,
+    "category": "repository_isolation",
+    "query": "Phase 14 Production Runtime evaluation query for repository_isolation case #582",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 583,
+    "category": "repository_isolation",
+    "query": "Phase 14 Production Runtime evaluation query for repository_isolation case #583",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 584,
+    "category": "repository_isolation",
+    "query": "Phase 14 Production Runtime evaluation query for repository_isolation case #584",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 585,
+    "category": "repository_isolation",
+    "query": "Phase 14 Production Runtime evaluation query for repository_isolation case #585",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 586,
+    "category": "repository_isolation",
+    "query": "Phase 14 Production Runtime evaluation query for repository_isolation case #586",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 587,
+    "category": "repository_isolation",
+    "query": "Phase 14 Production Runtime evaluation query for repository_isolation case #587",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 588,
+    "category": "repository_isolation",
+    "query": "Phase 14 Production Runtime evaluation query for repository_isolation case #588",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 589,
+    "category": "repository_isolation",
+    "query": "Phase 14 Production Runtime evaluation query for repository_isolation case #589",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 590,
+    "category": "repository_isolation",
+    "query": "Phase 14 Production Runtime evaluation query for repository_isolation case #590",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 591,
+    "category": "incremental_indexing",
+    "query": "Phase 14 Production Runtime evaluation query for incremental_indexing case #591",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 592,
+    "category": "incremental_indexing",
+    "query": "Phase 14 Production Runtime evaluation query for incremental_indexing case #592",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 593,
+    "category": "incremental_indexing",
+    "query": "Phase 14 Production Runtime evaluation query for incremental_indexing case #593",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 594,
+    "category": "incremental_indexing",
+    "query": "Phase 14 Production Runtime evaluation query for incremental_indexing case #594",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 595,
+    "category": "incremental_indexing",
+    "query": "Phase 14 Production Runtime evaluation query for incremental_indexing case #595",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 596,
+    "category": "incremental_indexing",
+    "query": "Phase 14 Production Runtime evaluation query for incremental_indexing case #596",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 597,
+    "category": "incremental_indexing",
+    "query": "Phase 14 Production Runtime evaluation query for incremental_indexing case #597",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 598,
+    "category": "incremental_indexing",
+    "query": "Phase 14 Production Runtime evaluation query for incremental_indexing case #598",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 599,
+    "category": "incremental_indexing",
+    "query": "Phase 14 Production Runtime evaluation query for incremental_indexing case #599",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 600,
+    "category": "incremental_indexing",
+    "query": "Phase 14 Production Runtime evaluation query for incremental_indexing case #600",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 601,
+    "category": "versioned_repositories",
+    "query": "Phase 14 Production Runtime evaluation query for versioned_repositories case #601",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 602,
+    "category": "versioned_repositories",
+    "query": "Phase 14 Production Runtime evaluation query for versioned_repositories case #602",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 603,
+    "category": "versioned_repositories",
+    "query": "Phase 14 Production Runtime evaluation query for versioned_repositories case #603",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 604,
+    "category": "versioned_repositories",
+    "query": "Phase 14 Production Runtime evaluation query for versioned_repositories case #604",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 605,
+    "category": "versioned_repositories",
+    "query": "Phase 14 Production Runtime evaluation query for versioned_repositories case #605",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 606,
+    "category": "versioned_repositories",
+    "query": "Phase 14 Production Runtime evaluation query for versioned_repositories case #606",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 607,
+    "category": "versioned_repositories",
+    "query": "Phase 14 Production Runtime evaluation query for versioned_repositories case #607",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 608,
+    "category": "versioned_repositories",
+    "query": "Phase 14 Production Runtime evaluation query for versioned_repositories case #608",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 609,
+    "category": "versioned_repositories",
+    "query": "Phase 14 Production Runtime evaluation query for versioned_repositories case #609",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 610,
+    "category": "versioned_repositories",
+    "query": "Phase 14 Production Runtime evaluation query for versioned_repositories case #610",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 611,
+    "category": "job_recovery",
+    "query": "Phase 14 Production Runtime evaluation query for job_recovery case #611",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 612,
+    "category": "job_recovery",
+    "query": "Phase 14 Production Runtime evaluation query for job_recovery case #612",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 613,
+    "category": "job_recovery",
+    "query": "Phase 14 Production Runtime evaluation query for job_recovery case #613",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 614,
+    "category": "job_recovery",
+    "query": "Phase 14 Production Runtime evaluation query for job_recovery case #614",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 615,
+    "category": "job_recovery",
+    "query": "Phase 14 Production Runtime evaluation query for job_recovery case #615",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 616,
+    "category": "job_recovery",
+    "query": "Phase 14 Production Runtime evaluation query for job_recovery case #616",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 617,
+    "category": "job_recovery",
+    "query": "Phase 14 Production Runtime evaluation query for job_recovery case #617",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 618,
+    "category": "job_recovery",
+    "query": "Phase 14 Production Runtime evaluation query for job_recovery case #618",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 619,
+    "category": "job_recovery",
+    "query": "Phase 14 Production Runtime evaluation query for job_recovery case #619",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 620,
+    "category": "job_recovery",
+    "query": "Phase 14 Production Runtime evaluation query for job_recovery case #620",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 621,
+    "category": "worker_failure",
+    "query": "Phase 14 Production Runtime evaluation query for worker_failure case #621",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 622,
+    "category": "worker_failure",
+    "query": "Phase 14 Production Runtime evaluation query for worker_failure case #622",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 623,
+    "category": "worker_failure",
+    "query": "Phase 14 Production Runtime evaluation query for worker_failure case #623",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 624,
+    "category": "worker_failure",
+    "query": "Phase 14 Production Runtime evaluation query for worker_failure case #624",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 625,
+    "category": "worker_failure",
+    "query": "Phase 14 Production Runtime evaluation query for worker_failure case #625",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 626,
+    "category": "worker_failure",
+    "query": "Phase 14 Production Runtime evaluation query for worker_failure case #626",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 627,
+    "category": "worker_failure",
+    "query": "Phase 14 Production Runtime evaluation query for worker_failure case #627",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 628,
+    "category": "worker_failure",
+    "query": "Phase 14 Production Runtime evaluation query for worker_failure case #628",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 629,
+    "category": "worker_failure",
+    "query": "Phase 14 Production Runtime evaluation query for worker_failure case #629",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 630,
+    "category": "worker_failure",
+    "query": "Phase 14 Production Runtime evaluation query for worker_failure case #630",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 631,
+    "category": "queue_failure",
+    "query": "Phase 14 Production Runtime evaluation query for queue_failure case #631",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 632,
+    "category": "queue_failure",
+    "query": "Phase 14 Production Runtime evaluation query for queue_failure case #632",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 633,
+    "category": "queue_failure",
+    "query": "Phase 14 Production Runtime evaluation query for queue_failure case #633",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 634,
+    "category": "queue_failure",
+    "query": "Phase 14 Production Runtime evaluation query for queue_failure case #634",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 635,
+    "category": "queue_failure",
+    "query": "Phase 14 Production Runtime evaluation query for queue_failure case #635",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 636,
+    "category": "queue_failure",
+    "query": "Phase 14 Production Runtime evaluation query for queue_failure case #636",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 637,
+    "category": "queue_failure",
+    "query": "Phase 14 Production Runtime evaluation query for queue_failure case #637",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 638,
+    "category": "queue_failure",
+    "query": "Phase 14 Production Runtime evaluation query for queue_failure case #638",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 639,
+    "category": "queue_failure",
+    "query": "Phase 14 Production Runtime evaluation query for queue_failure case #639",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 640,
+    "category": "queue_failure",
+    "query": "Phase 14 Production Runtime evaluation query for queue_failure case #640",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 641,
+    "category": "database_failure",
+    "query": "Phase 14 Production Runtime evaluation query for database_failure case #641",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 642,
+    "category": "database_failure",
+    "query": "Phase 14 Production Runtime evaluation query for database_failure case #642",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 643,
+    "category": "database_failure",
+    "query": "Phase 14 Production Runtime evaluation query for database_failure case #643",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 644,
+    "category": "database_failure",
+    "query": "Phase 14 Production Runtime evaluation query for database_failure case #644",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 645,
+    "category": "database_failure",
+    "query": "Phase 14 Production Runtime evaluation query for database_failure case #645",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 646,
+    "category": "database_failure",
+    "query": "Phase 14 Production Runtime evaluation query for database_failure case #646",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 647,
+    "category": "database_failure",
+    "query": "Phase 14 Production Runtime evaluation query for database_failure case #647",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 648,
+    "category": "database_failure",
+    "query": "Phase 14 Production Runtime evaluation query for database_failure case #648",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 649,
+    "category": "database_failure",
+    "query": "Phase 14 Production Runtime evaluation query for database_failure case #649",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 650,
+    "category": "database_failure",
+    "query": "Phase 14 Production Runtime evaluation query for database_failure case #650",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 651,
+    "category": "neo4j_failure",
+    "query": "Phase 14 Production Runtime evaluation query for neo4j_failure case #651",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 652,
+    "category": "neo4j_failure",
+    "query": "Phase 14 Production Runtime evaluation query for neo4j_failure case #652",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 653,
+    "category": "neo4j_failure",
+    "query": "Phase 14 Production Runtime evaluation query for neo4j_failure case #653",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 654,
+    "category": "neo4j_failure",
+    "query": "Phase 14 Production Runtime evaluation query for neo4j_failure case #654",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 655,
+    "category": "neo4j_failure",
+    "query": "Phase 14 Production Runtime evaluation query for neo4j_failure case #655",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 656,
+    "category": "neo4j_failure",
+    "query": "Phase 14 Production Runtime evaluation query for neo4j_failure case #656",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 657,
+    "category": "neo4j_failure",
+    "query": "Phase 14 Production Runtime evaluation query for neo4j_failure case #657",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 658,
+    "category": "neo4j_failure",
+    "query": "Phase 14 Production Runtime evaluation query for neo4j_failure case #658",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 659,
+    "category": "neo4j_failure",
+    "query": "Phase 14 Production Runtime evaluation query for neo4j_failure case #659",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 660,
+    "category": "neo4j_failure",
+    "query": "Phase 14 Production Runtime evaluation query for neo4j_failure case #660",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 661,
+    "category": "vector_store_failure",
+    "query": "Phase 14 Production Runtime evaluation query for vector_store_failure case #661",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 662,
+    "category": "vector_store_failure",
+    "query": "Phase 14 Production Runtime evaluation query for vector_store_failure case #662",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 663,
+    "category": "vector_store_failure",
+    "query": "Phase 14 Production Runtime evaluation query for vector_store_failure case #663",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 664,
+    "category": "vector_store_failure",
+    "query": "Phase 14 Production Runtime evaluation query for vector_store_failure case #664",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 665,
+    "category": "vector_store_failure",
+    "query": "Phase 14 Production Runtime evaluation query for vector_store_failure case #665",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 666,
+    "category": "vector_store_failure",
+    "query": "Phase 14 Production Runtime evaluation query for vector_store_failure case #666",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 667,
+    "category": "vector_store_failure",
+    "query": "Phase 14 Production Runtime evaluation query for vector_store_failure case #667",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 668,
+    "category": "vector_store_failure",
+    "query": "Phase 14 Production Runtime evaluation query for vector_store_failure case #668",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 669,
+    "category": "vector_store_failure",
+    "query": "Phase 14 Production Runtime evaluation query for vector_store_failure case #669",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 670,
+    "category": "vector_store_failure",
+    "query": "Phase 14 Production Runtime evaluation query for vector_store_failure case #670",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 671,
+    "category": "rate_limiting",
+    "query": "Phase 14 Production Runtime evaluation query for rate_limiting case #671",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 672,
+    "category": "rate_limiting",
+    "query": "Phase 14 Production Runtime evaluation query for rate_limiting case #672",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 673,
+    "category": "rate_limiting",
+    "query": "Phase 14 Production Runtime evaluation query for rate_limiting case #673",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 674,
+    "category": "rate_limiting",
+    "query": "Phase 14 Production Runtime evaluation query for rate_limiting case #674",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 675,
+    "category": "rate_limiting",
+    "query": "Phase 14 Production Runtime evaluation query for rate_limiting case #675",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 676,
+    "category": "rate_limiting",
+    "query": "Phase 14 Production Runtime evaluation query for rate_limiting case #676",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 677,
+    "category": "rate_limiting",
+    "query": "Phase 14 Production Runtime evaluation query for rate_limiting case #677",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 678,
+    "category": "rate_limiting",
+    "query": "Phase 14 Production Runtime evaluation query for rate_limiting case #678",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 679,
+    "category": "rate_limiting",
+    "query": "Phase 14 Production Runtime evaluation query for rate_limiting case #679",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 680,
+    "category": "rate_limiting",
+    "query": "Phase 14 Production Runtime evaluation query for rate_limiting case #680",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 681,
+    "category": "authorization",
+    "query": "Phase 14 Production Runtime evaluation query for authorization case #681",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 682,
+    "category": "authorization",
+    "query": "Phase 14 Production Runtime evaluation query for authorization case #682",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 683,
+    "category": "authorization",
+    "query": "Phase 14 Production Runtime evaluation query for authorization case #683",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 684,
+    "category": "authorization",
+    "query": "Phase 14 Production Runtime evaluation query for authorization case #684",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 685,
+    "category": "authorization",
+    "query": "Phase 14 Production Runtime evaluation query for authorization case #685",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 686,
+    "category": "authorization",
+    "query": "Phase 14 Production Runtime evaluation query for authorization case #686",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 687,
+    "category": "authorization",
+    "query": "Phase 14 Production Runtime evaluation query for authorization case #687",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 688,
+    "category": "authorization",
+    "query": "Phase 14 Production Runtime evaluation query for authorization case #688",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 689,
+    "category": "authorization",
+    "query": "Phase 14 Production Runtime evaluation query for authorization case #689",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 690,
+    "category": "authorization",
+    "query": "Phase 14 Production Runtime evaluation query for authorization case #690",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [
+      "UserService"
+    ],
+    "expected_files": [
+      "services.py"
+    ]
+  },
+  {
+    "id": 691,
+    "category": "resource_exhaustion",
+    "query": "Phase 14 Production Runtime evaluation query for resource_exhaustion case #691",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 692,
+    "category": "resource_exhaustion",
+    "query": "Phase 14 Production Runtime evaluation query for resource_exhaustion case #692",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 693,
+    "category": "resource_exhaustion",
+    "query": "Phase 14 Production Runtime evaluation query for resource_exhaustion case #693",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 694,
+    "category": "resource_exhaustion",
+    "query": "Phase 14 Production Runtime evaluation query for resource_exhaustion case #694",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 695,
+    "category": "resource_exhaustion",
+    "query": "Phase 14 Production Runtime evaluation query for resource_exhaustion case #695",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 696,
+    "category": "resource_exhaustion",
+    "query": "Phase 14 Production Runtime evaluation query for resource_exhaustion case #696",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 697,
+    "category": "resource_exhaustion",
+    "query": "Phase 14 Production Runtime evaluation query for resource_exhaustion case #697",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 698,
+    "category": "resource_exhaustion",
+    "query": "Phase 14 Production Runtime evaluation query for resource_exhaustion case #698",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 699,
+    "category": "resource_exhaustion",
+    "query": "Phase 14 Production Runtime evaluation query for resource_exhaustion case #699",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
+  },
+  {
+    "id": 700,
+    "category": "resource_exhaustion",
+    "query": "Phase 14 Production Runtime evaluation query for resource_exhaustion case #700",
+    "repository_id": "repository:sample_project",
+    "difficulty": "medium",
+    "expected_entities": [],
+    "expected_files": [],
+    "should_abstain": true
   }
 ]
