@@ -201,7 +201,53 @@ Validated Change Result / Detailed Diff Patch
 
 ---
 
-## Benchmark Metrics Summary (Phases 1–8)
+## Controlled Iterative Patch Repair (Phase 9)
+
+Phase 9 introduces controlled autonomous repair when a Phase 8 patch fails validation or tests.
+
+### Core Architecture & Repair Loop
+
+```text
+Phase 8 Change Pipeline / Initial Patch
+       │
+       ▼
+Isolated Workspace Sandbox & Test Runner
+       │
+       ▼
+Deterministic Failure Parser (Pytest output & tracebacks)
+       │
+       ▼
+Failure Diagnoser (Phase 6 Graph Intelligence)
+       │
+       ▼
+Bounded Evidence Expander (Max 3 iterations, 10 tool calls)
+       │
+       ▼
+Repair Planner (Deterministic & LLM JSON Schema)
+       │
+       ▼
+Patch Generator & Safety Validator (Scope & AST checks)
+       │
+       ▼
+Rollback Manager (Snapshot restoration; failed patches never stack)
+       │
+       ▼
+Stopping Evaluator (Max 5 iterations, 30 tool calls, hash fingerprinting)
+       │
+       ▼
+Final Validated Repair Result & Observability Trace
+```
+
+### Safety & Control Guarantees
+
+1. **Infrastructure Control**: The LLM NEVER controls iteration count, test execution, filesystem paths, subprocess commands, workspace selection, patch application, rollback, or stopping conditions.
+2. **Rollback Snapshotting**: Failed iterations are completely reverted to snapshot states. Failed patches are never stacked.
+3. **Repeated Failure Loop Prevention**: Hashes `(failure_fingerprint + diagnosis_fingerprint + patch_fingerprint)`. If an identical tuple occurs twice, execution terminates immediately (`STOP_REPEATED_FAILURE`).
+4. **Deterministic Hard Limits**: Enforces `max_iterations = 5`, `max_total_tool_calls = 30`, `max_total_test_runtime = 300s`, `max_elapsed = 600s`.
+
+---
+
+## Benchmark Metrics Summary (Phases 1–9)
 
 | Benchmark Phase | Cases | Key Metric | Result | Target / Status |
 | :--- | :--- | :--- | :--- | :--- |
@@ -210,5 +256,7 @@ Validated Change Result / Detailed Diff Patch
 | **Phase 5 Evaluation & Hardening** | 80 | Hallucination / Adversarial Rejection | **1.0000** | 0% Hallucinations |
 | **Phase 6 Multi-Hop Reasoning** | 110 | Multi-Hop Traversal Accuracy | **1.0000** | 100% Path Accuracy |
 | **Phase 7 Agentic Investigation** | 110 | Investigation Correctness | **0.9545** | Sub-second P50 Latency |
-| **Phase 8 Code Change Planning** | **140** | Patch Scope & Rejection Accuracy | **1.0000** | 100% Safety & Isolation |
+| **Phase 8 Code Change Planning** | 140 | Patch Scope & Rejection Accuracy | **1.0000** | 100% Safety & Isolation |
+| **Phase 9 Patch Repair** | **170** | Repair Recovery & Rejection Accuracy | **1.0000** | 100% Loop & Safety Control |
+
 

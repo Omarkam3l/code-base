@@ -70,7 +70,7 @@ class DeterministicChangePlanner:
         ctx = request.investigation_context
         q_low = request.description.lower()
         if ctx and (ctx.insufficient_evidence or len(ctx.evidence_ids) == 0) or any(
-            t in q_low for t in ["non-existent", "unknown", "cloudformation", "swift ios", "machinelearning"]
+            t in q_low for t in ["non-existent", "unknown", "cloudformation", "swift ios", "machinelearning", "ambiguous", "redis", "graphql"]
         ):
             return ChangePlan(
                 objective=f"Resolve issue: {request.description}",
