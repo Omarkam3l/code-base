@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CodeGraph Studio — AI-powered code intelligence platform with interactive knowledge graph, agentic investigation, patch repair, and architecture drift analysis." />
   <title>CodeGraph Studio — AI Software Intelligence Platform</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/css/studio.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>" />
 </head>
 <body>
   <!-- Top Navigation Bar -->
@@ -34,52 +36,54 @@
   <!-- Main Application Body -->
   <div class="app-container">
     <!-- Navigation Sidebar -->
-    <nav class="sidebar">
-      <a class="nav-item active" href="#canvas">
-        <span>⬡</span>
+    <nav class="sidebar" aria-label="Main navigation">
+      <div class="nav-section-label">Workspace</div>
+      <a class="nav-item active" href="#canvas" aria-current="page">
+        <span class="nav-icon">⬡</span>
         <span>Knowledge Graph</span>
       </a>
       <a class="nav-item" href="#console">
-        <span>❯_</span>
+        <span class="nav-icon">❯_</span>
         <span>Investigation Console</span>
       </a>
       <a class="nav-item" href="#planner">
-        <span>✎</span>
+        <span class="nav-icon">✎</span>
         <span>Change Planner</span>
       </a>
+      <div class="nav-section-label">Analysis</div>
       <a class="nav-item" href="#drift">
-        <span>◬</span>
+        <span class="nav-icon">◬</span>
         <span>Architecture Drift</span>
       </a>
       <a class="nav-item" href="#git">
-        <span>⑂</span>
-        <span>Git & PR Workflow</span>
+        <span class="nav-icon">⑂</span>
+        <span>Git &amp; PR Workflow</span>
       </a>
       <a class="nav-item" href="#observability">
-        <span>◈</span>
-        <span>Observability & Spans</span>
+        <span class="nav-icon">◈</span>
+        <span>Observability</span>
       </a>
     </nav>
 
     <!-- Workspace -->
     <main class="workspace">
       <!-- Center Graph Canvas Panel -->
-      <section class="graph-panel">
+      <section class="graph-panel" aria-label="Knowledge Graph Canvas">
         <div class="canvas-toolbar">
           <div class="badge active">
             <span class="led-dot"></span>
-            <span id="inspect-header">Selected: CodeGraph Knowledge Graph</span>
+            <span id="inspect-header">Interactive Knowledge Graph</span>
           </div>
           <div class="badge">
-            <span>Indexed Assets: 780 items</span>
+            <span>5 nodes · 5 edges</span>
           </div>
         </div>
 
         <div class="canvas-container">
           <svg id="graph-svg" width="100%" height="100%">
             <defs>
-              <marker id="arrow" viewBox="0 -5 10 10" refX="28" refY="0" markerWidth="6" markerHeight="6" orient="auto">
-                <path d="M0,-5L10,0L0,5" fill="#3b494c"></path>
+              <marker id="arrow" viewBox="0 -5 10 10" refX="30" refY="0" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,-5L10,0L0,5" fill="#2d3449"></path>
               </marker>
             </defs>
           </svg>
@@ -87,74 +91,90 @@
       </section>
 
       <!-- Right Tabbed Panel -->
-      <aside class="inspector-panel">
+      <aside class="inspector-panel" aria-label="Inspector">
         <!-- Tabs Header -->
-        <div class="tabs-bar">
-          <button class="tab-button active" data-tab="tab-investigation">Investigation</button>
-          <button class="tab-button" data-tab="tab-patch">Patch Repair</button>
-          <button class="tab-button" data-tab="tab-drift">Drift Inspector</button>
+        <div class="tabs-bar" role="tablist">
+          <button class="tab-button active" data-tab="tab-investigation" role="tab" aria-selected="true">Investigation</button>
+          <button class="tab-button" data-tab="tab-patch" role="tab" aria-selected="false">Patch Repair</button>
+          <button class="tab-button" data-tab="tab-drift" role="tab" aria-selected="false">Drift Inspector</button>
         </div>
 
         <!-- Tab 1: Agentic Investigation Console -->
-        <div id="tab-investigation" class="tab-content active">
+        <div id="tab-investigation" class="tab-content active" role="tabpanel">
           <div class="card">
-            <h3 style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">Autonomous Investigation</h3>
-            <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 10px;">Grounded multi-step reasoning with citation proofs.</p>
+            <div class="card-title">Autonomous Investigation</div>
+            <p class="card-desc">Grounded multi-step reasoning with citation proofs.</p>
             <div style="display: flex; gap: 8px;">
-              <input id="search-input" type="text" placeholder="Ask question (e.g. Why did auth fail?)" style="flex: 1; padding: 6px 10px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: 4px; color: var(--text-primary); font-size: 12px;" value="Does architecture.png match AuthService implementation?" />
+              <input id="search-input" type="text" class="input" style="flex: 1;"
+                     placeholder="Ask a question (e.g. Why did auth fail?)"
+                     value="Does architecture.png match AuthService implementation?" />
               <button id="btn-run-query" class="btn btn-primary">Investigate</button>
             </div>
           </div>
 
           <div class="step-card">
-            <div class="step-title">1. Discovered Multimodal Asset</div>
-            <p style="color: var(--text-variant); font-size: 12px;">Extracted visual entities from architecture diagram.</p>
-            <div>
-              <span class="evidence-badge">[E1] architecture.png region=(100,50,300,150)</span>
+            <div class="step-header">
+              <span class="step-number">1</span>
+              <span class="step-title">Discovered Multimodal Asset</span>
             </div>
+            <p class="step-desc">Extracted visual entities from architecture diagram.</p>
+            <span class="evidence-badge">[E1] architecture.png region=(100,50,300,150)</span>
           </div>
 
           <div class="step-card">
-            <div class="step-title">2. Resolved AST & Code Mappings</div>
-            <p style="color: var(--text-variant); font-size: 12px;">Matched AuthService with services.py class implementation.</p>
-            <div>
-              <span class="evidence-badge">[E2] services.py:L10-L25</span>
+            <div class="step-header">
+              <span class="step-number">2</span>
+              <span class="step-title">Resolved AST &amp; Code Mappings</span>
             </div>
+            <p class="step-desc">Matched AuthService with services.py class implementation.</p>
+            <span class="evidence-badge">[E2] services.py:L10-L25</span>
+          </div>
+
+          <div class="step-card">
+            <div class="step-header">
+              <span class="step-number">3</span>
+              <span class="step-title">Consistency Verdict</span>
+            </div>
+            <p class="step-desc">AuthService USES Redis marked as CONFLICT — documented as primary DB but used only for token cache.</p>
+            <span class="evidence-badge">[E3] consistency_report.json</span>
           </div>
         </div>
 
         <!-- Tab 2: Patch Repair Studio -->
-        <div id="tab-patch" class="tab-content">
+        <div id="tab-patch" class="tab-content" role="tabpanel">
           <div class="card">
-            <h3 style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">Change Plan & Verified Patch</h3>
-            <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 10px;">Human approval gate enforced before commit.</p>
-            <div style="display: flex; gap: 8px;">
+            <div class="card-title">Change Plan &amp; Verified Patch</div>
+            <p class="card-desc">Human approval gate enforced before commit.</p>
+            <div class="btn-row">
               <button id="btn-approve" class="btn btn-primary">Approve Plan</button>
               <button class="btn btn-ghost">Generate Patch</button>
+              <button class="btn btn-ghost">Run Repair</button>
             </div>
           </div>
 
           <div class="diff-container">
-            <div class="diff-line">--- a/services.py</div>
-            <div class="diff-line">+++ b/services.py</div>
-            <div class="diff-line">@@ -15,4 +15,5 @@</div>
-            <div class="diff-line diff-del">-    db_conn = RedisPool.get_connection()</div>
-            <div class="diff-line diff-add">+    db_conn = PostgresPool.get_connection()</div>
-            <div class="diff-line diff-add">+    cache_conn = RedisPool.get_connection()</div>
+            <div class="diff-line diff-header">--- a/services.py</div>
+            <div class="diff-line diff-header">+++ b/services.py</div>
+            <div class="diff-line diff-range">@@ -15,4 +15,6 @@ class AuthService:</div>
+            <div class="diff-line">     def get_connection(self):</div>
+            <div class="diff-line diff-del">-        db_conn = RedisPool.get_connection()</div>
+            <div class="diff-line diff-add">+        db_conn = PostgresPool.get_connection()</div>
+            <div class="diff-line diff-add">+        cache_conn = RedisPool.get_connection()</div>
+            <div class="diff-line">         return db_conn</div>
           </div>
         </div>
 
         <!-- Tab 3: Architecture Drift Inspector -->
-        <div id="tab-drift" class="tab-content">
+        <div id="tab-drift" class="tab-content" role="tabpanel">
           <div class="card">
-            <h3 style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">Consistency Drift Analysis</h3>
-            <p style="color: var(--text-muted); font-size: 12px;">Comparing documented assertions vs actual code graph.</p>
+            <div class="card-title">Consistency Drift Analysis</div>
+            <p class="card-desc">Comparing documented assertions vs actual code graph.</p>
           </div>
 
           <table class="data-table">
             <thead>
               <tr>
-                <th>Fact / Relation</th>
+                <th>Documented Fact</th>
                 <th>Code Reality</th>
                 <th>Status</th>
               </tr>
@@ -175,12 +195,33 @@
                 <td>User.verify_password called</td>
                 <td><span class="badge-match">MATCH</span></td>
               </tr>
+              <tr>
+                <td>UserService HAS_FIELD email</td>
+                <td>email: str in __init__</td>
+                <td><span class="badge-match">MATCH</span></td>
+              </tr>
             </tbody>
           </table>
         </div>
       </aside>
     </main>
   </div>
+
+  <!-- Status Bar -->
+  <footer class="status-bar">
+    <div class="status-bar-section">
+      <div class="status-indicator">
+        <span class="led-dot" style="color: var(--secondary);"></span>
+        <span>Ready</span>
+      </div>
+      <span>CodeGraph v16.0</span>
+    </div>
+    <div class="status-bar-section">
+      <span>780 eval cases</span>
+      <span>148 unit tests ✓</span>
+      <span>Phases 1–16</span>
+    </div>
+  </footer>
 
   <script src="/static/js/app.js"></script>
 </body>
