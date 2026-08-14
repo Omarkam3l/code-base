@@ -61,3 +61,35 @@ def aggregate_latency(timings_list: Sequence[dict[str, float]]) -> LatencyMetric
         avg_ms=avg,
         stage_breakdown_ms=stages,
     )
+
+
+from codegraph.evaluation.models import ConfidenceInterval
+
+
+def calculate_confidence_interval(successes: int, total: int, confidence_level: float = 0.95) -> ConfidenceInterval:
+    """Calculate 95% Wilson score confidence interval for a binomial proportion."""
+    if total == 0:
+        return ConfidenceInterval(mean=0.0, ci_lower=0.0, ci_upper=0.0, confidence_level=confidence_level)
+
+    p_hat = successes / total
+    z = 1.96  # 95% confidence
+    denominator = 1 + z**2 / total
+    centre = (p_hat + z**2 / (2 * total)) / denominator
+    spread = (z * math.sqrt((p_hat * (1 - p_hat) + z**2 / (4 * total)) / total)) / denominator
+
+    lower = max(0.0, centre - spread)
+    upper = min(1.0, centre + spread)
+
+    return ConfidenceInterval(
+        mean=p_hat,
+        ci_lower=lower,
+        ci_upper=upper,
+        confidence_level=confidence_level,
+    )
+
+
+def calculate_iterative_recovery_rate(first_patch_failures: int, recovered_failures: int) -> float:
+    """Calculate Iterative Recovery Rate = (successful repair after first patch failure) / (first patch failures)."""
+    if first_patch_failures == 0:
+        return 1.0
+    return recovered_failures / first_patch_failures

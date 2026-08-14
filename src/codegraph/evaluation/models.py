@@ -70,3 +70,40 @@ class BenchmarkReport:
     error_breakdown: dict[str, int]                          # failure_type -> count
     quality_gate_passed: bool = True
     regressions: tuple[str, ...] = field(default_factory=tuple)
+
+
+@dataclass(frozen=True)
+class ReproducibilityMetadata:
+    """Run metadata for reproducing benchmark evaluation runs."""
+
+    benchmark_id: str
+    git_commit: str
+    dataset_version: str
+    repository_fixture_version: str
+    configuration: dict[str, Any]
+    model: str
+    embedding_model: str
+    graph_version: str
+    random_seed: int
+    timestamp: str
+
+
+@dataclass(frozen=True)
+class ConfidenceInterval:
+    """Statistical confidence interval representation."""
+
+    mean: float
+    ci_lower: float
+    ci_upper: float
+    confidence_level: float = 0.95
+
+
+@dataclass(frozen=True)
+class RegressionReport:
+    """Comparison report evaluating current run against golden baselines."""
+
+    is_passed: bool
+    regressions: tuple[str, ...] = ()
+    improvements: tuple[str, ...] = ()
+    baseline_metrics: dict[str, float] = field(default_factory=dict)
+    current_metrics: dict[str, float] = field(default_factory=dict)

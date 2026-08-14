@@ -83,6 +83,19 @@ class TestRunner:
             skipped = summary.get("skipped", 0)
             total_run = passed + failed + skipped
 
+            # Pytest exits with code 5 (and no summary counts) when it collects zero
+            # tests. Report tests_run=0 explicitly so callers can distinguish "no test
+            # suite exists" from "tests ran and something failed".
+            if res.returncode == 5 or (total_run == 0 and "no tests ran" in res.stdout.lower()):
+                return TestExecutionResult(
+                    tests_run=0,
+                    tests_passed=0,
+                    tests_failed=0,
+                    test_failures=("No tests collected in workspace (no tests ran).",),
+                    execution_time_ms=elapsed_ms,
+                    baseline_failed=False,
+                )
+
             if res.returncode == 0:
                 return TestExecutionResult(
                     tests_run=total_run or 1,

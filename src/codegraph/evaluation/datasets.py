@@ -71,3 +71,22 @@ class EvaluationDataset:
             should_abstain=should_abstain,
             difficulty=difficulty,
         )
+
+
+class DatasetLoader:
+    """Helper loader partitioning evaluation dataset into specific evaluation tracks."""
+
+    @staticmethod
+    def load_full_dataset(dataset_path: str | Path = "tests/evaluation/eval_dataset_full.json") -> list[EvaluationCase]:
+        """Load full evaluation dataset."""
+        return EvaluationDataset.load_from_json(dataset_path)
+
+    @staticmethod
+    def get_cases_by_category(cases: list[EvaluationCase], category: str) -> list[EvaluationCase]:
+        """Filter dataset cases by category."""
+        return [c for c in cases if c.category == category]
+
+    @staticmethod
+    def get_cases_in_range(cases: list[EvaluationCase], start_id: int, end_id: int) -> list[EvaluationCase]:
+        """Filter dataset cases by ID range [start_id, end_id]."""
+        return [c for c in cases if start_id <= c.id <= end_id]

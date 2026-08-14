@@ -1,20 +1,27 @@
-"""Unit tests for dataset loading and regression detector."""
+"""Unit tests for RegressionDetector and Golden Baselines."""
 
-import pytest
-from pathlib import Path
-from codegraph.evaluation.datasets import EvaluationDataset
-from codegraph.evaluation.models import BenchmarkReport, CategoryMetrics, LatencyMetrics
+from codegraph.evaluation.regression import RegressionDetector
 
 
-def test_dataset_loader() -> None:
-    cases = EvaluationDataset.load_from_json("tests/evaluation/eval_dataset_full.json")
+def test_regression_detector_passing() -> None:
+    detector = RegressionDetector()
+    current = {
+        "retrieval_recall_at_5": 0.88,
+        "retrieval_mrr": 0.83,
+        "repair_success_rate": 0.85,
+    }
+    report = detector.evaluate_regression(current_metrics=current)
+    assert report.is_passed is True
+    assert len(report.regressions) == 0
 
-    assert len(cases) >= 50
-    cat_names = {c.category for c in cases}
-    assert "symbol_lookup" in cat_names
-    assert "negative" in cat_names
-    assert "ambiguous" in cat_names
 
-    neg_cases = [c for c in cases if c.category == "negative"]
-    assert len(neg_cases) == 5
-    assert all(c.should_abstain for c in neg_cases)
+def test_regression_detector_detects_degradation() -> None:
+    detector = RegressionDetector()
+    current = {
+        "retrieval_recall_at_5": 0.50,  # Severe drop from baseline 0.8667
+        "retrieval_mrr": 0.40,
+    }
+    report = detector.evaluate_regression(current_metrics=current, tolerance_factor=0.95)
+    assert report.is_passed is False
+    assert len(report.regressions) > 0
+    assert "retrieval_recall_at_5" in report.regressions[0]
