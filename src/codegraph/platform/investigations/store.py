@@ -1,10 +1,25 @@
 """Storage interface and file-backed repository implementation for Investigation records."""
 
 import json
+import os
 from abc import ABC, abstractmethod
 from pathlib import Path
 from dataclasses import asdict
 from codegraph.platform.investigations.models import InvestigationRecord
+
+
+def _default_investigation_storage_dir() -> Path:
+    """Resolve the default investigation storage directory.
+
+    Honors CODEGRAPH_DATA_DIR when set (e.g. for a real deployment). Otherwise
+    falls back to a per-user data directory outside the repo, so importing this
+    module — or running the test suite, which exercises it via the API and unit
+    tests — never writes files into the source tree.
+    """
+    env_dir = os.environ.get("CODEGRAPH_DATA_DIR")
+    if env_dir:
+        return Path(env_dir) / "investigations"
+    return Path.home() / ".codegraph" / "investigations"
 
 
 class InvestigationStore(ABC):
@@ -29,8 +44,8 @@ class InvestigationStore(ABC):
 class FileInvestigationStore(InvestigationStore):
     """File-backed investigation repository storing records in JSON files."""
 
-    def __init__(self, storage_dir: str | Path = "data/investigations") -> None:
-        self.storage_dir = Path(storage_dir)
+    def __init__(self, storage_dir: str | Path | None = None) -> None:
+        self.storage_dir = Path(storage_dir) if storage_dir is not None else _default_investigation_storage_dir()
         self.storage_dir.mkdir(parents=True, exist_ok=True)
         self._memory_cache: dict[str, InvestigationRecord] = {}
 
