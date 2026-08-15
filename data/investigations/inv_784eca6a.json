@@ -1,0 +1,22 @@
+{
+  "investigation_id": "inv_784eca6a",
+  "question": "Why auth fails?",
+  "repository_id": "repo:test",
+  "commit_sha": "head_sha_default",
+  "branch": "main",
+  "trace_id": "tr_8f9c366ff86f",
+  "hypotheses": [
+    "Initial codebase root cause hypothesis"
+  ],
+  "steps": [],
+  "tool_calls": [],
+  "evidence": [
+    "[E1] File services.py contains target logic"
+  ],
+  "citations": [
+    "services.py:L10-L25"
+  ],
+  "final_answer": "Investigation completed for question: Why auth fails?",
+  "confidence": 1.0,
+  "timestamp": "2026-08-15T00:53:02Z"
+}

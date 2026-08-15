@@ -31,6 +31,26 @@ def test_api_path_traversal_rejection() -> None:
     assert "Path traversal rejected" in res.json()["detail"]
 
 
+def test_api_sensitive_system_path_rejected() -> None:
+    """Absolute paths under sensitive system directories must be rejected even
+    without literal '..' — the old blocklist only checked two hardcoded prefixes."""
+    import platform
+    if platform.system() == "Windows":
+        res = client.post("/repositories", json={"path": "C:\\Windows\\System32", "name": "WinSys"})
+        assert res.status_code == 400
+        assert "forbidden" in res.json()["detail"].lower()
+
+        res2 = client.post("/repositories", json={"path": "C:\\Users\\Administrator\\Desktop", "name": "AdminDesk"})
+        assert res2.status_code == 400
+    else:
+        res = client.post("/repositories", json={"path": "/root/.ssh", "name": "SSH Keys"})
+        assert res.status_code == 400
+        assert "forbidden" in res.json()["detail"].lower()
+
+        res2 = client.post("/repositories", json={"path": "/proc/self/environ", "name": "Proc Env"})
+        assert res2.status_code == 400
+
+
 def test_api_query_and_investigate() -> None:
     res_q = client.post("/query", json={"query": "UserService", "repository_id": "repository:sample_project"})
     assert res_q.status_code == 200

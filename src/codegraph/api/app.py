@@ -1,5 +1,6 @@
 """FastAPI REST API application for CodeGraph Developer Platform."""
 
+import os
 import uuid
 from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request, status
@@ -14,6 +15,7 @@ from codegraph.api.models import (
     RepairRequestModel,
     RepositoryRegisterRequest,
 )
+from codegraph.change.safety import SafetyValidator
 from codegraph.observability.correlation import CorrelationContext
 from codegraph.observability.redaction import SecretRedactor
 from codegraph.platform.services.platform_service import PlatformService
@@ -29,6 +31,13 @@ if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 service = PlatformService()
+
+# Optional allowlist of directories repositories may be registered from, e.g.
+# "/home/deploy/repos:/data/workspaces". When unset, only the sensitive-system-path
+# blocklist in SafetyValidator applies — set this in production deployments to
+# restrict registration to a known set of directories.
+_allowed_roots_env = os.environ.get("CODEGRAPH_ALLOWED_REPO_ROOTS", "")
+ALLOWED_REPOSITORY_ROOTS = [r for r in _allowed_roots_env.split(os.pathsep) if r] or None
 
 
 @app.get("/")
@@ -60,9 +69,9 @@ def health_check():
 @app.post("/repositories", response_model=APIResponse)
 def register_repository(req: RepositoryRegisterRequest):
     """Register a new repository."""
-    # Prevent path traversal attacks
-    if ".." in req.path or req.path.startswith("/etc") or req.path.startswith("C:\\Windows"):
-        raise HTTPException(status_code=400, detail="Invalid repository path: Path traversal rejected")
+    valid, error = SafetyValidator.validate_repository_root(req.path, allowed_roots=ALLOWED_REPOSITORY_ROOTS)
+    if not valid:
+        raise HTTPException(status_code=400, detail=f"Invalid repository path: {error}")
     res = service.register_repository(path=req.path, name=req.name)
     return APIResponse(status="success", data=res)
 

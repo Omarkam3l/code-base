@@ -9,6 +9,14 @@ MAX_CHANGED_LINES_DEFAULT = 300
 DEFAULT_TEST_TIMEOUT = 60
 MAX_TEST_TIMEOUT = 300
 
+# System directories that should never be registerable as a repository root,
+# regardless of allowlist configuration. Checked case-insensitively against
+# the *resolved* (symlink-following) path.
+SENSITIVE_PATH_PREFIXES: tuple[str, ...] = (
+    "/etc", "/root", "/proc", "/sys", "/boot", "/var/run", "/private/etc",
+    "c:\\windows", "c:\\users\\administrator",
+)
+
 
 class SafetyValidator:
     """Validator enforcing path safety, operation constraints, and bounds limits."""
@@ -38,6 +46,47 @@ class SafetyValidator:
                 target_path.relative_to(abs_root)
             except ValueError:
                 return False, f"Path escapes repository root: '{file_path}'"
+
+        return True, None
+
+    @staticmethod
+    def validate_repository_root(path_str: str, allowed_roots: list[str] | None = None) -> tuple[bool, str | None]:
+        """Validate an absolute filesystem path being registered as a repository root.
+
+        Unlike validate_path (which validates relative in-repo paths), this checks a
+        path a caller wants to *register* as a repository — following symlinks and
+        resolving '..' segments so trickery can't escape the check, then requiring
+        the resolved path to sit under an explicit allowlist (when provided) and
+        never under a small set of sensitive system directories.
+        """
+        if not path_str:
+            return False, "Path is empty"
+
+        if ".." in path_str:
+            return False, f"Path traversal rejected: '{path_str}'"
+
+        if "\0" in path_str:
+            return False, f"Null byte in path: '{path_str}'"
+
+        try:
+            resolved = Path(path_str).resolve(strict=False)
+        except (OSError, RuntimeError) as e:
+            return False, f"Could not resolve path: {e}"
+
+        resolved_lower = str(resolved).lower()
+        for prefix in SENSITIVE_PATH_PREFIXES:
+            if resolved_lower.startswith(prefix.lower()):
+                return False, f"Registering a system path is forbidden: '{resolved}'"
+
+        if allowed_roots:
+            for root in allowed_roots:
+                try:
+                    abs_root = Path(root).resolve(strict=False)
+                    resolved.relative_to(abs_root)
+                    return True, None
+                except ValueError:
+                    continue
+            return False, f"Path is outside allowed repository roots: '{resolved}'"
 
         return True, None
 
