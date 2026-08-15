@@ -150,3 +150,26 @@ def test_platform_service_investigate(tmp_path: Path) -> None:
     assert inv_res["status"] == "success"
     assert inv_res["investigation_id"].startswith("inv_")
     assert len(inv_res["citations"]) >= 1
+
+
+def test_platform_service_agent_pipeline_not_auto_wired_without_graph_repo() -> None:
+    """Without a graph_repo, agent_pipeline stays None (safe default — no Neo4j required)
+    and investigate() keeps using its existing placeholder fallback."""
+    repo_mgr = RepositoryManager()
+    service = PlatformService(repository_manager=repo_mgr)
+    assert service.agent_pipeline is None
+
+
+def test_platform_service_agent_pipeline_auto_wired_with_graph_repo() -> None:
+    """When a graph_repo is supplied, PlatformService should auto-construct a real
+    AgenticPipeline (mirroring how ChangePipeline/RepairPipeline are auto-wired),
+    instead of requiring callers to build and inject one manually."""
+    from unittest.mock import MagicMock
+    from codegraph.graph.repository import GraphRepository
+
+    fake_graph_repo = MagicMock(spec=GraphRepository)
+    repo_mgr = RepositoryManager()
+    service = PlatformService(repository_manager=repo_mgr, graph_repo=fake_graph_repo)
+
+    assert service.agent_pipeline is not None
+    assert service.agent_pipeline.graph_repo is fake_graph_repo

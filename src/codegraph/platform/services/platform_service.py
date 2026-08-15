@@ -40,8 +40,16 @@ class PlatformService:
         self.trace_manager = TraceManager()
         self.graph_repo = graph_repo
 
-        # Initialize or wire pipelines
-        self.agent_pipeline = agent_pipeline
+        # Initialize or wire pipelines. AgenticPipeline requires a real GraphRepository
+        # (unlike ChangePipeline/RepairPipeline, which tolerate graph_repo=None), so it's
+        # only auto-constructed when one is available — otherwise investigate() falls back
+        # to its existing placeholder behavior rather than failing on missing Neo4j config.
+        if agent_pipeline is not None:
+            self.agent_pipeline = agent_pipeline
+        elif self.graph_repo is not None:
+            self.agent_pipeline = AgenticPipeline(graph_repo=self.graph_repo, use_deterministic_planner=True)
+        else:
+            self.agent_pipeline = None
         self.change_pipeline = change_pipeline or ChangePipeline(
             agent_pipeline=self.agent_pipeline,
             graph_repo=self.graph_repo,
