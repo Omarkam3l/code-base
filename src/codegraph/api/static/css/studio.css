@@ -700,3 +700,32 @@ body {
     display: none;
   }
 }
+
+/* ── Live-data states (fetched from the API) ───────────── */
+.empty-state {
+  color: var(--text-muted, #5a6a6d);
+  border: 1px dashed #2a3648;
+  text-align: center;
+}
+
+#repo-select {
+  background: #131a2c;
+  color: #dae2fd;
+  border: 1px solid #2a3648;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  max-width: 220px;
+}
+
+/* ── Graph readability: neighbor highlight + dimming ──── */
+.graph-node.dimmed {
+  opacity: 0.25;
+  transition: opacity 0.2s ease;
+}
+
+line.edge-active {
+  stroke: #4edea3;
+  stroke-width: 2.2;
+}

@@ -1,6 +1,8 @@
 """FastAPI REST API application for CodeGraph Developer Platform."""
 
+import json
 import os
+import re
 import uuid
 from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request, status
@@ -8,6 +10,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from codegraph.api.models import (
     APIResponse,
+    ChangePatchRequest,
     ChangePlanRequest,
     ImpactRequest,
     InvestigateRequest,
@@ -30,7 +33,25 @@ STATIC_DIR = Path(__file__).parent / "static"
 if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
-service = PlatformService()
+def _build_platform_service() -> PlatformService:
+    """Construct PlatformService, wiring a live Neo4j graph when credentials exist."""
+    uri = os.getenv("NEO4J_URI")
+    username = os.getenv("NEO4J_USERNAME")
+    password = os.getenv("NEO4J_PASSWORD")
+    if uri and username and password:
+        from neo4j import GraphDatabase
+
+        from codegraph.graph.repository import GraphRepository
+
+        driver = GraphDatabase.driver(uri, auth=(username, password))
+        graph_repo = GraphRepository(
+            driver=driver, database=os.getenv("NEO4J_DATABASE", "neo4j")
+        )
+        return PlatformService(graph_repo=graph_repo)
+    return PlatformService()
+
+
+service = _build_platform_service()
 
 # Optional allowlist of directories repositories may be registered from, e.g.
 # "/home/deploy/repos:/data/workspaces". When unset, only the sensitive-system-path
@@ -137,14 +158,35 @@ def trace_execution_flow(req: QueryRequest):
 @app.post("/changes/plan", response_model=APIResponse)
 def plan_change(req: ChangePlanRequest):
     """Generate code change plan."""
-    res = service.plan_change(change_request=req.change_request, repository_id=req.repository_id)
+    try:
+        res = service.plan_change(change_request=req.change_request, repository_id=req.repository_id)
+    except KeyError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     return APIResponse(status="success", trace_id=res["trace_id"], data=res)
 
 
+@app.post("/changes/{plan_id}/approve", response_model=APIResponse)
+def approve_change_plan(plan_id: str):
+    """Grant human approval for a change plan (required before patch generation)."""
+    try:
+        res = service.approve_plan(plan_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Plan not found: {plan_id}")
+    return APIResponse(status="success", data=res)
+
+
 @app.post("/changes/patch", response_model=APIResponse)
-def generate_patch(req: ChangePlanRequest):
-    """Generate unified diff patch."""
-    return APIResponse(status="success", data={"patch": "--- a/services.py\n+++ b/services.py\n@@ -1 +1 @@\n-old\n+new", "status": "generated"})
+def generate_patch(req: ChangePatchRequest):
+    """Generate and validate a unified diff patch for an approved plan."""
+    try:
+        res = service.generate_or_execute_patch(plan_id=req.plan_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Plan not found: {req.plan_id}")
+    except PermissionError as e:
+        raise HTTPException(status_code=403, detail=str(e))
+    return APIResponse(status="success", data=res)
 
 
 @app.post("/repairs", response_model=APIResponse)
@@ -162,8 +204,38 @@ def get_trace_details(trace_id: str):
 
 @app.get("/evaluations/latest", response_model=APIResponse)
 def get_latest_evaluation():
-    """Get latest evaluation benchmark report."""
-    return APIResponse(status="success", data={"benchmark_cases": 780, "status": "PASSED", "quality_gate": True})
+    """Latest evaluation summary derived from real artifacts (report + dataset)."""
+    report_path = Path("evaluation_report.md")
+    dataset_path = Path("tests/evaluation/eval_dataset_full.json")
+
+    benchmark_cases = 0
+    if dataset_path.exists():
+        try:
+            benchmark_cases = len(json.loads(dataset_path.read_text(encoding="utf-8")))
+        except Exception:
+            benchmark_cases = 0
+
+    metrics: dict[str, str] = {}
+    status = "UNKNOWN"
+    if report_path.exists():
+        report_text = report_path.read_text(encoding="utf-8")
+        status_match = re.search(r"Benchmark Status\*\*: (\w+)", report_text)
+        if status_match:
+            status = status_match.group(1)
+        for metric, value in re.findall(
+            r"\| \*\*(\w+)\*\* \| Benchmark Value \| \*\*([0-9.]+)\*\*", report_text
+        ):
+            metrics[metric] = value
+
+    return APIResponse(
+        status="success",
+        data={
+            "benchmark_cases": benchmark_cases,
+            "status": status,
+            "quality_gate": status == "PASSED",
+            "metrics": metrics,
+        },
+    )
 
 
 @app.post("/repositories/{repo_id}/multimodal/index", response_model=APIResponse)
@@ -194,6 +266,24 @@ def get_asset_metadata(asset_id: str):
 def get_asset_evidence(asset_id: str):
     """Get evidence citations extracted from asset."""
     return APIResponse(status="success", data={"asset_id": asset_id, "evidence": ["[E1] architecture.png — 'AuthService uses Redis'"]})
+
+
+@app.get("/repositories/{repo_id}/graph", response_model=APIResponse)
+def get_repository_graph(repo_id: str, limit: int = 40):
+    """Return a bounded snapshot of the real code graph for visualization."""
+    if service.graph_repo is None:
+        return APIResponse(
+            status="success",
+            data={
+                "repository_id": repo_id,
+                "nodes": [],
+                "edges": [],
+                "note": "Neo4j graph repository not configured; index a repository with a live graph first.",
+            },
+        )
+    snapshot = service.graph_repo.get_graph_snapshot(node_limit=max(1, min(limit, 200)))
+    snapshot["repository_id"] = repo_id
+    return APIResponse(status="success", data=snapshot)
 
 
 @app.get("/repositories/{repo_id}/drift", response_model=APIResponse)
