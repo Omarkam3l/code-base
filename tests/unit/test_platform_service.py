@@ -59,7 +59,7 @@ def test_platform_service_repair_failure_real_pipeline(tmp_path: Path) -> None:
 
     service = PlatformService(repository_manager=repo_mgr)
     result = service.repair_failure(
-        failure_message="AssertionError in test_services.py: Expected user to be authenticated",
+        failure_message="AssertionError in test_services.py: UserService.authenticate expected user to be authenticated",
         repository_id=rec.repository_id,
         run_tests=False,
     )
@@ -98,7 +98,7 @@ def test_platform_service_approval_gate_enforcement(tmp_path: Path) -> None:
 
     # 1. Plan change -> lands in AWAITING_APPROVAL
     plan_res = service.plan_change(
-        change_request="Fix authentication issue",
+        change_request="Fix UserService.authenticate authentication issue",
         repository_id=rec.repository_id,
     )
     plan_id = plan_res["plan_id"]

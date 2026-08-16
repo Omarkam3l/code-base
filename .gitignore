@@ -35,3 +35,6 @@ htmlcov/
 /data/investigations/
 .idea/
 .DS_Store
+
+# embedding cache for integration tests
+data/embed_cache/

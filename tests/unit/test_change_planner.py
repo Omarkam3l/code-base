@@ -6,16 +6,36 @@ from codegraph.change.impact import ChangeRiskAnalyzer
 
 
 def test_deterministic_change_planner() -> None:
-    """Verify deterministic change planner generates evidence-grounded plan."""
+    """Deterministic planner grounds its plan in the actual repository sources."""
     planner = DeterministicChangePlanner()
-    req = ChangeRequest(description="Fix UserService authorization mismatch", repository_id="repo")
-    plan = planner.create_plan(req)
+    sources = {
+        "services.py": (
+            "class UserService:\n"
+            "    def authenticate(self, user_id):\n"
+            "        return True\n"
+        ),
+    }
+    req = ChangeRequest(description="Fix UserService.authenticate authorization mismatch", repository_id="repo")
+    plan = planner.create_plan(req, source_code_map=sources)
 
     assert plan.is_valid
     assert plan.objective.startswith("Resolve issue:")
     assert len(plan.modifications) == 1
     assert plan.modifications[0].file == "services.py"
+    assert plan.modifications[0].target.endswith("UserService.authenticate")
+    # The patch is derived from the real file, so the original class is preserved.
+    assert "class UserService" in (plan.modifications[0].new_code or "")
     assert plan.risks == ChangeRiskLevel.LOW
+
+
+def test_deterministic_change_planner_abstains_without_real_target() -> None:
+    """With no graph and no matching source entity, the planner must abstain."""
+    planner = DeterministicChangePlanner()
+    req = ChangeRequest(description="Fix authorization mismatch", repository_id="repo")
+    plan = planner.create_plan(req)
+
+    assert not plan.is_valid
+    assert "does not reference any component" in plan.rejection_reason
 
 
 def test_change_plan_validator_rejects_unsupported_ops() -> None:

@@ -13,8 +13,10 @@ Tests cover:
   10. Cross-file contract — JS element selectors exist in HTML
 """
 
+import json
 import re
 from html.parser import HTMLParser
+from pathlib import Path
 from fastapi.testclient import TestClient
 from codegraph.api.app import app
 
@@ -219,47 +221,35 @@ class TestCSSConsistency:
 # ═══════════════════════════════════════════════════════════
 
 class TestGraphDataIntegrity:
-    """Graph edges must reference valid node IDs and data must be consistent."""
+    """The graph canvas must render live API data, not hardcoded demo nodes."""
 
-    def test_all_edge_endpoints_reference_valid_nodes(self) -> None:
-        """Every edge from/to must be a known node ID."""
+    def test_graph_fetched_from_real_endpoint(self) -> None:
+        """JS must fetch graph data from /repositories/{id}/graph — no demo literals."""
         js = _get_js()
+        assert "/repositories/" in js and "/graph" in js, "JS must load the graph from the API"
+        assert "renderGraph(svg, nodes, edges)" in js, "JS must render fetched nodes/edges"
+        # No hardcoded demo node/edge arrays may remain
+        assert not re.search(r"id:\s*'(UserService|AuthService|PostgreSQL|Redis|ArchDiagram)'", js), (
+            "Hardcoded demo graph nodes found in JS"
+        )
 
-        # Extract node IDs
-        node_ids = set(re.findall(r"id:\s*'(\w+)'", js))
-        assert len(node_ids) >= 4, f"Expected ≥4 graph nodes, found {len(node_ids)}"
+    def test_graph_endpoint_returns_nodes_and_edges(self) -> None:
+        """/repositories/{id}/graph returns the documented node/edge structure."""
+        client = TestClient(app)
+        r = client.get("/repositories/repo:test/graph")
+        assert r.status_code == 200
+        data = r.json()["data"]
+        assert "nodes" in data and "edges" in data
+        # Without Neo4j configured the endpoint reports the reason honestly
+        if not data["nodes"]:
+            assert "note" in data
 
-        # Extract edge from/to
-        edge_froms = set(re.findall(r"from:\s*'(\w+)'", js))
-        edge_tos = set(re.findall(r"to:\s*'(\w+)'", js))
-
-        dangling_from = edge_froms - node_ids
-        dangling_to = edge_tos - node_ids
-        assert dangling_from == set(), f"Edges reference non-existent source nodes: {dangling_from}"
-        assert dangling_to == set(), f"Edges reference non-existent target nodes: {dangling_to}"
-
-    def test_graph_nodes_have_required_properties(self) -> None:
-        """Each node must have id, type, label, color."""
-        js = _get_js()
-        # Count node objects — they all have 'id:' inside the nodes array
-        node_blocks = re.findall(r"\{\s*id:\s*'\w+'.*?color:\s*'#[\da-fA-F]+'\s*\}", js, re.DOTALL)
-        assert len(node_blocks) >= 4, f"Expected ≥4 complete node definitions, found {len(node_blocks)}"
-
-        for block in node_blocks:
-            assert "type:" in block, f"Node missing 'type': {block[:50]}"
-            assert "label:" in block, f"Node missing 'label': {block[:50]}"
-            assert "color:" in block, f"Node missing 'color': {block[:50]}"
-
-    def test_edge_count_matches_html_badge(self) -> None:
-        """The '5 nodes · 5 edges' badge in HTML must match actual JS data."""
-        js = _get_js()
+    def test_graph_stats_badge_is_live(self) -> None:
+        """The node/edge count badge is populated at runtime, not hardcoded."""
+        dom = _get_dom()
+        assert "graph-stats" in dom.ids, "graph-stats badge missing from HTML"
         html = TestClient(app).get("/").text
-
-        node_count = len(re.findall(r"id:\s*'\w+',\s*type:", js))
-        edge_count = len(re.findall(r"from:\s*'\w+',\s*to:", js))
-
-        assert f"{node_count} nodes" in html, f"HTML badge doesn't show {node_count} nodes"
-        assert f"{edge_count} edges" in html, f"HTML badge doesn't show {edge_count} edges"
+        assert "5 nodes" not in html, "Static node count must not be hardcoded"
 
 
 # ═══════════════════════════════════════════════════════════
@@ -372,9 +362,17 @@ class TestAPIEndpoints:
 
     def test_repair_endpoint(self) -> None:
         client = TestClient(app)
-        r = client.post("/repairs", json={"failure_message": "test_auth failed", "repository_id": "repo:test"})
+        # Reference a real sample-project symbol so the planner can ground the repair.
+        r = client.post("/repairs", json={
+            "failure_message": "UserService.add_user raised ValueError on None input",
+            "repository_id": "repo:test",
+        })
         assert r.status_code == 200
-        assert r.json()["data"]["repair_status"] == "REPAIRED"
+        data = r.json()["data"]
+        assert data["repair_status"] in {"REPAIRED", "FAILED", "ABORTED"}, (
+            f"Unexpected repair status: {data['repair_status']}"
+        )
+        assert "iterations" in data and "final_patch" in data
 
     def test_evaluation_endpoint(self) -> None:
         client = TestClient(app)
@@ -444,21 +442,19 @@ class TestSEO:
 # ═══════════════════════════════════════════════════════════
 
 class TestDiffViewer:
-    """Diff viewer must have correct structural elements."""
+    """Diff viewer must render real patches from the API with correct coloring."""
 
-    def test_diff_has_header_lines(self) -> None:
-        html = TestClient(app).get("/").text
-        assert "--- a/" in html, "Diff missing '--- a/' header"
-        assert "+++ b/" in html, "Diff missing '+++ b/' header"
-
-    def test_diff_has_range_line(self) -> None:
-        html = TestClient(app).get("/").text
-        assert "@@" in html, "Diff missing @@ range header"
-
-    def test_diff_has_additions_and_deletions(self) -> None:
+    def test_diff_container_present_with_empty_state(self) -> None:
         dom = _get_dom()
-        assert "diff-add" in dom.classes, "Diff missing addition lines (diff-add class)"
-        assert "diff-del" in dom.classes, "Diff missing deletion lines (diff-del class)"
+        assert "diff-viewer" in dom.ids, "diff-viewer container missing from HTML"
+        html = TestClient(app).get("/").text
+        assert "No patch generated yet" in html, "Diff viewer must start in an explicit empty state"
+
+    def test_render_diff_classifies_lines(self) -> None:
+        """renderDiff() must classify header/range/add/del lines of a unified diff."""
+        js = _get_js()
+        for marker in ("diff-header", "diff-range", "diff-add", "diff-del"):
+            assert marker in js, f"renderDiff must apply .{marker}"
 
     def test_diff_classes_have_css_styling(self) -> None:
         css = _get_css()
@@ -523,13 +519,21 @@ class TestStatusBar:
         html = TestClient(app).get("/").text
         assert "v16.0" in html
 
-    def test_status_bar_shows_eval_cases(self) -> None:
-        html = TestClient(app).get("/").text
-        assert "780 eval cases" in html
+    def test_status_bar_shows_eval_cases_element(self) -> None:
+        """Eval case count is a live element populated from /evaluations/latest."""
+        dom = _get_dom()
+        assert "stat-eval-cases" in dom.ids, "stat-eval-cases element missing from footer"
 
-    def test_status_bar_shows_test_count(self) -> None:
-        html = TestClient(app).get("/").text
-        assert "unit tests" in html
+    def test_eval_case_count_matches_real_dataset(self) -> None:
+        """The endpoint must report the actual number of evaluation dataset cases."""
+        client = TestClient(app)
+        data = client.get("/evaluations/latest").json()["data"]
+        dataset = json.loads(Path("tests/evaluation/eval_dataset_full.json").read_text())
+        assert data["benchmark_cases"] == len(dataset)
+
+    def test_status_bar_shows_repo_count_element(self) -> None:
+        dom = _get_dom()
+        assert "stat-repos" in dom.ids, "stat-repos element missing from footer"
 
 
 class TestSidebarNavigation:

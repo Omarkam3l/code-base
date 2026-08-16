@@ -33,4 +33,7 @@ def test_query_analyzer_with_fake_llm() -> None:
     intent = analyzer.analyze("How does UserService create users?")
     assert intent.intent_type == "symbol_lookup"
     assert "UserService" in intent.entities
-    assert "create_user" in intent.entities
+    # Entities come from the query itself — the provider must not invent symbols
+    # (e.g. the old create_user injection) that the user never mentioned.
+    assert "create_user" not in intent.entities
+    assert set(intent.entities) == {"UserService", "create", "users"}
