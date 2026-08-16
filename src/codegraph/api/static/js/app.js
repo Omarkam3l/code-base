@@ -464,8 +464,8 @@ class ForceSimulation {
       const cy = this.h / 2;
 
       this.nodes.forEach(n => {
-        n.vx += (cx - n.x) * this.alpha * 0.03;
-        n.vy += (cy - n.y) * this.alpha * 0.03;
+        n.vx += (cx - n.x) * this.alpha * 0.006;
+        n.vy += (cy - n.y) * this.alpha * 0.006;
       });
 
       for (let i = 0; i < this.nodes.length; i++) {
@@ -477,8 +477,8 @@ class ForceSimulation {
           let dist = Math.hypot(dx, dy);
           if (dist === 0) { dist = 0.1; }
           const minDistance = a.radius + b.radius + 30;
-          if (dist < minDistance * 1.5) {
-            const force = (minDistance * minDistance) / (dist * dist) * this.alpha * 0.2;
+          if (dist < minDistance * 2.8) {
+            const force = (minDistance * minDistance) / (dist * dist) * this.alpha * 0.5;
             const fx = (dx / dist) * force;
             const fy = (dy / dist) * force;
             a.vx += fx; a.vy += fy;
