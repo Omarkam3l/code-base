@@ -43,7 +43,11 @@ def _build_platform_service() -> PlatformService:
 
         from codegraph.graph.repository import GraphRepository
 
-        driver = GraphDatabase.driver(uri, auth=(username, password))
+        driver = GraphDatabase.driver(
+            uri,
+            auth=(username, password),
+            max_connection_lifetime=300,  # don't reuse connections Aura may have dropped
+        )
         graph_repo = GraphRepository(
             driver=driver, database=os.getenv("NEO4J_DATABASE", "neo4j")
         )

@@ -729,3 +729,113 @@ line.edge-active {
   stroke: #4edea3;
   stroke-width: 2.2;
 }
+
+/* ── Dense-graph label visibility (hover / selection reveals) ── */
+svg.labels-collapsed .node-label {
+  visibility: hidden;
+}
+
+svg.labels-collapsed .graph-node:hover .node-label,
+svg.labels-collapsed .graph-node.label-visible .node-label {
+  visibility: visible;
+}
+
+.graph-node.label-visible .node-label {
+  fill: #ffffff;
+}
+
+/* ── Graph legend (collapsible, bottom-right of the canvas) ── */
+.graph-legend {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 10;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  max-width: 200px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.legend-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text-primary);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+.legend-toggle:hover {
+  color: var(--primary);
+}
+
+.legend-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.graph-legend.collapsed .legend-body {
+  display: none;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.legend-swatch {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  flex: none;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.legend-swatch.edge {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+
+/* ── Force-Directed Graph Animations ── */
+
+@keyframes node-enter {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes selected-pulse {
+  0%, 100% { filter: drop-shadow(0 0 12px rgba(0, 218, 243, 0.25)); }
+  50% { filter: drop-shadow(0 0 24px rgba(0, 218, 243, 0.8)); }
+}
+
+@keyframes particle-fade {
+  0%, 100% { opacity: 0; }
+  20%, 80% { opacity: 0.6; }
+}
+
+.graph-node {
+  animation: node-enter 0.5s ease-out backwards;
+}
+
+.edge-particle {
+  opacity: 0.4;
+  animation: particle-fade 2.5s infinite ease-in-out;
+}
+
+.graph-node.selected circle {
+  animation: selected-pulse 2s infinite ease-in-out;
+}
+

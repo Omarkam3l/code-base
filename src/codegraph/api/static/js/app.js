@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initSidebarNav();
   initActions();
+  buildLegend();
   loadStatus();     // health + evaluation badges + footer stats
   loadRepositories(); // repo selector + graph canvas
   loadDrift();
@@ -15,6 +16,7 @@ const state = {
   lastPlanId: null,
   workflowId: null,
   traces: [],
+  activeSimulation: null,
 };
 
 // ── API helper with tracing + error handling ──────────────
@@ -206,6 +208,7 @@ async function loadGraph() {
 
 function renderGraphEmpty(svg, message) {
   clearSVG(svg);
+  svg.classList.remove('labels-collapsed');
   const text = createSVG('text', {
     x: '50%', y: '50%',
     'text-anchor': 'middle', 'dominant-baseline': 'central',
@@ -219,12 +222,23 @@ function renderGraphEmpty(svg, message) {
 
 const KIND_COLORS = { Class: '#4edea3', Method: '#00daf3', Function: '#ffb95f' };
 const KIND_ORDER = { Class: 0, Method: 1, Function: 2 };
+// Size tiers mirroring KIND_ORDER so the class/method hierarchy reads in size, not just color.
+const KIND_RADIUS = { Class: 1.4, Method: 1.0, Function: 1.0 };
+// Distinct stroke colors per relationship type (falls back to the neutral border tone).
+const EDGE_COLORS = { DEFINES: '#8fa7c9', CALLS: '#00daf3', IMPORTS: '#ffb95f', INHERITS: '#4edea3' };
+// Above this node count, labels render only on hover or via highlightNeighbors().
+const LABEL_THRESHOLD = 15;
 
 function truncateLabel(text, max = 14) {
   return text.length > max ? text.slice(0, max - 1) + '…' : text;
 }
 
 function renderGraph(svg, nodes, edges) {
+  // Kill any existing simulation to prevent orphaned rAF loops.
+  if (state.activeSimulation) {
+    state.activeSimulation.destroy();
+    state.activeSimulation = null;
+  }
   clearSVG(svg);
 
   const rect = svg.getBoundingClientRect();
@@ -232,100 +246,92 @@ function renderGraph(svg, nodes, edges) {
   const h = rect.height || 500;
   svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
 
+  svg.classList.toggle('labels-collapsed', nodes.length > LABEL_THRESHOLD);
+
+  const baseRadius = Math.max(12, Math.min(26, Math.min(w, h) * (0.5 / Math.sqrt(nodes.length))));
+  const labelSize = Math.max(9, Math.round(baseRadius * 0.42));
+
   const cx = w / 2, cy = h / 2;
-
-  // Concentric-ring layout: classes innermost, then methods/functions,
-  // spread across 1-3 rings so labels never collide at high node counts.
-  const sorted = [...nodes].sort(
-    (a, b) => (KIND_ORDER[a.kind] ?? 3) - (KIND_ORDER[b.kind] ?? 3)
-  );
-  const ringCount = Math.min(3, Math.max(1, Math.ceil(sorted.length / 14)));
-  const maxR = Math.min(w, h) * 0.40;
-  const minR = maxR * 0.35;
-  // Distribute nodes across rings proportionally to ring circumference.
-  const ringWeights = Array.from({ length: ringCount }, (_, i) => minR + (i / Math.max(1, ringCount - 1)) * (maxR - minR));
-  const weightSum = ringWeights.reduce((a, b) => a + b, 0);
-  const perRing = ringWeights.map(rw => Math.max(1, Math.round((rw / weightSum) * sorted.length)));
-  // Trim/extend to match exactly
-  let diff = sorted.length - perRing.reduce((a, b) => a + b, 0);
-  let ri = 0;
-  while (diff !== 0) {
-    const idx = ri % ringCount;
-    perRing[idx] += diff > 0 ? 1 : -1;
-    diff += diff > 0 ? -1 : 1;
-    ri++;
-  }
-
-  const nodeRadius = Math.max(12, Math.min(26, Math.min(w, h) * (0.5 / Math.sqrt(sorted.length))));
-  const labelSize = Math.max(9, Math.round(nodeRadius * 0.42));
-
-  const positions = {};
-  let cursor = 0;
-  ringWeights.forEach((ringR, ringIdx) => {
-    const count = perRing[ringIdx];
-    for (let i = 0; i < count && cursor < sorted.length; i++, cursor++) {
-      const node = sorted[cursor];
-      // Stagger ring start angles so labels don't line up radially.
-      const angle = (2 * Math.PI * i) / count + (ringIdx * Math.PI) / ringCount - Math.PI / 2;
-      positions[node.id] = { x: cx + Math.cos(angle) * ringR, y: cy + Math.sin(angle) * ringR, ring: ringIdx };
-    }
+  const nodeMap = new Map();
+  nodes.forEach((n, i) => {
+    // Spread nodes in a loose ring on init so the simulation uncoils gracefully.
+    const angle = (2 * Math.PI * i) / nodes.length - Math.PI / 2;
+    const spread = Math.min(w, h) * 0.2;
+    nodeMap.set(n.id, {
+      ...n,
+      x: cx + Math.cos(angle) * spread + (Math.random() - 0.5) * 20,
+      y: cy + Math.sin(angle) * spread + (Math.random() - 0.5) * 20,
+      vx: 0,
+      vy: 0,
+      radius: baseRadius * (KIND_RADIUS[n.kind] || 1.0),
+      pinned: false,
+      hovered: false,
+      color: KIND_COLORS[n.kind] || '#c3f5ff'
+    });
   });
 
-  const nodeIds = new Set(nodes.map(n => n.id));
-  const visibleEdges = edges.filter(e => nodeIds.has(e.source) && nodeIds.has(e.target));
-  const dense = sorted.length > 18 || visibleEdges.length > 14;
+  const visibleEdges = edges.filter(e => nodeMap.has(e.source) && nodeMap.has(e.target));
+  const dense = nodes.length > 18 || visibleEdges.length > 14;
 
-  // ── Edges ──
   const edgeLines = [];
   visibleEdges.forEach(edge => {
-    const src = positions[edge.source];
-    const tgt = positions[edge.target];
-    if (!src || !tgt) return;
+    const source = nodeMap.get(edge.source);
+    const target = nodeMap.get(edge.target);
+
+    const g = createSVG('g', { class: 'edge-group' });
 
     const line = createSVG('line', {
-      x1: src.x, y1: src.y, x2: tgt.x, y2: tgt.y,
-      stroke: '#3b494c', 'stroke-width': '1.2',
-      'marker-end': 'url(#arrow)',
+      stroke: EDGE_COLORS[edge.type] || '#3b494c',
+      'stroke-width': '1.2',
+      'marker-end': 'url(#arrow)'
     });
-    svg.appendChild(line);
-    edgeLines.push({ line, edge });
+    g.appendChild(line);
 
-    // Edge labels only when the graph is sparse enough to read them.
+    const particle = createSVG('circle', {
+      r: '2', fill: EDGE_COLORS[edge.type] || '#3b494c',
+      class: 'edge-particle', opacity: '0'
+    });
+    const particlePhase = Math.random();  // 0-1 offset so particles stagger
+    g.appendChild(particle);
+
+    let label = null;
     if (!dense) {
-      const label = createSVG('text', {
-        x: (src.x + tgt.x) / 2, y: (src.y + tgt.y) / 2 - 4,
+      label = createSVG('text', {
         'text-anchor': 'middle', 'dominant-baseline': 'central',
         'font-size': Math.max(9, labelSize - 2),
         'font-family': "'JetBrains Mono', monospace",
         fill: '#5a6a6d', 'pointer-events': 'none',
       });
       label.textContent = edge.type;
-      svg.appendChild(label);
+      g.appendChild(label);
     }
+    
+    svg.appendChild(g);
+    edgeLines.push({ edge, source, target, line, particle, particlePhase, label });
   });
 
-  // ── Nodes ──
+  const nodeElements = [];
   let selectedNode = null;
-  nodes.forEach(node => {
-    const pos = positions[node.id];
-    if (!pos) return;
-    const color = KIND_COLORS[node.kind] || '#c3f5ff';
+  
+  nodes.forEach((node, i) => {
+    const nd = nodeMap.get(node.id);
     const g = createSVG('g', {
-      transform: `translate(${pos.x}, ${pos.y})`,
-      class: 'graph-node', 'data-id': node.id,
+      class: 'graph-node', 'data-id': nd.id
     });
+    g.style.animationDelay = `${i * 0.03}s`;
 
-    g.appendChild(createSVG('circle', {
-      r: nodeRadius, fill: '#171f33', stroke: color, 'stroke-width': '2.5',
-    }));
+    const circle = createSVG('circle', {
+      r: nd.radius, fill: '#171f33', stroke: nd.color, 'stroke-width': '2.5',
+    });
+    g.appendChild(circle);
 
-    // Hover tooltip: full qualified name, kind, and file.
     const title = createSVG('title', {});
     title.textContent = `${node.qualified_name} (${node.kind})\n${node.file_path || ''}`;
     g.appendChild(title);
 
     const label = createSVG('text', {
-      'text-anchor': 'middle', y: nodeRadius + labelSize + 4,
+      class: 'node-label',
+      'text-anchor': 'middle', y: nd.radius + labelSize + 4,
       fill: '#e6ecff', 'font-size': labelSize, 'font-weight': '500',
       'font-family': "'JetBrains Mono', monospace", 'pointer-events': 'none',
     });
@@ -343,11 +349,182 @@ function renderGraph(svg, nodes, edges) {
       inspectNode(node);
     });
 
+    let isDragging = false;
+    g.addEventListener('mousedown', e => {
+      isDragging = true;
+      nd.pinned = true;
+      simulation.alpha = Math.max(simulation.alpha, 0.5);
+      simulation.start();
+      e.stopPropagation();
+    });
+    window.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      const pt = svg.createSVGPoint();
+      pt.x = e.clientX;
+      pt.y = e.clientY;
+      const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+      nd.x = svgP.x;
+      nd.y = svgP.y;
+      simulation.alpha = Math.max(simulation.alpha, 0.5);
+    });
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        nd.pinned = false;
+      }
+    });
+
+    g.addEventListener('mouseenter', () => {
+      nd.hovered = true;
+      simulation.alpha = Math.max(simulation.alpha, 0.2);
+      simulation.start();
+    });
+    g.addEventListener('mouseleave', () => {
+      nd.hovered = false;
+    });
+
     svg.appendChild(g);
+    nodeElements.push({ nd, g });
   });
+
+  const simulation = new ForceSimulation(Array.from(nodeMap.values()), edgeLines, w, h, () => {
+    nodeElements.forEach(({ nd, g }) => {
+      g.setAttribute('transform', `translate(${nd.x}, ${nd.y})`);
+    });
+    edgeLines.forEach(({ source, target, line, particle, particlePhase, label }) => {
+      line.setAttribute('x1', source.x);
+      line.setAttribute('y1', source.y);
+      line.setAttribute('x2', target.x);
+      line.setAttribute('y2', target.y);
+
+      // Animate particle along the edge path
+      const t = ((performance.now() / 2500 + particlePhase) % 1);
+      particle.setAttribute('cx', source.x + (target.x - source.x) * t);
+      particle.setAttribute('cy', source.y + (target.y - source.y) * t);
+      // Fade in/out at endpoints
+      const fadeAlpha = t < 0.1 ? t / 0.1 : t > 0.9 ? (1 - t) / 0.1 : 1;
+      particle.setAttribute('opacity', (fadeAlpha * 0.5).toFixed(2));
+
+      if (label) {
+        label.setAttribute('x', (source.x + target.x) / 2);
+        label.setAttribute('y', (source.y + target.y) / 2 - 4);
+      }
+    });
+  });
+  state.activeSimulation = simulation;
+}
+
+class ForceSimulation {
+  constructor(nodes, edges, w, h, onTick) {
+    this.nodes = nodes;
+    this.edges = edges;
+    this.w = w;
+    this.h = h;
+    this.onTick = onTick;
+    this.alpha = 1.0;
+    this.alphaMin = 0.005;
+    this.alphaDecay = 0.02;
+    this.running = false;
+    this.destroyed = false;
+    this.start();
+  }
+
+  destroy() {
+    this.destroyed = true;
+    this.running = false;
+  }
+
+  start() {
+    if (!this.running) {
+      this.running = true;
+      requestAnimationFrame(() => this.tick());
+    }
+  }
+
+  tick() {
+    if (this.destroyed) return;
+    const settled = this.alpha < this.alphaMin;
+
+    if (!settled) {
+      // Apply physics forces
+      const cx = this.w / 2;
+      const cy = this.h / 2;
+
+      this.nodes.forEach(n => {
+        n.vx += (cx - n.x) * this.alpha * 0.03;
+        n.vy += (cy - n.y) * this.alpha * 0.03;
+      });
+
+      for (let i = 0; i < this.nodes.length; i++) {
+        for (let j = i + 1; j < this.nodes.length; j++) {
+          const a = this.nodes[i];
+          const b = this.nodes[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          let dist = Math.hypot(dx, dy);
+          if (dist === 0) { dist = 0.1; }
+          const minDistance = a.radius + b.radius + 30;
+          if (dist < minDistance * 1.5) {
+            const force = (minDistance * minDistance) / (dist * dist) * this.alpha * 0.2;
+            const fx = (dx / dist) * force;
+            const fy = (dy / dist) * force;
+            a.vx += fx; a.vy += fy;
+            b.vx -= fx; b.vy -= fy;
+          }
+        }
+      }
+
+      this.edges.forEach(e => {
+        const a = e.source;
+        const b = e.target;
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const dist = Math.hypot(dx, dy);
+        const targetDist = a.radius + b.radius + 50;
+        
+        const force = (dist - targetDist) * this.alpha * 0.02;
+        let fx = (dx / dist) * force;
+        let fy = (dy / dist) * force;
+
+        if (a.hovered || b.hovered) {
+          const hoverForce = this.alpha * 1.5;
+          fx -= (dx / dist) * hoverForce;
+          fy -= (dy / dist) * hoverForce;
+        }
+
+        a.vx += fx; a.vy += fy;
+        b.vx -= fx; b.vy -= fy;
+      });
+
+      this.nodes.forEach(n => {
+        if (!n.pinned) {
+          n.vx *= 0.85;
+          n.vy *= 0.85;
+          n.x += n.vx;
+          n.y += n.vy;
+
+          const padding = n.radius + 10;
+          if (n.x < padding) { n.x = padding; n.vx *= -0.5; }
+          if (n.x > this.w - padding) { n.x = this.w - padding; n.vx *= -0.5; }
+          if (n.y < padding) { n.y = padding; n.vy *= -0.5; }
+          if (n.y > this.h - padding) { n.y = this.h - padding; n.vy *= -0.5; }
+        } else {
+          n.vx = 0; n.vy = 0;
+        }
+      });
+
+      this.alpha *= (1 - this.alphaDecay);
+    }
+
+    // Always call onTick so particles keep animating even when physics is settled.
+    this.onTick();
+    requestAnimationFrame(() => this.tick());
+  }
 }
 
 // Dim nodes/edges not connected to the selected node so its neighborhood reads clearly.
+// Adjacent nodes also get .label-visible so their labels show even in dense
+// (labels-collapsed) graphs.
 function highlightNeighbors(svg, edgeLines, nodeId) {
   const adjacent = new Set([nodeId]);
   edgeLines.forEach(({ line, edge }) => {
@@ -358,8 +535,10 @@ function highlightNeighbors(svg, edgeLines, nodeId) {
       adjacent.add(edge.target);
     }
   });
-  svg.querySelectorAll('.graph-node').forEach(g => {
-    g.classList.toggle('dimmed', !adjacent.has(g.dataset.id));
+  svg.querySelectorAll('g.graph-node').forEach(g => {
+    const isAdjacent = adjacent.has(g.dataset.id);
+    g.classList.toggle('dimmed', !isAdjacent);
+    g.classList.toggle('label-visible', isAdjacent);
   });
 }
 
@@ -367,6 +546,40 @@ function clearSVG(svg) {
   Array.from(svg.children).forEach(child => {
     if (child.tagName.toLowerCase() !== 'defs') svg.removeChild(child);
   });
+}
+
+// ── Graph legend (single source: KIND_COLORS / EDGE_COLORS) ──
+function buildLegend() {
+  const legend = document.getElementById('graph-legend');
+  const body = document.getElementById('legend-body');
+  const toggle = document.getElementById('legend-toggle');
+  if (!legend || !body || !toggle) return;
+
+  body.innerHTML = '';
+  Object.entries(KIND_COLORS).forEach(([kind, color]) => {
+    body.appendChild(legendRow(kind, color, 'node'));
+  });
+  Object.entries(EDGE_COLORS).forEach(([type, color]) => {
+    body.appendChild(legendRow(type, color, 'edge'));
+  });
+
+  toggle.addEventListener('click', () => {
+    const collapsed = legend.classList.toggle('collapsed');
+    toggle.setAttribute('aria-expanded', String(!collapsed));
+  });
+}
+
+function legendRow(name, color, variant) {
+  const row = document.createElement('div');
+  row.className = 'legend-row';
+  const swatch = document.createElement('span');
+  swatch.className = `legend-swatch${variant === 'edge' ? ' edge' : ''}`;
+  swatch.style.background = color;
+  const label = document.createElement('span');
+  label.textContent = name;
+  row.appendChild(swatch);
+  row.appendChild(label);
+  return row;
 }
 
 function inspectNode(node) {
