@@ -17,7 +17,34 @@ const state = {
   workflowId: null,
   traces: [],
   activeSimulation: null,
+  draggedNode: null,
+  dragSvg: null,
 };
+
+// Single pair of window-level drag listeners for the whole page lifetime, instead of
+// one per node per renderGraph() call (which leaked N listeners on every graph reload —
+// each reload/repo-switch added another full set that was never removed).
+// They operate on state.draggedNode, which renderGraph() updates on mousedown.
+window.addEventListener('mousemove', e => {
+  const nd = state.draggedNode;
+  const svg = state.dragSvg;
+  if (!nd || !svg) return;
+  const pt = svg.createSVGPoint();
+  pt.x = e.clientX;
+  pt.y = e.clientY;
+  const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+  nd.x = svgP.x;
+  nd.y = svgP.y;
+  if (state.activeSimulation) {
+    state.activeSimulation.alpha = Math.max(state.activeSimulation.alpha, 0.5);
+  }
+});
+window.addEventListener('mouseup', () => {
+  if (state.draggedNode) {
+    state.draggedNode.pinned = false;
+    state.draggedNode = null;
+  }
+});
 
 // ── API helper with tracing + error handling ──────────────
 async function api(path, options = {}) {
@@ -239,6 +266,8 @@ function renderGraph(svg, nodes, edges) {
     state.activeSimulation.destroy();
     state.activeSimulation = null;
   }
+  state.draggedNode = null;
+  state.dragSvg = null;
   clearSVG(svg);
 
   const rect = svg.getBoundingClientRect();
@@ -349,29 +378,13 @@ function renderGraph(svg, nodes, edges) {
       inspectNode(node);
     });
 
-    let isDragging = false;
     g.addEventListener('mousedown', e => {
-      isDragging = true;
+      state.draggedNode = nd;
+      state.dragSvg = svg;
       nd.pinned = true;
       simulation.alpha = Math.max(simulation.alpha, 0.5);
       simulation.start();
       e.stopPropagation();
-    });
-    window.addEventListener('mousemove', e => {
-      if (!isDragging) return;
-      const pt = svg.createSVGPoint();
-      pt.x = e.clientX;
-      pt.y = e.clientY;
-      const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
-      nd.x = svgP.x;
-      nd.y = svgP.y;
-      simulation.alpha = Math.max(simulation.alpha, 0.5);
-    });
-    window.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        nd.pinned = false;
-      }
     });
 
     g.addEventListener('mouseenter', () => {
@@ -479,7 +492,8 @@ class ForceSimulation {
         const b = e.target;
         const dx = b.x - a.x;
         const dy = b.y - a.y;
-        const dist = Math.hypot(dx, dy);
+        let dist = Math.hypot(dx, dy);
+        if (dist === 0) { dist = 0.1; }
         const targetDist = a.radius + b.radius + 50;
         
         const force = (dist - targetDist) * this.alpha * 0.02;
