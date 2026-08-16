@@ -197,9 +197,9 @@ class PlatformService:
         wf_ctx = self.approval_engine.transition(wf_ctx, WorkflowState.PLAN)
         wf_ctx = self.approval_engine.transition(wf_ctx, WorkflowState.AWAITING_APPROVAL)
 
-        # 3. Invoke real ChangePlanner
+        # 3. Invoke real ChangePlanner (grounded in the resolved sources)
         req = ChangeRequest(description=change_request, repository_id=repository_id)
-        plan = self.change_pipeline.planner.create_plan(req)
+        plan = self.change_pipeline.planner.create_plan(req, source_code_map=sources)
 
         plan_id = f"plan_{ctx.trace_id[:8]}"
         self._active_workflows[plan_id] = wf_ctx
@@ -355,9 +355,9 @@ class PlatformService:
         # 1. Resolve repository path and sources (fails closed with KeyError if unregistered)
         root, sources = self._resolve_repo_and_sources(repository_id)
 
-        # 2. Build RepairRequest with initial ChangePlan
+        # 2. Build RepairRequest with initial ChangePlan (grounded in the resolved sources)
         change_req = ChangeRequest(description=failure_message, repository_id=repository_id)
-        initial_plan = self.change_pipeline.planner.create_plan(change_req)
+        initial_plan = self.change_pipeline.planner.create_plan(change_req, source_code_map=sources)
 
         repair_req = RepairRequest(
             change_request=change_req,

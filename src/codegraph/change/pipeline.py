@@ -66,8 +66,8 @@ class ChangePipeline:
             investigation_context=investigation_ctx,
         )
 
-        # Step 2: Change Planner
-        plan = self.planner.create_plan(req_with_ctx)
+        # Step 2: Change Planner (receives source map for grounded patch construction)
+        plan = self.planner.create_plan(req_with_ctx, source_code_map=source_code_map)
         if not plan.is_valid:
             elapsed = (time.perf_counter() - start_time) * 1000.0
             return ChangeResult(

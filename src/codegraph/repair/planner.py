@@ -26,52 +26,45 @@ class DeterministicRepairPlanner:
         failures: Sequence[FailureRecord],
         previous_plans: Sequence[RepairPlan] = (),
     ) -> RepairPlan:
-        """Formulate a structured RepairPlan grounded in failure diagnosis."""
-        affected_files = list(initial_plan.affected_files)
-        affected_entities = list(initial_plan.affected_entities)
+        """Formulate a structured RepairPlan grounded in the initial plan's real modification.
 
-        if not affected_files:
-            affected_files = ["services.py"]
-        if not affected_entities:
-            affected_entities = ["UserService"]
+        The deterministic planner re-applies the grounded patch produced by the
+        change planner (computed from the actual repository sources); it never
+        fabricates replacement code.
+        """
+        grounded = [m for m in initial_plan.modifications if m.new_code]
+        if not grounded or not initial_plan.affected_files:
+            return RepairPlan(
+                objective=f"Repair {diagnosis.category.value}: {diagnosis.root_cause_hypothesis}",
+                diagnosis=diagnosis,
+                modifications=(),
+                affected_entities=tuple(initial_plan.affected_entities),
+                affected_files=tuple(initial_plan.affected_files),
+                validation_strategy="Abstain: no grounded modification available for repair.",
+                expected_fix="",
+                is_valid=False,
+            )
 
-        target_file = affected_files[0]
-        target_entity = affected_entities[0]
-
+        source_op = grounded[0]
         cat = diagnosis.category
-
-        # Formulate operation tailored to failure category
-        if cat == FailureCategory.SYNTAX_ERROR:
-            desc = "Fix Python syntax error in target function"
-            code = f"def {target_entity}(user_id: str):\n    return {{'status': 'authenticated', 'user_id': user_id}}\n"
-        elif cat == FailureCategory.IMPORT_ERROR:
-            desc = "Correct import resolution in file header"
-            code = "import json\nfrom typing import Any, Dict\n"
-        elif cat == FailureCategory.MISSING_SYMBOL:
-            desc = f"Define missing symbol {target_entity}"
-            code = f"class {target_entity}:\n    def __init__(self, name: str):\n        self.name = name\n"
-        else:
-            desc = f"Adjust {target_entity} parameters to fix assertion mismatch"
-            code = f"def {target_entity}(user_id: str):\n    return {{'status': 'authenticated', 'user_id': user_id, 'validated': True}}\n"
-
         op = ChangeOperation(
-            file=target_file,
+            file=source_op.file,
             operation_type=ChangeOperationType.MODIFY_FUNCTION,
-            target=target_entity,
-            description=desc,
+            target=source_op.target,
+            description=f"Apply diagnosed fix for {cat.value} in {source_op.target}",
             rationale=f"Resolves {cat.value} identified in diagnosis {diagnosis.failure_id}",
             evidence_ids=diagnosis.evidence_ids,
-            new_code=code,
+            new_code=source_op.new_code,
         )
 
         return RepairPlan(
             objective=f"Repair {cat.value}: {diagnosis.root_cause_hypothesis}",
             diagnosis=diagnosis,
             modifications=(op,),
-            affected_entities=tuple(affected_entities),
-            affected_files=tuple(affected_files),
+            affected_entities=tuple(initial_plan.affected_entities),
+            affected_files=tuple(initial_plan.affected_files),
             validation_strategy="AST syntax validation, scope check, targeted pytest runner",
-            expected_fix=f"Resolves failure by updating {target_entity} implementation in {target_file}",
+            expected_fix=f"Resolves failure by updating {source_op.target} in {source_op.file}",
             is_valid=True,
         )
 

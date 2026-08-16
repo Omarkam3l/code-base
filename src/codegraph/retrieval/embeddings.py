@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 import hashlib
+import re
 from typing import Sequence
 
 
@@ -20,7 +21,14 @@ class BaseEmbeddingModel(ABC):
 
 
 class FakeEmbeddingModel(BaseEmbeddingModel):
-    """Deterministic mock embedding model for fast unit testing without model downloads."""
+    """Deterministic lexical embedding model for fast offline testing.
+
+    Each token contributes a deterministic pseudo-random vector; embeddings are
+    the summed token vectors, L2-normalized, so cosine similarity between a
+    query and a document approximates token overlap. Retrieval stays meaningful
+    (queries surface documents sharing terms with them) without downloading a
+    real embedding model.
+    """
 
     def __init__(self, dimension: int = 384) -> None:
         self.dimension = dimension
@@ -31,13 +39,24 @@ class FakeEmbeddingModel(BaseEmbeddingModel):
     def embed_query(self, text: str) -> list[float]:
         return self._embed_text(text)
 
+    def _token_vector(self, token: str) -> list[float]:
+        digest = hashlib.sha256(token.encode("utf-8")).digest()
+        return [
+            (((digest[i % len(digest)] + i * 3) % 256) - 128) / 128.0
+            for i in range(self.dimension)
+        ]
+
     def _embed_text(self, text: str) -> list[float]:
-        digest = hashlib.sha256(text.encode("utf-8")).digest()
-        vec = []
-        for i in range(self.dimension):
-            raw = (digest[i % len(digest)] + i * 3) % 256
-            vec.append((raw - 128) / 128.0)
-        return vec
+        tokens = [t for t in re.findall(r"[a-z_][a-z0-9_]*", text.lower()) if len(t) >= 2]
+        if not tokens:
+            tokens = [text.lower().strip() or "<empty>"]
+        vec = [0.0] * self.dimension
+        for token in set(tokens):
+            token_vec = self._token_vector(token)
+            for i in range(self.dimension):
+                vec[i] += token_vec[i]
+        norm = sum(v * v for v in vec) ** 0.5 or 1.0
+        return [v / norm for v in vec]
 
 
 class BGEEmbeddingModel(BaseEmbeddingModel):

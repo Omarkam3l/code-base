@@ -16,7 +16,12 @@ class BaseLLMProvider(ABC):
 
 
 class FakeLLMProvider(BaseLLMProvider):
-    """Deterministic mock LLM provider for unit testing without external API calls."""
+    """Deterministic offline LLM provider for testing without external API calls.
+
+    Responses are synthesized from the prompt itself (query entities, evidence
+    lines) so they stay grounded in the actual inputs — never canned text about
+    entities that were not asked about.
+    """
 
     def __init__(self, default_response: str | None = None) -> None:
         self.default_response = default_response
@@ -39,26 +44,32 @@ class FakeLLMProvider(BaseLLMProvider):
                 "function", "class", "method", "module", "file", "code"
             }
             entities = [e for e in raw_entities if e.lower() not in stop_words and len(e) >= 2]
-            if ("create" in query.lower() or "users" in query.lower()) and "create_user" not in entities:
-                entities.append("create_user")
 
             return json.dumps(
                 {
                     "intent_type": "symbol_lookup",
-                    "entities": entities if entities else ["UserService"],
+                    "entities": entities,
                     "concepts": [],
                     "requested_relationships": [],
                 }
             )
 
-        # Mock grounded answer with valid citations [E1]
-        if "[E1]" in prompt or "EVIDENCE" in prompt:
-            return (
-                "The `UserService.create_user` method delegates user creation and persistence. [E1] "
-                "It uses `UserRepository.create` to store the new user entity. [E1]"
-            )
+        # Grounded-answer synthesis: build the answer from the evidence lines
+        # embedded in the prompt ("[E1] qualified_name in file:start-end").
+        evidence_matches = re.findall(
+            r"\[(E\d+)\]\s+(\S+)\s+in\s+(\S+?):(\d+)-(\d+)", prompt
+        )
+        if evidence_matches:
+            parts = []
+            for cit, name, file_path, start, end in evidence_matches[:5]:
+                parts.append(f"`{name}` in `{file_path}` lines {start}-{end} is involved [{cit}].")
+            return "Based on the gathered evidence: " + " ".join(parts)
 
-        return "Mock grounded response. [E1]"
+        # Evidence block without the standard formatting — cite generically.
+        if "[E1]" in prompt or "EVIDENCE" in prompt:
+            return "Based on the gathered evidence, the identified components are related. [E1]"
+
+        return "Deterministic offline response."
 
 
 class OpenAICompatibleProvider(BaseLLMProvider):
@@ -100,12 +111,15 @@ class OpenAICompatibleProvider(BaseLLMProvider):
             method="POST",
         )
 
-        try:
-            with urllib.request.urlopen(req, timeout=30) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-                return data["choices"][0]["message"]["content"]
-        except Exception as e:
-            raise RuntimeError(f"LLM API request failed: {e}") from e
+        last_error: Exception | None = None
+        for _ in range(3):  # one retry pass for transient network/API failures
+            try:
+                with urllib.request.urlopen(req, timeout=120) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                    return data["choices"][0]["message"]["content"]
+            except Exception as e:
+                last_error = e
+        raise RuntimeError(f"LLM API request failed: {last_error}") from last_error
 
 
 class NvidiaLLMProvider(OpenAICompatibleProvider):

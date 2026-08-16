@@ -96,8 +96,14 @@ class DeterministicPlanner(BaseInvestigationPlanner):
             if len(w) > 2 and w.lower() not in ENGLISH_STOP_WORDS
         ]
 
-        target_term = "UserService"
-        target_term2 = "User"
+        # Dynamic default target: prefer CamelCase-looking symbols (class names),
+        # then any identifier, extracted from the question itself.
+        def _score(word: str) -> int:
+            return (1 if word[0].isupper() else 0) + (1 if "." in word or "_" in word else 0)
+
+        ranked = sorted(filtered_words, key=_score, reverse=True)
+        target_term = ranked[0] if ranked else ""
+        target_term2 = ranked[1] if len(ranked) > 1 else target_term
 
         # Check if step 1 hybrid_search yielded results
         if state.results and state.results[0].success and isinstance(state.results[0].result, list) and state.results[0].result:
@@ -106,11 +112,6 @@ class DeterministicPlanner(BaseInvestigationPlanner):
                 target_term = first_hit["entity_id"]
                 if len(state.results[0].result) > 1 and isinstance(state.results[0].result[1], dict) and "entity_id" in state.results[0].result[1]:
                     target_term2 = state.results[0].result[1]["entity_id"]
-
-        if target_term == "UserService" and filtered_words:
-            target_term = filtered_words[0]
-            if len(filtered_words) > 1:
-                target_term2 = filtered_words[1]
 
         if step_idx == 1:
             return InvestigationStep(
