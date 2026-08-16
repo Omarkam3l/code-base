@@ -11,7 +11,7 @@ from codegraph.domain.entities import (
     PythonFile,
     SourceLocation,
 )
-from codegraph.ingestion.parser import ParseResult
+from codegraph.ingestion.parser import ParseResult, byte_offset_to_point
 
 
 class PythonExtractor:
@@ -125,7 +125,7 @@ class PythonExtractor:
         self, node: tree_sitter.Node, source_bytes: bytes
     ) -> list[Import]:
         """Extract imports from `import os`, `import os.path`, `import foo, bar as b`."""
-        loc = self._get_location(node)
+        loc = self._get_location(node, source_bytes)
         results: list[Import] = []
 
         for child in node.children:
@@ -163,7 +163,7 @@ class PythonExtractor:
         self, node: tree_sitter.Node, source_bytes: bytes
     ) -> list[Import]:
         """Extract imports from `from x import y`, `from .models import User`, `from x import *`."""
-        loc = self._get_location(node)
+        loc = self._get_location(node, source_bytes)
         results: list[Import] = []
 
         module_str: str | None = None
@@ -276,7 +276,7 @@ class PythonExtractor:
             return None
 
         class_name = name_node.text.decode("utf-8")
-        loc = self._get_location(node)
+        loc = self._get_location(node, source_bytes)
 
         body_node = node.child_by_field_name("body")
         methods: list[Function] = []
@@ -314,7 +314,7 @@ class PythonExtractor:
             return None
 
         fn_name = name_node.text.decode("utf-8")
-        loc = self._get_location(node)
+        loc = self._get_location(node, source_bytes)
         is_async = node.type == "async_function_definition"
 
         # Return annotation
@@ -459,11 +459,20 @@ class PythonExtractor:
                 break
         return None
 
-    def _get_location(self, node: tree_sitter.Node) -> SourceLocation:
-        """Convert Tree-sitter Node coordinates to 0-based SourceLocation."""
+    def _get_location(
+        self, node: tree_sitter.Node, source_bytes: bytes
+    ) -> SourceLocation:
+        """Convert Tree-sitter Node coordinates to 0-based SourceLocation.
+
+        Row/column values are derived from byte offsets instead of
+        node.start_point/end_point, whose native Point accessors crash with an
+        access violation on some Windows builds.
+        """
+        start_line, start_column = byte_offset_to_point(source_bytes, node.start_byte)
+        end_line, end_column = byte_offset_to_point(source_bytes, node.end_byte)
         return SourceLocation(
-            start_line=node.start_point.row,
-            start_column=node.start_point.column,
-            end_line=node.end_point.row,
-            end_column=node.end_point.column,
+            start_line=start_line,
+            start_column=start_column,
+            end_line=end_line,
+            end_column=end_column,
         )
