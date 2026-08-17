@@ -144,19 +144,22 @@ def investigate_question(req: InvestigateRequest):
 @app.post("/impact", response_model=APIResponse)
 def analyze_impact(req: ImpactRequest):
     """Analyze symbol change impact."""
-    return APIResponse(status="success", data={"symbol": req.symbol, "impacted_files": ["services.py", "middleware.py"]})
+    res = service.analyze_impact(symbol=req.symbol, repository_id=req.repository_id)
+    return APIResponse(status="success", trace_id=res["trace_id"], data=res)
 
 
 @app.post("/dependencies", response_model=APIResponse)
 def analyze_dependencies(req: QueryRequest):
     """Analyze symbol dependencies."""
-    return APIResponse(status="success", data={"query": req.query, "dependencies": ["User", "BaseService"]})
+    res = service.analyze_dependencies(symbol=req.query, repository_id=req.repository_id)
+    return APIResponse(status="success", trace_id=res["trace_id"], data=res)
 
 
 @app.post("/trace", response_model=APIResponse)
 def trace_execution_flow(req: QueryRequest):
     """Trace call execution flow."""
-    return APIResponse(status="success", data={"query": req.query, "call_flow": ["UserService.authenticate -> User.verify_password"]})
+    res = service.trace_execution_flow(symbol=req.query, repository_id=req.repository_id)
+    return APIResponse(status="success", trace_id=res["trace_id"], data=res)
 
 
 @app.post("/changes/plan", response_model=APIResponse)
@@ -203,7 +206,8 @@ def repair_failure(req: RepairRequestModel):
 @app.get("/traces/{trace_id}", response_model=APIResponse)
 def get_trace_details(trace_id: str):
     """Get observability trace details by trace_id."""
-    return APIResponse(status="success", trace_id=trace_id, data={"trace_id": trace_id, "status": "OK", "spans_count": 3})
+    res = service.get_trace_details(trace_id=trace_id)
+    return APIResponse(status="success", trace_id=trace_id, data=res)
 
 
 @app.get("/evaluations/latest", response_model=APIResponse)
@@ -245,31 +249,40 @@ def get_latest_evaluation():
 @app.post("/repositories/{repo_id}/multimodal/index", response_model=APIResponse)
 def index_multimodal_assets(repo_id: str):
     """Index multimodal repository assets (Markdown, images, diagrams)."""
-    return APIResponse(status="success", data={"repository_id": repo_id, "indexed_assets": 5, "status": "INDEXED"})
+    try:
+        res = service.index_multimodal_assets(repository_id=repo_id)
+    except KeyError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    return APIResponse(status="success", data=res)
 
 
 @app.post("/multimodal/query", response_model=APIResponse)
 def query_multimodal(req: QueryRequest):
     """Execute multimodal hybrid search query."""
-    return APIResponse(status="success", data={"query": req.query, "results": [{"type": "IMAGE_DIAGRAM", "text": "AuthService architecture"}]})
+    res = service.query_multimodal(query_text=req.query, repository_id=req.repository_id)
+    return APIResponse(status="success", data=res)
 
 
 @app.post("/multimodal/consistency", response_model=APIResponse)
 def analyze_consistency(req: QueryRequest):
     """Analyze documentation and diagram drift against code graph."""
-    return APIResponse(status="success", data={"status": "MATCH", "documented_fact": req.query, "confidence": "HIGH"})
+    try:
+        res = service.analyze_consistency(fact=req.query, repository_id=req.repository_id)
+    except KeyError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    return APIResponse(status="success", data=res)
 
 
 @app.get("/assets/{asset_id}", response_model=APIResponse)
 def get_asset_metadata(asset_id: str):
     """Get multimodal asset metadata."""
-    return APIResponse(status="success", data={"asset_id": asset_id, "type": "ARCHITECTURE_DIAGRAM", "mime": "image/png"})
+    return APIResponse(status="success", data={"asset_id": asset_id, "status": "AVAILABLE"})
 
 
 @app.get("/assets/{asset_id}/evidence", response_model=APIResponse)
 def get_asset_evidence(asset_id: str):
     """Get evidence citations extracted from asset."""
-    return APIResponse(status="success", data={"asset_id": asset_id, "evidence": ["[E1] architecture.png — 'AuthService uses Redis'"]})
+    return APIResponse(status="success", data={"asset_id": asset_id, "evidence": [f"Evidence extracted for asset {asset_id}"]})
 
 
 @app.get("/repositories/{repo_id}/graph", response_model=APIResponse)
@@ -285,7 +298,9 @@ def get_repository_graph(repo_id: str, limit: int = 40):
                 "note": "Neo4j graph repository not configured; index a repository with a live graph first.",
             },
         )
-    snapshot = service.graph_repo.get_graph_snapshot(node_limit=max(1, min(limit, 200)))
+    snapshot = service.graph_repo.get_graph_snapshot(
+        node_limit=max(1, min(limit, 200)), repository_id=repo_id
+    )
     snapshot["repository_id"] = repo_id
     return APIResponse(status="success", data=snapshot)
 

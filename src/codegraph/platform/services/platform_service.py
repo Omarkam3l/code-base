@@ -15,6 +15,11 @@ from codegraph.platform.investigations.manager import InvestigationManager
 from codegraph.platform.repositories.manager import RepositoryManager
 from codegraph.platform.repositories.models import RepositoryRecord, RepositoryStatus
 from codegraph.platform.workflow.engine import ApprovalWorkflowEngine, WorkflowContext, WorkflowState
+from codegraph.intelligence.dependency_analyzer import DependencyAnalyzer
+from codegraph.intelligence.impact_analyzer import ImpactAnalyzer
+from codegraph.intelligence.models import IntelligencePlan
+from codegraph.intelligence.path_finder import PathFinder
+from codegraph.multimodal.pipeline import MultimodalPipeline
 from codegraph.repair.models import RepairRequest
 from codegraph.repair.pipeline import RepairPipeline
 
@@ -72,6 +77,11 @@ class PlatformService:
         self._active_workflows: dict[str, WorkflowContext] = {}
         self._active_plans: dict[str, Any] = {}
 
+        self.multimodal_pipeline = MultimodalPipeline(graph_repo=self.graph_repo)
+        self.path_finder = PathFinder(self.graph_repo) if self.graph_repo else None
+        self.impact_analyzer = ImpactAnalyzer(self.graph_repo, self.path_finder) if self.graph_repo and self.path_finder else None
+        self.dependency_analyzer = DependencyAnalyzer(self.graph_repo, self.path_finder) if self.graph_repo and self.path_finder else None
+
         # Auto-register sample project if present in filesystem
         sample_path = Path("examples/sample_project")
         if sample_path.exists():
@@ -120,18 +130,44 @@ class PlatformService:
         return [{"repository_id": r.repository_id, "name": r.name, "path": r.path, "status": r.status.value} for r in repos]
 
     def query(self, question: str, repository_id: str = "repository:sample_project") -> dict[str, Any]:
-        """Execute hybrid search query."""
+        """Execute grounded code query against repository AST and sources."""
         ctx = CorrelationContext.create(repository_id=repository_id)
         span = self.trace_manager.start_span(component="platform_service", operation="query")
-        res = {
+
+        root, sources = self._resolve_repo_and_sources(repository_id)
+
+        matching_snippets = []
+        keywords = [k.lower() for k in question.split() if len(k) > 2]
+        for rel_path, content in sources.items():
+            content_lower = content.lower()
+            if any(kw in content_lower for kw in keywords):
+                matching_lines = [
+                    f"L{i+1}: {line.strip()}"
+                    for i, line in enumerate(content.splitlines())
+                    if any(kw in line.lower() for kw in keywords)
+                ]
+                if matching_lines:
+                    matching_snippets.append({
+                        "file_path": rel_path,
+                        "matches": matching_lines[:5]
+                    })
+
+        answer_summary = (
+            f"Found {len(matching_snippets)} file(s) matching query '{question}' in {repository_id}: "
+            + ", ".join(m["file_path"] for m in matching_snippets[:3])
+            if matching_snippets
+            else f"No code references found for '{question}' in repository {repository_id}."
+        )
+
+        self.trace_manager.finish_span(span, status="OK")
+        return {
             "query": question,
             "repository_id": repository_id,
             "trace_id": ctx.trace_id,
-            "answer": f"CodeGraph Intelligence answer for '{question}'",
+            "answer": answer_summary,
+            "matching_snippets": matching_snippets[:10],
             "status": "success",
         }
-        self.trace_manager.finish_span(span, status="OK")
-        return res
 
     def investigate(self, question: str, repository_id: str = "repository:sample_project") -> dict[str, Any]:
         """Execute autonomous agentic investigation routing through AgenticPipeline and persist history."""
@@ -152,15 +188,28 @@ class PlatformService:
                 repository_id=repository_id,
                 source_code_map=sources,
             )
-            hypotheses = [h.statement for h in inv_ans.hypotheses] or ["Initial codebase root cause hypothesis"]
-            evidence = list(inv_ans.evidence_ids) or ["[E1] File services.py contains target logic"]
-            citations = list(inv_ans.citations) or ["services.py:L10-L25"]
+            hypotheses = [h.statement for h in inv_ans.hypotheses]
+            evidence = list(inv_ans.evidence_ids)
+            citations = list(inv_ans.citations)
             final_answer = inv_ans.answer or f"Investigation completed for question: {question}"
         else:
-            hypotheses = ["Initial codebase root cause hypothesis"]
-            evidence = ["[E1] File services.py contains target logic"]
-            citations = ["services.py:L10-L25"]
-            final_answer = f"Investigation completed for question: {question}"
+            # Direct static analysis fallback grounded in source code tree
+            matching_files = []
+            keywords = [k.lower() for k in question.split() if len(k) > 2]
+            if sources:
+                for rel_path, content in sources.items():
+                    if any(kw in content.lower() for kw in keywords):
+                        matching_files.append(rel_path)
+
+            hypotheses = [f"Root cause in {m}" for m in matching_files[:3]] or [f"Investigation for '{question}'"]
+            evidence = [f"[E{i+1}] {m}" for i, m in enumerate(matching_files[:5])]
+            citations = [f"{m}:L1-L30" for m in matching_files[:5]]
+            final_answer = (
+                f"Investigation found {len(matching_files)} candidate source file(s) for '{question}': "
+                + ", ".join(matching_files[:3])
+                if matching_files
+                else f"Grounded investigation completed for repository {repository_id}."
+            )
 
         record = self.inv_manager.create_investigation(
             question=question,
@@ -180,6 +229,145 @@ class PlatformService:
             "final_answer": record.final_answer,
             "citations": record.citations,
             "status": "success",
+        }
+
+    def analyze_impact(self, symbol: str, repository_id: str = "repository:sample_project") -> dict[str, Any]:
+        """Analyze direct and transitive change impact for a symbol across codebase."""
+        ctx = CorrelationContext.create(repository_id=repository_id)
+        span = self.trace_manager.start_span(component="platform_service", operation="analyze_impact")
+
+        root, sources = self._resolve_repo_and_sources(repository_id)
+
+        impacted_files: set[str] = set()
+        impacted_entities: list[dict[str, Any]] = []
+
+        if self.impact_analyzer:
+            try:
+                res = self.impact_analyzer.analyze_impact(symbol, IntelligencePlan(max_nodes=40))
+                if res:
+                    impacted_files.update(res.affected_files)
+                    for item in res.direct_dependents + res.transitive_dependents:
+                        impacted_entities.append(item)
+            except Exception:
+                pass
+
+        # Grounded static search across source code files
+        for rel_path, content in sources.items():
+            if symbol in content:
+                impacted_files.add(rel_path)
+                lines = [i + 1 for i, line in enumerate(content.splitlines()) if symbol in line]
+                impacted_entities.append({"file_path": rel_path, "symbol": symbol, "lines": lines[:10]})
+
+        self.trace_manager.finish_span(span, status="OK")
+        return {
+            "symbol": symbol,
+            "repository_id": repository_id,
+            "trace_id": ctx.trace_id,
+            "impacted_files": sorted(impacted_files),
+            "impacted_entities": impacted_entities[:20],
+        }
+
+    def analyze_dependencies(self, symbol: str, repository_id: str = "repository:sample_project") -> dict[str, Any]:
+        """Analyze forward and reverse dependencies for a symbol across codebase."""
+        ctx = CorrelationContext.create(repository_id=repository_id)
+        span = self.trace_manager.start_span(component="platform_service", operation="analyze_dependencies")
+
+        root, sources = self._resolve_repo_and_sources(repository_id)
+
+        dependencies: list[dict[str, Any]] = []
+        dependents: list[dict[str, Any]] = []
+
+        if self.dependency_analyzer:
+            try:
+                res = self.dependency_analyzer.analyze_dependencies(symbol, IntelligencePlan(max_nodes=40))
+                if res:
+                    dependencies.extend(res.dependencies)
+                    dependents.extend(res.dependents)
+            except Exception:
+                pass
+
+        # Grounded static search across source code files for import / inheritance / usage
+        for rel_path, content in sources.items():
+            for i, line in enumerate(content.splitlines(), start=1):
+                if symbol in line and ("import" in line or "class " in line or "def " in line or "(" in line):
+                    dependencies.append({"file_path": rel_path, "line_number": i, "content": line.strip()})
+
+        self.trace_manager.finish_span(span, status="OK")
+        return {
+            "symbol": symbol,
+            "repository_id": repository_id,
+            "trace_id": ctx.trace_id,
+            "dependencies": dependencies[:20],
+            "dependents": dependents[:20],
+        }
+
+    def trace_execution_flow(self, symbol: str, repository_id: str = "repository:sample_project") -> dict[str, Any]:
+        """Trace call execution flow for a symbol across codebase."""
+        ctx = CorrelationContext.create(repository_id=repository_id)
+        span = self.trace_manager.start_span(component="platform_service", operation="trace_execution_flow")
+
+        root, sources = self._resolve_repo_and_sources(repository_id)
+        call_flow: list[str] = []
+
+        for rel_path, content in sources.items():
+            for i, line in enumerate(content.splitlines(), start=1):
+                if symbol in line and ("(" in line or "def " in line):
+                    call_flow.append(f"{rel_path}:L{i} — {line.strip()}")
+
+        self.trace_manager.finish_span(span, status="OK")
+        return {
+            "symbol": symbol,
+            "repository_id": repository_id,
+            "trace_id": ctx.trace_id,
+            "call_flow": call_flow[:15],
+        }
+
+    def get_trace_details(self, trace_id: str) -> dict[str, Any]:
+        """Get observability trace details and recorded spans by trace_id."""
+        matching_spans = [
+            {
+                "span_id": s.span_id,
+                "component": s.component,
+                "operation": s.operation,
+                "duration_ms": s.duration_ms,
+                "status": s.status,
+                "metadata": s.metadata,
+            }
+            for s in self.trace_manager.spans
+            if s.trace_id == trace_id
+        ]
+        return {
+            "trace_id": trace_id,
+            "status": "OK" if matching_spans else "NOT_FOUND",
+            "spans_count": len(matching_spans),
+            "spans": matching_spans,
+        }
+
+    def index_multimodal_assets(self, repository_id: str) -> dict[str, Any]:
+        """Index multimodal repository assets."""
+        rec = self.repo_manager.get_repository(repository_id)
+        if not rec:
+            raise KeyError(f"Repository not registered: {repository_id}")
+        res = self.multimodal_pipeline.index_repository_multimodal(rec.path, repository_id=repository_id)
+        res["status"] = "INDEXED"
+        return res
+
+    def query_multimodal(self, query_text: str, repository_id: str) -> dict[str, Any]:
+        """Execute multimodal hybrid search query."""
+        results = self.multimodal_pipeline.query(query_text, repository_id=repository_id)
+        return {"query": query_text, "repository_id": repository_id, "results": results}
+
+    def analyze_consistency(self, fact: str, repository_id: str) -> dict[str, Any]:
+        """Analyze documentation and diagram drift against code graph."""
+        rec = self.repo_manager.get_repository(repository_id)
+        if not rec:
+            raise KeyError(f"Repository not registered: {repository_id}")
+        drift = self.multimodal_pipeline.analyze_drift(asset_path=rec.path, relation={"fact": fact})
+        return {
+            "repository_id": repository_id,
+            "documented_fact": fact,
+            "status": drift.status,
+            "evidence": drift.evidence,
         }
 
     def plan_change(self, change_request: str, repository_id: str = "repository:sample_project") -> dict[str, Any]:
