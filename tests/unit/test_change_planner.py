@@ -1,5 +1,6 @@
 """Unit tests for Phase 8 Change Planner & Risk Analysis."""
 
+import pytest
 from codegraph.change.planner import DeterministicChangePlanner, ChangePlanValidator
 from codegraph.change.models import ChangeRequest, ChangeRiskLevel, ChangePlan, ChangeOperation, ChangeOperationType
 from codegraph.change.impact import ChangeRiskAnalyzer
@@ -83,3 +84,93 @@ def test_change_risk_analyzer_blocked_keywords() -> None:
 
     risk = ChangeRiskAnalyzer.calculate_risk(plan)
     assert risk == ChangeRiskLevel.BLOCKED
+
+
+def test_change_planner_blocks_database_migration_bypass() -> None:
+    """Regression test: raw request with blocked keywords must result in BLOCKED risk and is_valid=False."""
+    planner = DeterministicChangePlanner()
+    sources = {
+        "services.py": (
+            "class UserService:\n"
+            "    def authenticate(self, user_id):\n"
+            "        return True\n"
+        ),
+    }
+    req = ChangeRequest(
+        description="Perform database migration DROP TABLE on UserService",
+        repository_id="repo",
+    )
+    plan = planner.create_plan(req, source_code_map=sources)
+
+    assert plan.risks == ChangeRiskLevel.BLOCKED
+    assert not plan.is_valid
+    assert "BLOCKED" in (plan.rejection_reason or "")
+
+
+@pytest.mark.parametrize(
+    "phrase,term",
+    [
+        ("apply schema migration script for UserService", "migration"),
+        ("update the user schema definition in UserService", "schema"),
+        ("connect to external database from UserService", "database"),
+        ("add a new column to the users table in UserService", "table"),
+        ("execute raw sql query inside UserService", "sql"),
+    ],
+)
+def test_blocklist_individual_terms_in_requests(phrase: str, term: str) -> None:
+    """Verify each blocked keyword in a natural user request triggers BLOCKED risk level."""
+    planner = DeterministicChangePlanner()
+    sources = {
+        "services.py": (
+            "class UserService:\n"
+            "    def authenticate(self, user_id):\n"
+            "        return True\n"
+        ),
+    }
+    req = ChangeRequest(description=phrase, repository_id="repo")
+    plan = planner.create_plan(req, source_code_map=sources)
+
+    assert plan.risks == ChangeRiskLevel.BLOCKED, f"Expected {phrase} containing term '{term}' to be BLOCKED"
+    assert not plan.is_valid
+    assert "BLOCKED" in (plan.rejection_reason or "")
+
+
+def test_blocklist_affected_files_and_entities() -> None:
+    """Verify plans referencing files or entities with blocked keywords are BLOCKED."""
+    plan_with_file = ChangePlan(
+        objective="Refactor service",
+        root_cause="Clean code",
+        affected_entities=("UserService",),
+        affected_files=("db_migration.py",),
+        modifications=(),
+        risks=ChangeRiskLevel.LOW,
+        validation_strategy="test",
+    )
+    assert ChangeRiskAnalyzer.calculate_risk(plan_with_file) == ChangeRiskLevel.BLOCKED
+
+    plan_with_entity = ChangePlan(
+        objective="Refactor service",
+        root_cause="Clean code",
+        affected_entities=("UserTable",),
+        affected_files=("services.py",),
+        modifications=(),
+        risks=ChangeRiskLevel.LOW,
+        validation_strategy="test",
+    )
+    assert ChangeRiskAnalyzer.calculate_risk(plan_with_entity) == ChangeRiskLevel.BLOCKED
+
+
+def test_calculate_risk_objective_fallback() -> None:
+    """Verify calculate_risk checks plan.objective when request_text is not provided."""
+    plan = ChangePlan(
+        objective="Resolve issue: update database schema for UserService",
+        root_cause="Standard update",
+        affected_entities=("UserService",),
+        affected_files=("services.py",),
+        modifications=(),
+        risks=ChangeRiskLevel.LOW,
+        validation_strategy="test",
+    )
+    assert ChangeRiskAnalyzer.calculate_risk(plan) == ChangeRiskLevel.BLOCKED
+
+

@@ -148,7 +148,7 @@ class DeterministicChangePlanner:
         )
 
         # Calculate actual risk and verify impact
-        calculated_risk = ChangeRiskAnalyzer.calculate_risk(plan)
+        calculated_risk = ChangeRiskAnalyzer.calculate_risk(plan, request_text=request.description)
         plan = ChangePlan(
             objective=plan.objective,
             root_cause=plan.root_cause,

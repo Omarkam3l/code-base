@@ -43,13 +43,30 @@ class ChangeRiskAnalyzer:
     """Analyzes risk level for proposed change plans."""
 
     @staticmethod
-    def calculate_risk(plan: ChangePlan) -> ChangeRiskLevel:
+    def calculate_risk(plan: ChangePlan, request_text: str | None = None) -> ChangeRiskLevel:
         """Evaluate risk factors: affected files, entities, database/schema changes."""
         # 1. Blocked triggers: DB migrations or schema keywords
         blocked_terms = {"migration", "schema", "database", "table", "sql"}
-        if any(term in plan.root_cause.lower() for term in blocked_terms) or any(
-            term in op.description.lower() for op in plan.modifications for term in blocked_terms
-        ):
+        texts_to_check: list[str] = []
+        if request_text:
+            texts_to_check.append(request_text)
+        if plan.objective:
+            texts_to_check.append(plan.objective)
+        if plan.root_cause:
+            texts_to_check.append(plan.root_cause)
+        for op in plan.modifications:
+            if op.description:
+                texts_to_check.append(op.description)
+            if op.file:
+                texts_to_check.append(op.file)
+            if op.target:
+                texts_to_check.append(op.target)
+        for entity in plan.affected_entities:
+            texts_to_check.append(entity)
+        for file_path in plan.affected_files:
+            texts_to_check.append(file_path)
+
+        if any(term in text.lower() for text in texts_to_check for term in blocked_terms):
             return ChangeRiskLevel.BLOCKED
 
         # 2. High risk triggers: >3 files or >5 entities
@@ -61,3 +78,4 @@ class ChangeRiskAnalyzer:
             return ChangeRiskLevel.MEDIUM
 
         return ChangeRiskLevel.LOW
+
