@@ -49,7 +49,7 @@ def _build_platform_service() -> PlatformService:
             max_connection_lifetime=300,  # don't reuse connections Aura may have dropped
         )
         graph_repo = GraphRepository(
-            driver=driver, database=os.getenv("NEO4J_DATABASE", "neo4j")
+            driver=driver, database=os.getenv("NEO4J_DATABASE")
         )
         return PlatformService(graph_repo=graph_repo)
     return PlatformService()
