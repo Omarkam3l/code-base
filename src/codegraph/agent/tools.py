@@ -47,8 +47,6 @@ class AgentTools:
     def find_symbol(self, symbol: str, repository_id: str) -> dict[str, Any] | None:
         """Find symbol details by name or qualified identifier."""
         resolved_id = self.path_finder.resolve_entity_id(symbol)
-        if not resolved_id:
-            return None
 
         # Resolve details from Neo4j
         func = self.graph_repo.find_function(symbol)
@@ -58,7 +56,24 @@ class AgentTools:
         if cls:
             return cls
 
-        return {"id": resolved_id, "name": symbol}
+        # Short names (e.g. "KafkaConsumerApp") don't match qualified-name
+        # lookups — resolve them against Class/Method nodes by name so
+        # investigations on real repositories still produce evidence.
+        try:
+            matches = self.graph_repo.find_entities_by_name(symbol)
+        except Exception:
+            matches = []
+        if matches:
+            first = matches[0]
+            return {
+                "id": first.get("id") or resolved_id,
+                "name": first.get("name", symbol),
+                "qualified_name": first.get("qualified_name", symbol),
+                "file_path": first.get("file_path", ""),
+                "kind": first.get("kind", ""),
+            }
+
+        return {"id": resolved_id, "name": symbol} if resolved_id else None
 
     def trace_calls(self, entity_id: str, repository_id: str, depth: int = 4) -> list[dict[str, Any]]:
         """Trace forward callees from an entity."""

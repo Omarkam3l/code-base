@@ -16,6 +16,9 @@ def test_agent_tools_initialization() -> None:
 
 def test_agent_tools_find_symbol_empty() -> None:
     mock_repo = MagicMock(spec=GraphRepository)
+    mock_repo.find_function.return_value = None
+    mock_repo.find_class.return_value = None
+    mock_repo.find_entities_by_name.return_value = []
     tools = AgentTools(graph_repo=mock_repo)
     tools.path_finder.resolve_entity_id = MagicMock(return_value=None)
     res = tools.find_symbol("NonExistentSymbol", "repo")

@@ -127,28 +127,41 @@ class GraphRepository:
             result = session.run(QUERY_GET_REPOSITORY_STRUCTURE, repo_id=repository_id)
             return [record.data() for record in result]
 
-    def get_graph_snapshot(self, node_limit: int = 40) -> dict[str, Any]:
+    def get_graph_snapshot(
+        self, node_limit: int = 40, repository_id: str | None = None
+    ) -> dict[str, Any]:
         """Return a bounded snapshot of code-graph nodes and edges for visualization.
 
         Nodes are Class/Method/Function entities; edges are returned only when
         both endpoints are within the returned node set, so the client can draw
-        the subgraph directly.
+        the subgraph directly. When repository_id is given, only entities
+        belonging to that repository are returned (the graph store is shared).
         """
+        scope_filter = (
+            """
+            MATCH (repo:Repository {id: $repo_id})
+            MATCH (repo)-[:CONTAINS]->(:File)-[:DEFINES*1..3]->(n)
+            """
+            if repository_id
+            else "MATCH (n)"
+        )
         with self._driver.session(database=self.database) as session:
             nodes = session.run(
-                """
-                MATCH (n)
+                f"""
+                {scope_filter}
+                WITH DISTINCT n
                 WHERE n:Class OR n:Method OR n:Function
-                RETURN {
+                RETURN {{
                     id: elementId(n),
                     kind: head([l IN labels(n) WHERE l IN ['Class','Method','Function']]),
                     name: coalesce(n.name, '?'),
                     qualified_name: coalesce(n.qualified_name, n.name, '?'),
                     file_path: n.file_path
-                } AS node
+                }} AS node
                 LIMIT $limit
                 """,
                 limit=node_limit,
+                **({"repo_id": repository_id} if repository_id else {}),
             ).data()
             ids = [record["node"]["id"] for record in nodes]
             edges = (
