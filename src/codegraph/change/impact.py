@@ -1,5 +1,6 @@
 """Impact verification and change risk analysis for Phase 8."""
 
+import re
 from codegraph.change.models import ChangePlan, ChangeRiskLevel
 from codegraph.intelligence.impact_analyzer import ImpactAnalyzer, ImpactResult
 from codegraph.intelligence.models import IntelligencePlan
@@ -45,8 +46,16 @@ class ChangeRiskAnalyzer:
     @staticmethod
     def calculate_risk(plan: ChangePlan, request_text: str | None = None) -> ChangeRiskLevel:
         """Evaluate risk factors: affected files, entities, database/schema changes."""
-        # 1. Blocked triggers: DB migrations or schema keywords
-        blocked_terms = {"migration", "schema", "database", "table", "sql"}
+        # 1. Blocked triggers: DB migrations, DDL statements, and schema keywords
+        dangerous_patterns = (
+            r"\bdrop\s+(table|database|schema|view|index)\b",
+            r"\btruncate\s+(table|\w+)\b",
+            r"\balter\s+(table|database)\b",
+            r"\bdelete\s+from\b",
+            r"\bdatabase\s+migration\b",
+            r"\bdrop\s+table\b",
+        )
+        blocked_keywords = {"migration", "schema", "database", "sql"}
         texts_to_check: list[str] = []
         if request_text:
             texts_to_check.append(request_text)
@@ -66,8 +75,12 @@ class ChangeRiskAnalyzer:
         for file_path in plan.affected_files:
             texts_to_check.append(file_path)
 
-        if any(term in text.lower() for text in texts_to_check for term in blocked_terms):
-            return ChangeRiskLevel.BLOCKED
+        for text in texts_to_check:
+            text_low = text.lower()
+            if any(re.search(pat, text_low) for pat in dangerous_patterns):
+                return ChangeRiskLevel.BLOCKED
+            if any(kw in text_low for kw in blocked_keywords):
+                return ChangeRiskLevel.BLOCKED
 
         # 2. High risk triggers: >3 files or >5 entities
         if len(plan.affected_files) > 3 or len(plan.affected_entities) > 5:

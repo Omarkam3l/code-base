@@ -10,6 +10,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from codegraph.api.models import (
     APIResponse,
+    ChangeCommitRequest,
     ChangePatchRequest,
     ChangePlanRequest,
     ImpactRequest,
@@ -188,7 +189,29 @@ def approve_change_plan(plan_id: str):
 def generate_patch(req: ChangePatchRequest):
     """Generate and validate a unified diff patch for an approved plan."""
     try:
-        res = service.generate_or_execute_patch(plan_id=req.plan_id)
+        res = service.generate_or_execute_patch(plan_id=req.plan_id, run_tests=req.run_tests)
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Plan not found: {req.plan_id}")
+    except PermissionError as e:
+        raise HTTPException(status_code=403, detail=str(e))
+    return APIResponse(status="success", data=res)
+
+
+@app.post("/changes/{plan_id}/approve-git", response_model=APIResponse)
+def approve_git_commit(plan_id: str):
+    """Grant human approval for git commit execution."""
+    try:
+        res = service.approve_git_commit(plan_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Plan not found: {plan_id}")
+    return APIResponse(status="success", data=res)
+
+
+@app.post("/changes/commit", response_model=APIResponse)
+def execute_git_commit(req: ChangeCommitRequest):
+    """Execute git commit and PR creation for an approved plan."""
+    try:
+        res = service.execute_git_commit_and_pr(plan_id=req.plan_id, request_push=req.request_push)
     except KeyError:
         raise HTTPException(status_code=404, detail=f"Plan not found: {req.plan_id}")
     except PermissionError as e:
@@ -289,15 +312,8 @@ def get_asset_evidence(asset_id: str):
 def get_repository_graph(repo_id: str, limit: int = 40):
     """Return a bounded snapshot of the real code graph for visualization."""
     if service.graph_repo is None:
-        return APIResponse(
-            status="success",
-            data={
-                "repository_id": repo_id,
-                "nodes": [],
-                "edges": [],
-                "note": "Neo4j graph repository not configured; index a repository with a live graph first.",
-            },
-        )
+        local_ast_data = service.get_local_ast_graph(repository_id=repo_id, limit=limit)
+        return APIResponse(status="success", data=local_ast_data)
     snapshot = service.graph_repo.get_graph_snapshot(
         node_limit=max(1, min(limit, 200)), repository_id=repo_id
     )
@@ -308,4 +324,8 @@ def get_repository_graph(repo_id: str, limit: int = 40):
 @app.get("/repositories/{repo_id}/drift", response_model=APIResponse)
 def get_repository_drift(repo_id: str):
     """Get all documentation drift records for repository."""
-    return APIResponse(status="success", data={"repository_id": repo_id, "drifts": []})
+    try:
+        res = service.get_repository_drift(repository_id=repo_id)
+        return APIResponse(status="success", data=res)
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Repository not found: {repo_id}")

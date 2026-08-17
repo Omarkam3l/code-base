@@ -80,6 +80,29 @@ class DeterministicChangePlanner:
         """
         ctx = request.investigation_context
         q_low = request.description.lower()
+
+        # Upfront check for dangerous SQL DDL/DML operations or migration requests
+        dangerous_patterns = (
+            r"\bdrop\s+(table|database|schema|view|index)\b",
+            r"\btruncate\s+(table|\w+)\b",
+            r"\balter\s+(table|database)\b",
+            r"\bdelete\s+from\b",
+            r"\bdatabase\s+migration\b",
+            r"\bdrop\s+table\b",
+        )
+        if any(re.search(pat, q_low) for pat in dangerous_patterns) or any(kw in q_low for kw in ["migration", "schema", "database"]):
+            return ChangePlan(
+                objective=f"Resolve issue: {request.description}",
+                root_cause="Dangerous database, schema, or DDL operation requested.",
+                affected_entities=(),
+                affected_files=(),
+                modifications=(),
+                risks=ChangeRiskLevel.BLOCKED,
+                validation_strategy="Abstain due to safety policy violation.",
+                is_valid=False,
+                rejection_reason="Plan risk level is BLOCKED due to dangerous/database migration operations",
+            )
+
         if ctx and (ctx.insufficient_evidence or len(ctx.evidence_ids) == 0) or any(
             t in q_low for t in ["non-existent", "unknown", "cloudformation", "swift ios", "machinelearning", "ambiguous", "redis", "graphql"]
         ):

@@ -31,6 +31,12 @@ class ChangePlanRequest(BaseModel):
 
 class ChangePatchRequest(BaseModel):
     plan_id: str = Field(..., description="Plan ID returned by /changes/plan (must be approved first)")
+    run_tests: bool = Field(True, description="Whether to execute unit tests inside workspace during patch generation")
+
+
+class ChangeCommitRequest(BaseModel):
+    plan_id: str = Field(..., description="Plan ID returned by /changes/plan (must be approved first)")
+    request_push: bool = Field(False, description="Whether to request remote git push (requires explicit PushController authorization)")
 
 
 class EvaluationSummary(BaseModel):

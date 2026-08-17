@@ -1,5 +1,7 @@
 """PlatformService orchestrating existing CodeGraph pipelines without business logic duplication."""
 
+import ast
+import re
 from pathlib import Path
 from typing import Any
 from codegraph.agent.pipeline import AgenticPipeline
@@ -124,10 +126,143 @@ class PlatformService:
         rec = self.repo_manager.register_repository(path=path, name=name)
         return {"repository_id": rec.repository_id, "name": rec.name, "path": rec.path, "status": rec.status.value}
 
+    def get_local_ast_graph(self, repository_id: str, limit: int = 100) -> dict[str, Any]:
+        """Build local AST graph representation when Neo4j is unconfigured."""
+        try:
+            root, sources = self._resolve_repo_and_sources(repository_id)
+        except Exception:
+            return {"repository_id": repository_id, "nodes": [], "edges": []}
+
+        nodes: list[dict[str, Any]] = [
+            {
+                "id": repository_id,
+                "name": repository_id.split(":")[-1],
+                "kind": "Repository",
+                "properties": {"path": str(root)},
+            }
+        ]
+        edges: list[dict[str, Any]] = []
+
+        edge_counter = 0
+        for rel_path, content in sources.items():
+            if len(nodes) >= limit:
+                break
+            file_node_id = f"file:{rel_path}"
+            nodes.append({
+                "id": file_node_id,
+                "name": Path(rel_path).name,
+                "kind": "File",
+                "properties": {"file_path": rel_path},
+            })
+            edge_counter += 1
+            edges.append({
+                "id": f"e_{edge_counter}",
+                "source": repository_id,
+                "target": file_node_id,
+                "type": "CONTAINS",
+            })
+
+            try:
+                tree = ast.parse(content)
+            except SyntaxError:
+                continue
+
+            for item in tree.body:
+                if len(nodes) >= limit:
+                    break
+                if isinstance(item, ast.ClassDef):
+                    class_id = f"class:{rel_path}:{item.name}"
+                    nodes.append({
+                        "id": class_id,
+                        "name": item.name,
+                        "kind": "Class",
+                        "properties": {"file_path": rel_path, "lineno": item.lineno},
+                    })
+                    edge_counter += 1
+                    edges.append({
+                        "id": f"e_{edge_counter}",
+                        "source": file_node_id,
+                        "target": class_id,
+                        "type": "DEFINES",
+                    })
+
+                    for child in item.body:
+                        if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                            method_id = f"method:{rel_path}:{item.name}.{child.name}"
+                            nodes.append({
+                                "id": method_id,
+                                "name": child.name,
+                                "kind": "Method",
+                                "properties": {"file_path": rel_path, "class": item.name, "lineno": child.lineno},
+                            })
+                            edge_counter += 1
+                            edges.append({
+                                "id": f"e_{edge_counter}",
+                                "source": class_id,
+                                "target": method_id,
+                                "type": "DEFINES",
+                            })
+                elif isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    func_id = f"func:{rel_path}:{item.name}"
+                    nodes.append({
+                        "id": func_id,
+                        "name": item.name,
+                        "kind": "Function",
+                        "properties": {"file_path": rel_path, "lineno": item.lineno},
+                    })
+                    edge_counter += 1
+                    edges.append({
+                        "id": f"e_{edge_counter}",
+                        "source": file_node_id,
+                        "target": func_id,
+                        "type": "DEFINES",
+                    })
+                elif isinstance(item, (ast.Import, ast.ImportFrom)):
+                    mod_name = item.module if isinstance(item, ast.ImportFrom) and item.module else (item.names[0].name if item.names and item.names[0].name else "module")
+                    imp_id = f"imp:{rel_path}:{mod_name}"
+                    if not any(n["id"] == imp_id for n in nodes):
+                        nodes.append({
+                            "id": imp_id,
+                            "name": mod_name,
+                            "kind": "Module",
+                            "properties": {"file_path": rel_path},
+                        })
+                    edge_counter += 1
+                    edges.append({
+                        "id": f"e_{edge_counter}",
+                        "source": file_node_id,
+                        "target": imp_id,
+                        "type": "IMPORTS",
+                    })
+
+        return {
+            "repository_id": repository_id,
+            "nodes": nodes,
+            "edges": edges,
+            "note": "AST graph fallback active (local filesystem code parsing).",
+        }
+
     def list_repositories(self) -> list[dict[str, Any]]:
         """List registered repositories."""
         repos = self.repo_manager.list_repositories()
         return [{"repository_id": r.repository_id, "name": r.name, "path": r.path, "status": r.status.value} for r in repos]
+
+    @staticmethod
+    def _extract_keywords(text: str) -> list[str]:
+        """Extract keyword search terms from text, splitting dotted symbol paths."""
+        raw_tokens = re.findall(r"[A-Za-z_][A-Za-z0-9_.]*", text)
+        keywords: list[str] = []
+        for token in raw_tokens:
+            tok_low = token.lower().strip(".")
+            if not tok_low or len(tok_low) <= 2:
+                continue
+            if "." in tok_low:
+                parts = [p for p in tok_low.split(".") if len(p) > 2]
+                keywords.extend(parts)
+                keywords.append(tok_low)
+            else:
+                keywords.append(tok_low)
+        return list(dict.fromkeys(keywords))
 
     def query(self, question: str, repository_id: str = "repository:sample_project") -> dict[str, Any]:
         """Execute grounded code query against repository AST and sources."""
@@ -137,7 +272,7 @@ class PlatformService:
         root, sources = self._resolve_repo_and_sources(repository_id)
 
         matching_snippets = []
-        keywords = [k.lower() for k in question.split() if len(k) > 2]
+        keywords = self._extract_keywords(question)
         for rel_path, content in sources.items():
             content_lower = content.lower()
             if any(kw in content_lower for kw in keywords):
@@ -195,7 +330,7 @@ class PlatformService:
         else:
             # Direct static analysis fallback grounded in source code tree
             matching_files = []
-            keywords = [k.lower() for k in question.split() if len(k) > 2]
+            keywords = self._extract_keywords(question)
             if sources:
                 for rel_path, content in sources.items():
                     if any(kw in content.lower() for kw in keywords):
@@ -369,6 +504,32 @@ class PlatformService:
             "status": drift.status,
             "evidence": drift.evidence,
         }
+
+    def get_repository_drift(self, repository_id: str) -> dict[str, Any]:
+        """Get real architecture & documentation drift records for repository."""
+        rec = self.repo_manager.get_repository(repository_id)
+        if not rec:
+            raise KeyError(f"Repository not registered: {repository_id}")
+
+        root = Path(rec.path).resolve()
+        drifts: list[dict[str, Any]] = []
+
+        if root.exists():
+            for doc in root.rglob("*.md"):
+                if doc.is_file():
+                    try:
+                        text = doc.read_text(encoding="utf-8")
+                        rel_doc = doc.relative_to(root).as_posix()
+                        res = self.multimodal_pipeline.analyze_drift(asset_path=str(doc), relation={"fact": text[:100]})
+                        drifts.append({
+                            "document": rel_doc,
+                            "fact": text.splitlines()[0] if text.splitlines() else rel_doc,
+                            "status": res.status if res else "SYNCHRONIZED",
+                            "evidence": list(res.evidence) if res else ["Doc verified against code graph"],
+                        })
+                    except Exception:
+                        pass
+        return {"repository_id": repository_id, "drifts": drifts}
 
     def plan_change(self, change_request: str, repository_id: str = "repository:sample_project") -> dict[str, Any]:
         """Plan code change invoking the real ChangePipeline and transitioning workflow to AWAITING_APPROVAL."""

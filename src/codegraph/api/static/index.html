@@ -8,8 +8,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/css/studio.css" />
+  <link rel="stylesheet" href="/static/css/studio.css?v=2" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>" />
+  <!-- Cytoscape.js — must load before app.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+  <!-- fCoSE layout, vendored locally (MIT): fcose depends on cose-base, which
+       depends on layout-base — loaded in order so the graph layout never
+       depends on a reachable third-party CDN. -->
+  <script src="/static/js/vendor/layout-base.js"></script>
+  <script src="/static/js/vendor/cose-base.js"></script>
+  <script src="/static/js/vendor/cytoscape-fcose.min.js"></script>
 </head>
 <body>
   <!-- Top Navigation Bar -->
@@ -62,48 +70,150 @@
         <span class="nav-icon">◈</span>
         <span>Observability</span>
       </a>
+      <a class="nav-item" href="#evaluation" data-tab="tab-evaluation">
+        <span class="nav-icon">⊞</span>
+        <span>Evaluation</span>
+      </a>
     </nav>
 
     <!-- Workspace -->
     <main class="workspace">
       <!-- Center Graph Canvas Panel -->
       <section class="graph-panel" id="canvas" aria-label="Knowledge Graph Canvas">
-        <div class="canvas-toolbar">
-          <div class="badge active">
-            <span class="led-dot"></span>
-            <span id="inspect-header">Interactive Knowledge Graph</span>
+
+        <!-- Graph Toolbar (floating, top-left) -->
+        <div class="graph-toolbar" role="toolbar" aria-label="Graph controls">
+          <div class="toolbar-repo-wrapper">
+            <div class="repo-selector-btn" id="repo-selector-btn" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Select repository">
+              <span class="nav-icon" style="font-size:12px;">⬡</span>
+              <span id="repo-selector-label">No repository</span>
+              <span id="repo-selector-status" class="repo-status-badge"></span>
+              <span style="margin-left:4px;color:var(--text-muted);font-size:10px;">▾</span>
+            </div>
+            <div class="repo-dropdown" id="repo-dropdown" role="listbox" aria-label="Repositories" hidden></div>
           </div>
-          <select id="repo-select" class="input" aria-label="Repository"></select>
+          <button class="toolbar-btn" id="btn-open-register-modal" title="Register local repository" aria-label="Register repository">+ Register</button>
+          <div class="toolbar-sep"></div>
+          <button class="toolbar-btn" id="btn-zoom-in" title="Zoom in" aria-label="Zoom in">+</button>
+          <button class="toolbar-btn" id="btn-zoom-out" title="Zoom out" aria-label="Zoom out">−</button>
+          <button class="toolbar-btn" id="btn-fit" title="Fit graph" aria-label="Fit graph">⊡</button>
+          <button class="toolbar-btn" id="btn-reset" title="Reset view" aria-label="Reset view">↺</button>
+          <div class="toolbar-sep"></div>
+          <select class="toolbar-select" id="layout-selector" aria-label="Graph layout">
+            <option value="fcose">Force (fCoSE)</option>
+            <option value="cose">Force (CoSE)</option>
+            <option value="breadthfirst">Hierarchical</option>
+            <option value="concentric">Radial</option>
+            <option value="circle">Circle</option>
+          </select>
+          <button class="toolbar-btn" id="btn-labels-toggle" title="Toggle labels" aria-label="Toggle labels" aria-pressed="true">Aa</button>
+          <div class="toolbar-sep"></div>
           <div class="badge">
             <span id="graph-stats">no data</span>
           </div>
         </div>
 
-        <div class="canvas-container">
-          <svg id="graph-svg" width="100%" height="100%">
-            <defs>
-              <marker id="arrow" viewBox="0 -5 10 10" refX="38" refY="0" markerWidth="7" markerHeight="7" orient="auto">
-                <path d="M0,-5L10,0L0,5" fill="#2d3449"></path>
-              </marker>
-            </defs>
-          </svg>
+        <!-- Register Repo Modal Overlay -->
+        <div id="register-repo-modal" class="modal-overlay" hidden style="position:absolute;top:60px;left:20px;z-index:1000;background:var(--card-bg, #1a2332);border:1px solid var(--border-color, #2a364f);padding:16px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,0.5);width:360px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <strong style="font-size:14px;">Register New Repository</strong>
+            <button id="btn-close-register-modal" class="btn btn-ghost btn-sm" style="padding:2px 8px;">✕</button>
+          </div>
+          <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:4px;">Local Folder Path:</label>
+          <input type="text" id="reg-repo-path" class="input" placeholder="C:\Users\...\my-repo" style="width:100%;margin-bottom:8px;" />
+          <label style="font-size:12px;color:var(--text-muted);display:block;margin-bottom:4px;">Repository Name (Optional):</label>
+          <input type="text" id="reg-repo-name" class="input" placeholder="my-repo" style="width:100%;margin-bottom:12px;" />
+          <button id="btn-submit-register-repo" class="btn btn-primary btn-sm" style="width:100%;">Register Repository</button>
         </div>
 
+        <!-- Graph Search Bar (floating, top-right) -->
+        <div class="graph-search-bar">
+          <span class="graph-search-icon" aria-hidden="true">⌕</span>
+          <input type="search" id="graph-search" class="graph-search-input" placeholder="Search symbols…" aria-label="Search graph nodes" autocomplete="off" />
+        </div>
+
+        <!-- Filter Panel (collapsible, left edge below toolbar) -->
+        <div class="filter-panel" id="filter-panel">
+          <button class="filter-panel-toggle" id="filter-panel-toggle" aria-expanded="false" aria-controls="filter-panel-body" title="Toggle filters">
+            <span>⚟</span>
+          </button>
+          <div class="filter-panel-body" id="filter-panel-body" hidden>
+            <div class="filter-section-label">Node Types</div>
+            <label class="filter-check"><input type="checkbox" class="node-type-filter" value="Repository" checked /> <span class="filter-swatch" style="background:#00daf3;"></span> Repository</label>
+            <label class="filter-check"><input type="checkbox" class="node-type-filter" value="File" checked /> <span class="filter-swatch" style="background:#8fa7c9;"></span> File</label>
+            <label class="filter-check"><input type="checkbox" class="node-type-filter" value="Module" checked /> <span class="filter-swatch" style="background:#6b7fa3;"></span> Module</label>
+            <label class="filter-check"><input type="checkbox" class="node-type-filter" value="Class" checked /> <span class="filter-swatch" style="background:#4edea3;"></span> Class</label>
+            <label class="filter-check"><input type="checkbox" class="node-type-filter" value="Function" checked /> <span class="filter-swatch" style="background:#ffb95f;"></span> Function</label>
+            <label class="filter-check"><input type="checkbox" class="node-type-filter" value="Method" checked /> <span class="filter-swatch" style="background:#e09040;"></span> Method</label>
+            <label class="filter-check"><input type="checkbox" class="node-type-filter" value="Image" checked /> <span class="filter-swatch" style="background:#b57bee;"></span> Image</label>
+            <label class="filter-check"><input type="checkbox" class="node-type-filter" value="Document" checked /> <span class="filter-swatch" style="background:#5ec4c4;"></span> Document</label>
+            <div class="filter-section-label" style="margin-top:10px;">Edge Types</div>
+            <label class="filter-check"><input type="checkbox" class="edge-type-filter" value="CALLS" checked /> <span class="filter-swatch edge-swatch" style="background:#00daf3;"></span> CALLS</label>
+            <label class="filter-check"><input type="checkbox" class="edge-type-filter" value="IMPORTS" checked /> <span class="filter-swatch edge-swatch" style="background:#ffb95f;"></span> IMPORTS</label>
+            <label class="filter-check"><input type="checkbox" class="edge-type-filter" value="DEFINES" checked /> <span class="filter-swatch edge-swatch" style="background:#8fa7c9;"></span> DEFINES</label>
+            <label class="filter-check"><input type="checkbox" class="edge-type-filter" value="CONTAINS" checked /> <span class="filter-swatch edge-swatch" style="background:#3b6e8a;"></span> CONTAINS</label>
+            <label class="filter-check"><input type="checkbox" class="edge-type-filter" value="INHERITS" checked /> <span class="filter-swatch edge-swatch" style="background:#4edea3;"></span> INHERITS</label>
+          </div>
+        </div>
+
+        <!-- Cytoscape container -->
+        <div id="cy-container"></div>
+
+        <!-- Node Details Panel (right overlay, hidden initially) -->
+        <div class="node-details-panel" id="node-details-panel" hidden aria-label="Node details" aria-live="polite">
+          <button class="node-details-close" id="node-details-close" aria-label="Close node details">✕</button>
+          <div class="node-details-icon" id="nd-icon"></div>
+          <div class="node-details-name" id="nd-name"></div>
+          <div class="node-details-kind" id="nd-kind"></div>
+          <div class="node-details-meta" id="nd-meta"></div>
+          <div class="node-details-actions">
+            <button class="btn btn-primary btn-sm" id="nd-btn-investigate">Investigate</button>
+            <button class="btn btn-ghost btn-sm" id="nd-btn-trace">Trace Calls</button>
+            <button class="btn btn-ghost btn-sm" id="nd-btn-impact">Analyze Impact</button>
+          </div>
+        </div>
+
+        <!-- Graph Loading State -->
+        <div class="graph-loading" id="graph-loading" hidden>
+          <div class="graph-loading-inner">
+            <div class="spinner"></div>
+            <span>Loading knowledge graph…</span>
+          </div>
+        </div>
+
+        <!-- Graph Empty State -->
+        <div class="graph-empty-state" id="graph-empty-state" hidden>
+          <div class="graph-empty-inner">
+            <div style="font-size:40px;margin-bottom:16px;opacity:0.4;">⬡</div>
+            <div class="graph-empty-title">No graph loaded</div>
+            <div class="graph-empty-message" id="graph-empty-message">Select a repository and index it to explore the CodeGraph knowledge graph.</div>
+            <button class="btn btn-primary btn-sm" id="btn-index-repo" style="margin-top:16px;">Index Repository</button>
+          </div>
+        </div>
+
+        <!-- Minimap -->
+        <div class="graph-minimap" id="graph-minimap" hidden>
+          <canvas id="minimap-canvas" width="160" height="100"></canvas>
+        </div>
+
+        <!-- Legend -->
         <div class="graph-legend collapsed" id="graph-legend">
           <button class="legend-toggle" id="legend-toggle" aria-expanded="false" aria-controls="legend-body">◈ Legend</button>
           <div class="legend-body" id="legend-body"></div>
         </div>
+
       </section>
 
       <!-- Right Tabbed Panel -->
       <aside class="inspector-panel" id="console" aria-label="Inspector">
         <!-- Tabs Header -->
         <div class="tabs-bar" role="tablist" aria-label="Inspector panels">
-          <button class="tab-button active" data-tab="tab-investigation" id="tabbtn-investigation" role="tab" aria-selected="true" aria-controls="tab-investigation">Investigation</button>
-          <button class="tab-button" data-tab="tab-patch" id="tabbtn-patch" role="tab" aria-selected="false" aria-controls="tab-patch">Patch Repair</button>
-          <button class="tab-button" data-tab="tab-drift" id="tabbtn-drift" role="tab" aria-selected="false" aria-controls="tab-drift">Drift Inspector</button>
-          <button class="tab-button" data-tab="tab-git" id="tabbtn-git" role="tab" aria-selected="false" aria-controls="tab-git">Git &amp; PR</button>
-          <button class="tab-button" data-tab="tab-observability" id="tabbtn-observability" role="tab" aria-selected="false" aria-controls="tab-observability">Observability</button>
+          <button class="tab-button active" data-tab="tab-investigation" id="tabbtn-investigation" role="tab" aria-selected="true" aria-controls="tab-investigation">Investigate</button>
+          <button class="tab-button" data-tab="tab-patch" id="tabbtn-patch" role="tab" aria-selected="false" aria-controls="tab-patch">Patch</button>
+          <button class="tab-button" data-tab="tab-drift" id="tabbtn-drift" role="tab" aria-selected="false" aria-controls="tab-drift">Drift</button>
+          <button class="tab-button" data-tab="tab-git" id="tabbtn-git" role="tab" aria-selected="false" aria-controls="tab-git">Git&amp;PR</button>
+          <button class="tab-button" data-tab="tab-observability" id="tabbtn-observability" role="tab" aria-selected="false" aria-controls="tab-observability">Traces</button>
+          <button class="tab-button" data-tab="tab-evaluation" id="tabbtn-evaluation" role="tab" aria-selected="false" aria-controls="tab-evaluation">Eval</button>
         </div>
 
         <!-- Tab 1: Agentic Investigation Console -->
@@ -111,18 +221,39 @@
           <div class="card">
             <div class="card-title">Autonomous Investigation</div>
             <p class="card-desc">Grounded multi-step reasoning with citation proofs.</p>
-            <div style="display: flex; gap: 8px;">
-              <input id="search-input" type="text" class="input" style="flex: 1;"
-                     placeholder="Ask a question (e.g. Why did auth fail?)" />
-              <button id="btn-run-query" class="btn btn-primary">Investigate</button>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input id="search-input" type="text" class="input" style="flex:1;"
+                     placeholder="Why did auth fail?" aria-label="Investigation question" />
+              <button id="btn-run-query" class="btn btn-primary" aria-label="Run investigation">Investigate</button>
             </div>
           </div>
 
-          <div id="investigation-steps">
-            <div class="card empty-state" id="investigation-empty">
-              <p class="card-desc">No investigation yet — ask a question above to run a live agentic investigation against the selected repository.</p>
-            </div>
+          <!-- Status Indicator -->
+          <div class="investigation-status" id="investigation-status" hidden>
+            <span class="inv-status-dot" id="inv-status-dot"></span>
+            <span id="inv-status-text">Investigating…</span>
           </div>
+
+          <!-- Evidence Section -->
+          <div class="investigation-evidence" id="investigation-evidence" hidden>
+            <div class="section-label">Evidence</div>
+            <div id="investigation-evidence-items"></div>
+          </div>
+
+          <!-- Answer Section -->
+          <div class="investigation-answer" id="investigation-answer" hidden>
+            <div class="section-label">Answer</div>
+            <div class="investigation-answer-text" id="investigation-answer-text"></div>
+            <div id="investigation-meta" style="margin-top:8px;"></div>
+          </div>
+
+          <!-- Empty / Initial State -->
+          <div id="investigation-empty" class="card empty-state">
+            <p class="card-desc">No investigation yet — ask a question above to run a live agentic investigation against the selected repository.</p>
+          </div>
+
+          <!-- kept for legacy compat -->
+          <div id="investigation-steps" style="display:none;"></div>
         </div>
 
         <!-- Tab 2: Patch Repair Studio -->
@@ -130,20 +261,53 @@
           <div class="card" id="planner">
             <div class="card-title">Change Plan &amp; Verified Patch</div>
             <p class="card-desc">Human approval gate enforced before commit.</p>
-            <div style="display: flex; gap: 8px;">
-              <input id="change-request-input" type="text" class="input" style="flex: 1;"
-                     placeholder="Describe the change (e.g. Add input validation to UserService.add_user)" />
+            <div style="display:flex;gap:8px;margin-bottom:10px;">
+              <input id="change-request-input" type="text" class="input" style="flex:1;"
+                     placeholder="Add input validation to UserService.add_user" aria-label="Change request" />
               <button id="btn-plan-change" class="btn btn-primary">Plan</button>
             </div>
-            <div class="btn-row">
+            <div class="btn-row" style="flex-wrap:wrap;gap:6px;">
               <button id="btn-approve" class="btn btn-primary" disabled>Approve Plan</button>
               <button id="btn-generate-patch" class="btn btn-ghost" disabled>Generate Patch</button>
               <button id="btn-run-repair" class="btn btn-ghost">Run Repair</button>
             </div>
           </div>
 
+          <!-- Plan Info -->
+          <div class="patch-plan-info" id="patch-plan-info" hidden>
+            <div class="section-label">Plan Details</div>
+            <div id="patch-plan-details"></div>
+          </div>
+
+          <!-- Risk & Test Execution Badges -->
+          <div id="patch-risk-row" hidden style="margin-bottom:10px;display:flex;gap:12px;align-items:center;">
+            <div>
+              <span class="section-label" style="display:inline;">Risk: </span>
+              <span class="risk-badge" id="patch-risk-badge">UNKNOWN</span>
+            </div>
+            <div id="patch-test-metrics" style="font-size:12px;color:var(--text-muted);">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Diff Viewer -->
+          <div class="section-label" style="margin-bottom:6px;">Diff</div>
           <div class="diff-container" id="diff-viewer">
-            <div class="diff-line diff-header" id="diff-empty">No patch generated yet — plan a change, approve it, then generate a patch.</div>
+            <div class="diff-line diff-header">No patch generated yet — plan a change, approve it, then generate a patch.</div>
+          </div>
+
+          <!-- Dedicated Repair Input Area -->
+          <div class="card" style="margin-top:16px;">
+            <div class="card-title" style="font-size:13px;">Patch Repair Studio</div>
+            <p class="card-desc" style="font-size:11px;">Paste a test failure traceback or error message to trigger the iterative repair loop.</p>
+            <textarea id="repair-traceback-input" class="input" rows="3" placeholder="AssertionError: assert name is not None..." style="width:100%;margin-bottom:8px;font-family:var(--font-mono);font-size:11px;"></textarea>
+            <button id="btn-execute-repair-dedicated" class="btn btn-primary btn-sm" style="width:100%;">Run Repair Loop</button>
+          </div>
+
+          <!-- Approve / Reject prominent buttons -->
+          <div id="patch-action-row" style="display:none;gap:8px;margin-top:12px;">
+            <button class="btn btn-success" id="btn-approve-prominent" style="flex:1;">✓ Approve &amp; Apply</button>
+            <button class="btn btn-ghost" id="btn-reject-plan" style="flex:1;border-color:var(--crimson);color:var(--crimson);">✕ Reject</button>
           </div>
         </div>
 
@@ -153,20 +317,15 @@
             <div class="card-title">Consistency Drift Analysis</div>
             <p class="card-desc">Comparing documented assertions vs actual code graph.</p>
           </div>
-
-          <table class="data-table" id="drift">
-            <thead>
-              <tr>
-                <th>Documented Fact</th>
-                <th>Code Reality</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="drift-tbody">
-              <tr id="drift-empty">
-                <td colspan="3" class="empty-state">No stored drift records for this repository yet.</td>
-              </tr>
-            </tbody>
+          <div id="drift-cards-container">
+            <div class="card empty-state">
+              <p class="card-desc">No stored drift records for this repository yet.</p>
+            </div>
+          </div>
+          <!-- Legacy table kept hidden -->
+          <table class="data-table" id="drift" style="display:none;">
+            <thead><tr><th>Documented Fact</th><th>Code Reality</th><th>Status</th></tr></thead>
+            <tbody id="drift-tbody"></tbody>
           </table>
         </div>
 
@@ -175,10 +334,17 @@
           <div class="card">
             <div class="card-title">Git &amp; PR Workflow State</div>
             <p class="card-desc">Live workflow state from the approval-gated change pipeline.</p>
+            <div id="git-action-controls" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+              <button id="btn-approve-git" class="btn btn-primary btn-sm" disabled>Approve Git Commit</button>
+              <button id="btn-execute-git-pr" class="btn btn-ghost btn-sm" disabled>Create Commit &amp; PR</button>
+              <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-muted);margin-left:auto;">
+                <input type="checkbox" id="chk-request-push" /> Request Remote Push
+              </label>
+            </div>
           </div>
           <div id="git-state">
             <div class="card empty-state">
-              <p class="card-desc">No active workflow — plan a change in the Patch Repair tab to start one.</p>
+              <p class="card-desc">No active workflow — plan a change in the Patch tab to start one.</p>
             </div>
           </div>
         </div>
@@ -195,6 +361,20 @@
             </div>
           </div>
         </div>
+
+        <!-- Tab 6: Evaluation Dashboard -->
+        <div id="tab-evaluation" class="tab-content" role="tabpanel" aria-labelledby="tabbtn-evaluation" tabindex="0">
+          <div class="card">
+            <div class="card-title">Evaluation Dashboard</div>
+            <p class="card-desc">Live benchmark results from <code>/evaluations/latest</code>.</p>
+          </div>
+          <div id="eval-metrics-grid" class="eval-metrics-grid">
+            <div class="card empty-state" id="eval-empty">
+              <p class="card-desc">Loading evaluation data…</p>
+            </div>
+          </div>
+        </div>
+
       </aside>
     </main>
   </div>
@@ -203,7 +383,7 @@
   <footer class="status-bar">
     <div class="status-bar-section">
       <div class="status-indicator">
-        <span class="led-dot" style="color: var(--secondary);"></span>
+        <span class="led-dot" style="color:var(--secondary);"></span>
         <span id="status-ready">Ready</span>
       </div>
       <span>CodeGraph v16.0</span>
@@ -215,6 +395,7 @@
     </div>
   </footer>
 
+  <!-- app.js must load AFTER cytoscape scripts -->
   <script src="/static/js/app.js"></script>
 </body>
 </html>
