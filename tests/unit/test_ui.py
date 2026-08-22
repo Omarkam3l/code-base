@@ -227,7 +227,7 @@ class TestGraphDataIntegrity:
         """JS must fetch graph data from /repositories/{id}/graph — no demo literals."""
         js = _get_js()
         assert "/repositories/" in js and "/graph" in js, "JS must load the graph from the API"
-        assert "renderGraph(svg, nodes, edges)" in js, "JS must render fetched nodes/edges"
+        assert "renderGraphCytoscape(nodes, edges)" in js, "JS must render fetched nodes/edges"
         # No hardcoded demo node/edge arrays may remain
         assert not re.search(r"id:\s*'(UserService|AuthService|PostgreSQL|Redis|ArchDiagram)'", js), (
             "Hardcoded demo graph nodes found in JS"
@@ -478,7 +478,12 @@ class TestJSHTMLContract:
 
         # Extract class selectors from querySelectorAll
         selectors = re.findall(r"querySelectorAll\(['\"]\.(\w[\w-]*)['\"]", js)
+        # Classes the JS itself creates at runtime (dropdown items, filter
+        # checkboxes) legitimately have no static-HTML counterpart.
+        runtime_created = {"repo-dropdown-item", "node-type-filter", "edge-type-filter"}
         for sel in selectors:
+            if sel in runtime_created:
+                continue
             assert sel in dom.classes, f"JS selects '.{sel}' but class not in HTML"
 
     def test_js_does_not_use_alert(self) -> None:
@@ -489,19 +494,28 @@ class TestJSHTMLContract:
         assert "alert(" not in js_no_comments, "JS uses alert() instead of showToast()"
 
     def test_js_event_handlers_target_existing_elements(self) -> None:
-        """Button IDs referenced in initActions() must exist in HTML."""
+        """Button IDs referenced in initActions()/graph wiring must exist in HTML."""
         dom = _get_dom()
-        assert "btn-approve" in dom.ids, "btn-approve missing from HTML"
-        assert "btn-run-query" in dom.ids, "btn-run-query missing from HTML"
-        assert "search-input" in dom.ids, "search-input missing from HTML"
-        assert "inspect-header" in dom.ids, "inspect-header missing from HTML"
-        assert "graph-svg" in dom.ids, "graph-svg missing from HTML"
+        for element_id, why in [
+            ("btn-approve", "patch approval button"),
+            ("btn-plan-change", "change planning button"),
+            ("btn-generate-patch", "patch generation button"),
+            ("btn-run-query", "investigation button"),
+            ("search-input", "investigation input"),
+            ("cy-container", "graph canvas container"),
+            ("graph-stats", "graph stats badge"),
+        ]:
+            assert element_id in dom.ids, f"{element_id} ({why}) missing from HTML"
 
-    def test_svg_arrow_marker_defined(self) -> None:
-        """JS references url(#arrow) — marker must be defined in HTML SVG."""
+    def test_cytoscape_scripts_loaded_before_app(self) -> None:
+        """app.js must load after the Cytoscape scripts it depends on."""
         html = TestClient(app).get("/").text
-        dom = _get_dom()
-        assert "arrow" in dom.ids, "SVG marker id='arrow' missing"
+        cy_pos = html.find("cytoscape.min.js")
+        fcose_pos = max(html.find("cytoscape-fcose"), 0)
+        app_pos = html.find("/static/js/app.js")
+        assert cy_pos != -1, "Cytoscape core script not included"
+        assert app_pos > cy_pos, "app.js must load after cytoscape core"
+        assert app_pos > fcose_pos, "app.js must load after the fcose layout script"
 
 
 # ═══════════════════════════════════════════════════════════

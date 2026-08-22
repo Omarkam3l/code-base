@@ -55,7 +55,7 @@ class ChangeRiskAnalyzer:
             r"\bdatabase\s+migration\b",
             r"\bdrop\s+table\b",
         )
-        blocked_keywords = {"migration", "schema", "database", "sql"}
+        blocked_keywords = {"migration", "schema", "database", "sql", "table"}
         texts_to_check: list[str] = []
         if request_text:
             texts_to_check.append(request_text)

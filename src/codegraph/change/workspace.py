@@ -9,6 +9,20 @@ from contextlib import contextmanager
 from codegraph.change.models import Patch
 from codegraph.change.safety import SafetyValidator
 
+# Dependency trees, build output, caches, and virtual environments routinely
+# dwarf the actual source (e.g. a 1.6 GB repo with 721 MB of node_modules).
+# None of them are needed to validate or test a source patch, so they are
+# never copied into the isolated workspace.
+IGNORED_DIR_NAMES = {
+    ".git", ".hg", ".svn", "__pycache__", ".pytest_cache", ".mypy_cache",
+    ".ruff_cache", ".tox", ".cache", "coverage", ".htmlcov", ".idea",
+    ".vscode", ".venv", "venv", "env", "node_modules", ".next", ".nuxt",
+    "dist", "build", "target", "out", "site-packages", ".eggs",
+}
+IGNORED_DIR_SUFFIXES = (".egg-info",)
+IGNORED_FILE_SUFFIXES = (".pyc", ".pyo")
+MAX_FILE_BYTES = 5 * 1024 * 1024  # skip large binaries/models/databases
+
 
 class WorkspaceManager:
     """Manages isolated workspace creation, repository copying, and patch application."""
@@ -18,24 +32,48 @@ class WorkspaceManager:
 
     @contextmanager
     def create_isolated_workspace(self) -> Iterator[Path]:
-        """Create temporary isolated workspace directory copied from source repo."""
+        """Create temporary isolated workspace containing the repo's source files.
+
+        Heavyweight directories (venvs, node_modules, build output, caches)
+        and large binary files are excluded — real repositories can be
+        gigabytes of dependencies around a few MB of source, and none of the
+        excluded content affects patch validation or test execution.
+        """
         with tempfile.TemporaryDirectory(prefix="codegraph_workspace_") as tmp_dir:
             workspace_path = Path(tmp_dir).resolve()
 
-            # Copy repository files into isolated workspace
             if self.source_repo_path.exists():
-                shutil.copytree(
-                    self.source_repo_path,
-                    workspace_path,
-                    dirs_exist_ok=True,
-                    ignore=shutil.ignore_patterns(".git", "__pycache__", ".pytest_cache", "*.pyc"),
-                )
+                self._copy_source_tree(self.source_repo_path, workspace_path)
 
             try:
                 yield workspace_path
             finally:
                 # Cleanup is automatically handled by TemporaryDirectory context manager
                 pass
+
+    def _copy_source_tree(self, src: Path, dst: Path) -> None:
+        """Copy the repository source tree, skipping dependency/build/binary bulk."""
+        for dirpath, dirnames, filenames in os.walk(src):
+            dirnames[:] = [
+                d for d in dirnames
+                if d not in IGNORED_DIR_NAMES and not d.endswith(IGNORED_DIR_SUFFIXES)
+            ]
+            rel_dir = Path(dirpath).relative_to(src)
+            target_dir = dst / rel_dir
+            target_dir.mkdir(parents=True, exist_ok=True)
+
+            for filename in filenames:
+                if filename.endswith(IGNORED_FILE_SUFFIXES):
+                    continue
+                source_file = Path(dirpath) / filename
+                try:
+                    if source_file.stat().st_size > MAX_FILE_BYTES:
+                        continue
+                    shutil.copy2(source_file, target_dir / filename)
+                except OSError:
+                    # Unreadable/locked files (running DBs, sockets) can't affect
+                    # source validation; skip them rather than failing the patch.
+                    continue
 
     def apply_patch_to_workspace(self, workspace_path: Path, patch: Patch) -> tuple[bool, str | None]:
         """Apply patch file changes directly inside the isolated workspace."""

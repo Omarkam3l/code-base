@@ -90,7 +90,7 @@ class DeterministicChangePlanner:
             r"\bdatabase\s+migration\b",
             r"\bdrop\s+table\b",
         )
-        if any(re.search(pat, q_low) for pat in dangerous_patterns) or any(kw in q_low for kw in ["migration", "schema", "database"]):
+        if any(re.search(pat, q_low) for pat in dangerous_patterns) or any(kw in q_low for kw in ["migration", "schema", "database", "table"]):
             return ChangePlan(
                 objective=f"Resolve issue: {request.description}",
                 root_cause="Dangerous database, schema, or DDL operation requested.",
